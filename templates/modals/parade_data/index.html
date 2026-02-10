@@ -1,0 +1,1201 @@
+<style>
+    .parade-table {
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .parade-table th {
+        background: #2c3e50;
+        color: white;
+        padding: 8px 4px;
+        text-align: center;
+        font-size: 0.75rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .parade-table td {
+        padding: 4px;
+        text-align: center;
+    }
+
+    .parade-table input.form-control {
+        width: 60px;
+        padding: 2px;
+        font-size: 0.75rem;
+        text-align: center;
+    }
+
+    .category-label {
+        font-weight: 600;
+        background: #ecf0f1;
+        text-align: left !important;
+        padding-left: 10px !important;
+        min-width: 150px;
+    }
+
+    .total-row {
+        background: #d5e8f7 !important;
+        font-weight: bold;
+    }
+
+    .calculated-cell {
+        background: #fff3cd !important;
+        font-weight: 600;
+    }
+
+    .read-only-cell {
+        background: #e9ecef;
+        cursor: not-allowed;
+    }
+
+    #paradeTableContainer {
+        max-height: 65vh;
+        overflow: auto;
+    }
+
+    .mode-badge {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    .company-display {
+        background-color: #ffffff;
+        border: 2px solid #e3e6ea;
+        border-radius: 0.5rem;
+        padding: 0.625rem 1rem;
+        font-weight: 500;
+        color: #495057;
+        font-size: 0.9375rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .date-restricted {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+
+    /* ========================================
+       POLISHED CONTROL PANEL STYLING
+       ======================================== */
+    
+    .control-panel-card {
+        border: none;
+        background: #ffffff;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .control-panel-card .card-body {
+        padding: 1.5rem 2rem;
+    }
+
+    /* Control Panel Container */
+    .control-panel-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    /* Left Section - Inputs */
+    .control-panel-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Right Section - Buttons */
+    .control-panel-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    /* Input Groups */
+    .input-group-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+        min-width: 180px;
+    }
+
+    .input-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        margin: 0;
+    }
+
+    .input-label i {
+        font-size: 0.875rem;
+        color: #667eea;
+    }
+
+    /* Form Controls Enhanced */
+    .form-control-enhanced,
+    .form-select-enhanced {
+        height: 42px;
+        border: 2px solid #e3e6ea;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #2d3748;
+        transition: all 0.2s ease;
+        background-color: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .form-control-enhanced:focus,
+    .form-select-enhanced:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+    }
+
+    .form-control-enhanced:hover,
+    .form-select-enhanced:hover {
+        border-color: #c5cad5;
+    }
+
+    /* Action Buttons Enhanced */
+    .btn-action {
+        height: 42px;
+        padding: 0 1.5rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-action:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-action i {
+        font-size: 1rem;
+    }
+
+    /* Button Variants */
+    .btn-enter {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-enter:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #63368d 100%);
+    }
+
+    .btn-view {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: linear-gradient(135deg, #138496 0%, #0f6674 100%);
+    }
+
+    .btn-export {
+        background: linear-gradient(135deg, #28a745 0%, #20873a 100%);
+        color: white;
+    }
+
+    .btn-export:hover {
+        background: linear-gradient(135deg, #20873a 0%, #1a6d2f 100%);
+    }
+
+    .btn-export:disabled {
+        background: #e9ecef;
+        color: #adb5bd;
+        cursor: not-allowed;
+        opacity: 0.6;
+        box-shadow: none;
+    }
+
+    .btn-export:disabled:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+        .control-panel-container {
+            gap: 1.5rem;
+        }
+
+        .control-panel-left {
+            gap: 1rem;
+        }
+
+        .input-group-wrapper {
+            min-width: 160px;
+        }
+
+        .btn-action {
+            padding: 0 1.25rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .control-panel-container {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.25rem;
+        }
+
+        .control-panel-left {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .control-panel-right {
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .input-group-wrapper {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .btn-action {
+            flex: 1;
+            justify-content: center;
+            min-width: 140px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .control-panel-card .card-body {
+            padding: 1.25rem 1rem;
+        }
+
+        .control-panel-left {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .control-panel-right {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input-group-wrapper,
+        .btn-action {
+            width: 100%;
+            min-width: 100%;
+        }
+    }
+
+    /* Status Bar Enhancement */
+    .status-bar-custom {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-left: 4px solid #667eea;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .status-bar-custom .btn-light {
+        background: white;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-bar-custom .btn-light:hover {
+        background: #f8f9fa;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Modal Header Enhancement */
+    .modal-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-header .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .modal-header .modal-title i {
+        font-size: 1.25rem;
+        margin-right: 0.5rem;
+    }
+
+    /* Loading Spinner Enhancement */
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+
+    .spinner-border {
+        border-width: 0.3rem;
+    }
+</style>
+
+<div class="modal fade" id="paradeDataModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen" style="margin: 10px; max-width: calc(100vw - 20px);">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header bg-gradient"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-clipboard-list"></i>
+                    Parade State Data Management
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-3">
+                <!-- Control Panel -->
+                <div class="card control-panel-card mb-3">
+                    <div class="card-body">
+                        <div class="control-panel-container">
+                            <!-- Left Section: Date & Company -->
+                            <div class="control-panel-left">
+                                <!-- Date Selection -->
+                                <div class="input-group-wrapper">
+                                    <label class="input-label">
+                                        <i class="fas fa-calendar"></i>
+                                        Select Date
+                                    </label>
+                                    <input type="date" class="form-control-enhanced" id="paradeDate" />
+                                </div>
+
+                                <!-- Company Selection for O CENTRE NCO -->
+                                <div class="input-group-wrapper" id="companySelectionContainer">
+                                    <label class="input-label">
+                                        <i class="fas fa-building"></i>
+                                        Select Company
+                                    </label>
+                                    <select class="form-select-enhanced" id="paradeCompany">
+                                        <option value="">-- Select Company --</option>
+                                        <option value="1 company">1 Company</option>
+                                        <option value="2 company">2 Company</option>
+                                        <option value="3 company">3 Company</option>
+                                        <option value="hq company">HQ Company</option>
+                                        <option value="All">All Companies</option>
+                                    </select>
+                                </div>
+
+                                <!-- Company Display for ONCO -->
+                                <div class="input-group-wrapper d-none" id="companyDisplayContainer">
+                                    <label class="input-label">
+                                        <i class="fas fa-building"></i>
+                                        Your Company
+                                    </label>
+                                    <div class="company-display" id="userCompanyDisplay">
+                                        Loading...
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Section: Action Buttons -->
+                            <div class="control-panel-right">
+                                <button class="btn-action btn-enter" id="btnEnterData">
+                                    <i class="fas fa-edit"></i>
+                                    ENTER/EDIT
+                                </button>
+                                <button class="btn-action btn-view" id="btnViewData">
+                                    <i class="fas fa-eye"></i>
+                                    VIEW
+                                </button>
+                                <button class="btn-action btn-export" id="btnExportCSV" disabled>
+                                    <i class="fas fa-download"></i>
+                                    EXPORT CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="alert status-bar-custom d-none mb-3" id="statusBar">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="badge mode-badge bg-primary" id="modeDisplay">-</span>
+                            <span class="badge role-badge bg-secondary" id="roleDisplay">-</span>
+                            <span class="ms-2">
+                                <strong>Company:</strong> <span id="companyDisplay">-</span>
+                            </span>
+                            <span class="ms-2">
+                                <strong>Date:</strong> <span id="dateDisplay">-</span>
+                            </span>
+                        </div>
+                        <button class="btn btn-sm btn-light" id="btnRefresh">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="text-center d-none loading-container" id="loadingSpinner">
+                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted fw-medium">Loading parade data...</p>
+                </div>
+
+                <!-- Parade Table -->
+                <div id="paradeTableContainer" class="d-none">
+                    <div class="table-responsive">
+                        <table class="table table-bordered parade-table" id="paradeTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="min-width: 150px;">Category</th>
+                                    <th>AUTH</th>
+                                    <th>H/S</th>
+                                    <th>POSTED/STR</th>
+                                    <th>LVE</th>
+                                    <th>COURSE</th>
+                                    <th>DET</th>
+                                    <th>MH</th>
+                                    <th>SICK/LVE</th>
+                                    <th>EX</th>
+                                    <th>TD</th>
+                                    <th>ATT</th>
+                                    <th>AWL/OSL/JC</th>
+                                    <th class="bg-warning">T/OUT</th>
+                                    <th class="bg-info text-white">PRES/DET</th>
+                                    <th class="bg-success text-white">PRES/UNIT</th>
+                                    <th>DUES IN</th>
+                                    <th>DUES OUT</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paradeTableBody">
+                                <!-- Rows will be generated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Save Button (Edit Mode Only) -->
+                    <div class="text-center mt-3 d-none" id="saveContainer">
+                        <button class="btn btn-success btn-lg px-5" id="btnSave">
+                            <i class="fas fa-save me-2"></i> Save Parade Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Wait for DOM to be fully loaded before executing JavaScript
+    window.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM fully loaded');
+
+        // Check if we're in a page that has the parade modal
+        const paradeModal = document.getElementById('paradeDataModal');
+        if (!paradeModal) {
+            console.log('Parade modal not found on this page');
+            return;
+        }
+
+        // Only initialize parade manager when modal is shown
+        let paradeDataManagerInitialized = false;
+
+        paradeModal.addEventListener('shown.bs.modal', function () {
+            if (!paradeDataManagerInitialized) {
+                initializeParadeDataManager();
+                paradeDataManagerInitialized = true;
+                console.log('Parade Data Manager initialized');
+            }
+        });
+    });
+
+    function initializeParadeDataManager() {
+        console.log('Initializing Parade Data Manager');
+
+        const ParadeDataManager = {
+            currentMode: null,
+            currentDate: null,
+            currentCompany: null,
+            userRole: null,
+            userCompany: null,
+            paradeData: {},
+
+            categories: [
+                { key: 'offr', label: 'OFFR', editable: true },
+                { key: 'jco', label: 'JCO', editable: true },
+                { key: 'jcoEre', label: 'JCO (ERE)', editable: true },
+                { key: 'or', label: 'OR', editable: true },
+                { key: 'orEre', label: 'OR (ERE)', editable: true },
+                { key: 'firstTotal', label: 'TOTAL (I)', editable: false },
+                { key: 'oaOr', label: 'OA/OR', editable: true },
+                { key: 'attSummary', label: 'SUPERNUMARARY', editable: true },
+                { key: 'attOffr', label: 'ATT (OFFR)', editable: true },
+                { key: 'attJco', label: 'ATT (JCO)', editable: true },
+                { key: 'attOr', label: 'ATT (OR)', editable: true },
+                { key: 'secondTotal', label: 'TOTAL (II)', editable: false },
+                { key: 'grandTotal', label: 'GRAND TOTAL', editable: false }
+            ],
+
+            async init() {
+                console.log('Setting up parade data manager');
+
+                // Get user info first
+                await this.getUserInfo();
+
+                // Setup UI based on role
+                this.setupUIForRole();
+
+                // Setup event listeners
+                this.setupEventListeners();
+
+                console.log(`Parade Data Manager initialized for ${this.userRole} - ${this.userCompany}`);
+            },
+
+            async getUserInfo() {
+                try {
+                    const response = await fetch('/api/parade-data/user-info');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.userRole = data.role;
+                        this.userCompany = data.company;
+                        console.log(`User Role: ${this.userRole}, Company: ${this.userCompany}`);
+                    } else {
+                        console.error('Failed to get user info:', data.error);
+                        this.showAlert('Failed to get user information', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                    this.showAlert('Error loading user information', 'error');
+                }
+            },
+
+            setupUIForRole() {
+                const dateInput = document.getElementById('paradeDate');
+                const companySelection = document.getElementById('companySelectionContainer');
+                const companyDisplay = document.getElementById('companyDisplayContainer');
+                const userCompanyDisplay = document.getElementById('userCompanyDisplay');
+                const modalTitle = document.querySelector('#paradeDataModal .modal-title');
+
+                // Set today's date
+                const today = new Date().toISOString().split('T')[0];
+                if (dateInput) {
+                    dateInput.value = today;
+
+                    if (this.userRole === 'ONCO') {
+                        // ONCO can only select today's date
+                        dateInput.min = today;
+                        dateInput.max = today;
+                        dateInput.classList.add('date-restricted');
+                        dateInput.title = 'ONCO can only enter data for today';
+                    } else {
+                        dateInput.max = today;
+                    }
+                }
+
+                // Setup UI based on role
+                if (this.userRole === 'O CENTRE NCO') {
+                    // Show dropdown for company selection
+                    if (companySelection) companySelection.classList.remove('d-none');
+                    if (companyDisplay) companyDisplay.classList.add('d-none');
+                    if (modalTitle) modalTitle.innerHTML = '<i class="fas fa-clipboard-list"></i> Parade State Data Management (O CENTRE NCO)';
+                } else if (this.userRole === 'ONCO') {
+                    // Show company display (read-only)
+                    if (companySelection) companySelection.classList.add('d-none');
+                    if (companyDisplay) companyDisplay.classList.remove('d-none');
+                    if (userCompanyDisplay) userCompanyDisplay.textContent = this.userCompany;
+                    if (modalTitle) modalTitle.innerHTML = `<i class="fas fa-clipboard-list"></i> Parade State Data Entry - ${this.userCompany}`;
+
+                    // Set current company to user's company
+                    this.currentCompany = this.userCompany;
+                } else {
+                    // Hide the modal if user doesn't have access
+                    this.showAlert('You do not have permission to access parade data', 'error');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('paradeDataModal'));
+                    if (modal) modal.hide();
+                }
+            },
+
+            setupEventListeners() {
+                // Button event listeners
+                const btnEnterData = document.getElementById('btnEnterData');
+                const btnViewData = document.getElementById('btnViewData');
+                const btnExportCSV = document.getElementById('btnExportCSV');
+                const btnSave = document.getElementById('btnSave');
+                const btnRefresh = document.getElementById('btnRefresh');
+                const paradeTableBody = document.getElementById('paradeTableBody');
+
+                if (btnEnterData) {
+                    btnEnterData.addEventListener('click', () => this.handleEnterData());
+                }
+
+                if (btnViewData) {
+                    btnViewData.addEventListener('click', () => this.handleViewData());
+                }
+
+                if (btnExportCSV) {
+                    btnExportCSV.addEventListener('click', () => this.exportCSV());
+                }
+
+                if (btnSave) {
+                    btnSave.addEventListener('click', () => this.saveData());
+                }
+
+                if (btnRefresh) {
+                    btnRefresh.addEventListener('click', () => this.refreshData());
+                }
+
+                // Auto-calculate on input
+                if (paradeTableBody) {
+                    paradeTableBody.addEventListener('input', (e) => {
+                        if (e.target.tagName === 'INPUT') {
+                            this.handleInputChange(e.target);
+                        }
+                    });
+                }
+            },
+
+            async handleEnterData() {
+                console.log('Enter Data clicked');
+
+                const dateInput = document.getElementById('paradeDate');
+                const date = dateInput?.value;
+
+                if (!date) {
+                    this.showAlert('Please select date', 'warning');
+                    return;
+                }
+
+                // Determine company based on role
+                let company = this.currentCompany;
+
+                if (this.userRole === 'O CENTRE NCO') {
+                    const companySelect = document.getElementById('paradeCompany');
+                    company = companySelect?.value;
+
+                    if (!company) {
+                        this.showAlert('Please select a company', 'warning');
+                        return;
+                    }
+
+                    if (company === 'All') {
+                        this.showAlert('Please select a specific company for data entry', 'warning');
+                        return;
+                    }
+                }
+
+                // Validate date restriction for ONCO
+                const today = new Date().toISOString().split('T')[0];
+                if (this.userRole === 'ONCO' && date !== today) {
+                    this.showAlert('ONCO can only enter/edit data for today', 'error');
+                    return;
+                }
+
+                // Validate date is not in future
+                if (date > today) {
+                    this.showAlert('Cannot enter data for future dates', 'error');
+                    return;
+                }
+
+                this.currentMode = 'edit';
+                this.currentDate = date;
+                this.currentCompany = company;
+                await this.loadData();
+            },
+
+            async handleViewData() {
+                console.log('View Data clicked');
+
+                const dateInput = document.getElementById('paradeDate');
+                const date = dateInput?.value;
+
+                if (!date) {
+                    this.showAlert('Please select date', 'warning');
+                    return;
+                }
+
+                // Determine company based on role
+                let company = this.currentCompany;
+
+                if (this.userRole === 'O CENTRE NCO') {
+                    const companySelect = document.getElementById('paradeCompany');
+                    company = companySelect?.value;
+
+                    if (!company) {
+                        this.showAlert('Please select a company', 'warning');
+                        return;
+                    }
+                }
+
+                this.currentMode = 'view';
+                this.currentDate = date;
+                this.currentCompany = company;
+                await this.loadData();
+            },
+
+            async loadData() {
+                console.log(`Loading data for ${this.currentCompany} on ${this.currentDate}, Role: ${this.userRole}`);
+
+                this.showLoading(true);
+                const paradeTableContainer = document.getElementById('paradeTableContainer');
+                if (paradeTableContainer) {
+                    paradeTableContainer.classList.add('d-none');
+                }
+
+                try {
+                    let url;
+
+                    // Build URL based on role and company selection
+                    if (this.userRole === 'O CENTRE NCO' && this.currentCompany === 'All') {
+                        url = `/api/parade-data/view-all/${this.currentDate}`;
+                    } else {
+                        url = `/api/parade-data/get/${this.currentDate}/${encodeURIComponent(this.currentCompany)}`;
+                    }
+
+                    console.log(`Fetching from URL: ${url}`);
+
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        if (response.status === 403) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Access denied');
+                        }
+                        if (response.status === 404) {
+                            throw new Error('Data not found for this date and company');
+                        }
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('API Response:', result);
+
+                    if (result.success) {
+                        if (result.is_empty) {
+                            if (this.currentMode === 'edit') {
+                                this.paradeData = this.getEmptyData();
+                                this.renderTable();
+                                this.updateStatusBar();
+                                this.showAlert('No existing data. You can enter new data below.', 'info');
+                            } else {
+                                this.showAlert('No data found for this date and company', 'info');
+                            }
+                        } else {
+                            this.paradeData = result.data.data || {};
+                            this.renderTable();
+                            this.updateStatusBar();
+                        }
+
+                        // Enable export button
+                        const exportBtn = document.getElementById('btnExportCSV');
+                        if (exportBtn) {
+                            exportBtn.disabled = result.is_empty || false;
+                        }
+                    } else {
+                        this.showAlert(result.error || 'Failed to load data', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.showAlert('Error loading data: ' + error.message, 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            },
+
+            renderTable() {
+                const tbody = document.getElementById('paradeTableBody');
+                if (!tbody) {
+                    console.error('Table body not found');
+                    return;
+                }
+                tbody.innerHTML = '';
+
+                let actualData = this.paradeData;
+                if (this.paradeData.data) {
+                    actualData = this.paradeData.data;
+                }
+
+                this.categories.forEach((category, idx) => {
+                    const row = document.createElement('tr');
+                    const isTotal = !category.editable;
+
+                    if (isTotal) {
+                        row.classList.add('total-row');
+                    }
+
+                    // Category Label
+                    const labelCell = document.createElement('td');
+                    labelCell.className = 'category-label';
+                    labelCell.textContent = category.label;
+                    row.appendChild(labelCell);
+
+                    // Data Cells (17 columns)
+                    const data = actualData[category.key] || Array(17).fill(0);
+
+                    for (let i = 0; i < 17; i++) {
+                        const cell = document.createElement('td');
+                        const isCalculated = (i === 12 || i === 13 || i === 14);
+
+                        if (this.currentMode === 'edit' && category.editable && !isCalculated) {
+                            const input = document.createElement('input');
+                            input.type = 'number';
+                            input.className = 'form-control';
+                            input.value = data[i] || 0;
+                            input.min = 0;
+                            input.dataset.category = category.key;
+                            input.dataset.index = i;
+                            cell.appendChild(input);
+                        } else {
+                            cell.textContent = data[i] || 0;
+                            if (isCalculated) {
+                                cell.classList.add('calculated-cell');
+                            } else if (this.currentMode === 'view' || !category.editable) {
+                                cell.classList.add('read-only-cell');
+                            }
+                        }
+
+                        row.appendChild(cell);
+                    }
+
+                    tbody.appendChild(row);
+                });
+
+                this.paradeData = actualData;
+
+                if (this.currentMode === 'edit') {
+                    this.calculateAllTotals();
+                }
+
+                const saveContainer = document.getElementById('saveContainer');
+                const paradeTableContainer = document.getElementById('paradeTableContainer');
+                if (saveContainer) {
+                    saveContainer.classList.toggle('d-none', this.currentMode !== 'edit');
+                }
+                if (paradeTableContainer) {
+                    paradeTableContainer.classList.remove('d-none');
+                }
+
+                console.log('Table rendered successfully');
+            },
+
+            handleInputChange(input) {
+                const category = input.dataset.category;
+                const index = parseInt(input.dataset.index);
+                const value = parseInt(input.value) || 0;
+
+                if (!this.paradeData[category]) {
+                    this.paradeData[category] = Array(17).fill(0);
+                }
+                this.paradeData[category][index] = value;
+
+                this.calculateRow(category);
+                this.calculateAllTotals();
+            },
+
+            calculateRow(categoryKey) {
+                const data = this.paradeData[categoryKey];
+                if (!data || data.length < 17) return;
+
+                const tOut = data[3] + data[4] + data[5] + data[6] + data[7] + data[8] + data[9] + data[10] + data[11];
+                data[12] = Math.max(0, tOut);
+                data[13] = data[5];
+                data[14] = Math.max(0, data[2] - data[12]);
+
+                this.updateRowDisplay(categoryKey);
+            },
+
+            calculateAllTotals() {
+                const firstTotalData = Array(17).fill(0);
+                const secondTotalData = Array(17).fill(0);
+
+                // Helper to sum a specific column across categories
+                const sumColumn = (categories, colIndex) => {
+                    return categories.reduce((sum, cat) => {
+                        const data = this.paradeData[cat] || Array(17).fill(0);
+                        return sum + (data[colIndex] || 0);
+                    }, 0);
+                };
+
+                // === FIRST TOTAL (I) ===
+                const firstCats = ['offr', 'jco', 'jcoEre', 'or', 'orEre'];
+
+                // Sum all columns directly from source rows
+                for (let i = 0; i < 17; i++) {
+                    firstTotalData[i] = sumColumn(firstCats, i);
+                }
+
+                // But override calculated fields properly
+                const firstTOut =
+                    sumColumn(firstCats, 3) + // LVE
+                    sumColumn(firstCats, 4) + // COURSE
+                    sumColumn(firstCats, 5) + // DET
+                    sumColumn(firstCats, 6) + // MH
+                    sumColumn(firstCats, 7) + // SICK/LVE
+                    sumColumn(firstCats, 8) + // EX
+                    sumColumn(firstCats, 9) + // TD
+                    sumColumn(firstCats, 10) + // ATT
+                    sumColumn(firstCats, 11);  // AWL/OSL/JC
+
+                firstTotalData[12] = Math.max(0, firstTOut);
+                firstTotalData[13] = sumColumn(firstCats, 5); // PRES/DET = sum of DET
+                firstTotalData[14] = Math.max(0, firstTotalData[2] - firstTotalData[12]);
+
+                this.paradeData.firstTotal = firstTotalData;
+
+                // === SECOND TOTAL (II) ===
+                const secondCats = ['oaOr', 'attSummary', 'attOffr', 'attJco', 'attOr'];
+
+                for (let i = 0; i < 17; i++) {
+                    secondTotalData[i] = sumColumn(secondCats, i);
+                }
+
+                const secondTOut =
+                    sumColumn(secondCats, 3) + sumColumn(secondCats, 4) +
+                    sumColumn(secondCats, 5) + sumColumn(secondCats, 6) +
+                    sumColumn(secondCats, 7) + sumColumn(secondCats, 8) +
+                    sumColumn(secondCats, 9) + sumColumn(secondCats, 10) +
+                    sumColumn(secondCats, 11);
+
+                secondTotalData[12] = Math.max(0, secondTOut);
+                secondTotalData[13] = sumColumn(secondCats, 5);
+                secondTotalData[14] = Math.max(0, secondTotalData[2] - secondTotalData[12]);
+
+                this.paradeData.secondTotal = secondTotalData;
+
+                // === GRAND TOTAL ===
+                const grandTotalData = Array(17).fill(0);
+                for (let i = 0; i < 17; i++) {
+                    grandTotalData[i] = firstTotalData[i] + secondTotalData[i];
+                }
+                this.paradeData.grandTotal = grandTotalData;
+
+                // Update display
+                this.updateRowDisplay('firstTotal');
+                this.updateRowDisplay('secondTotal');
+                this.updateRowDisplay('grandTotal');
+            },
+
+            updateRowDisplay(categoryKey) {
+                const data = this.paradeData[categoryKey];
+                if (!data) return;
+
+                const rows = document.getElementById('paradeTableBody')?.querySelectorAll('tr');
+                if (!rows) return;
+
+                const categoryIndex = this.categories.findIndex(c => c.key === categoryKey);
+                if (categoryIndex === -1) return;
+
+                const row = rows[categoryIndex];
+                if (!row) return;
+
+                const cells = row.querySelectorAll('td');
+
+                for (let i = 0; i < 17; i++) {
+                    const cell = cells[i + 1];
+                    if (cell) {
+                        const input = cell.querySelector('input');
+                        if (input) {
+                            input.value = data[i] || 0;
+                        } else {
+                            cell.textContent = data[i] || 0;
+                        }
+                    }
+                }
+            },
+
+            async saveData() {
+                if (this.currentMode !== 'edit') {
+                    this.showAlert('Cannot save in view mode', 'warning');
+                    return;
+                }
+
+                if (!this.paradeData || Object.keys(this.paradeData).length === 0) {
+                    this.showAlert('No data to save', 'warning');
+                    return;
+                }
+
+                // Validate data for ONCO
+                const today = new Date().toISOString().split('T')[0];
+                if (this.userRole === 'ONCO' && this.currentDate !== today) {
+                    this.showAlert('ONCO can only save data for today', 'error');
+                    return;
+                }
+
+                // Show saving indicator
+                const saveBtn = document.getElementById('btnSave');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+
+                try {
+                    // Determine which company to send
+                    let companyToSave = this.currentCompany;
+
+                    // For ONCO, always send their own company (even though backend will override)
+                    if (this.userRole === 'ONCO') {
+                        companyToSave = this.userCompany;
+                    }
+
+                    const response = await fetch('/api/parade-data/save', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date: this.currentDate,
+                            company: companyToSave,
+                            data: this.paradeData
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.showAlert('Data saved successfully!', 'success');
+
+                        // Switch to view mode after successful save
+                        if (this.userRole === 'ONCO') {
+                            this.currentMode = 'view';
+                            this.renderTable();
+                            this.updateStatusBar();
+                        }
+                    } else {
+                        this.showAlert(result.error || 'Failed to save data', 'error');
+                    }
+                } catch (error) {
+                    console.error('Save error:', error);
+                    this.showAlert('Error saving data: ' + error.message, 'error');
+                } finally {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                }
+            },
+
+            async exportCSV() {
+                if (!this.currentDate || !this.currentCompany) {
+                    this.showAlert('Please load data first', 'warning');
+                    return;
+                }
+
+                try {
+                    let url;
+
+                    // For ONCO, always export their own company
+                    if (this.userRole === 'ONCO') {
+                        url = `/api/parade-data/export-csv/${this.currentDate}/${encodeURIComponent(this.userCompany)}?t=${new Date().getTime()}`;
+                    } else {
+                        url = `/api/parade-data/export-csv/${this.currentDate}/${encodeURIComponent(this.currentCompany)}?t=${new Date().getTime()}`;
+                    }
+
+                    window.open(url, '_blank');
+                } catch (error) {
+                    console.error('Export error:', error);
+                    this.showAlert('Error exporting CSV', 'error');
+                }
+            },
+
+            refreshData() {
+                if (this.currentMode && this.currentDate && this.currentCompany) {
+                    this.loadData();
+                }
+            },
+
+            getEmptyData() {
+                const data = {};
+                this.categories.forEach(cat => {
+                    data[cat.key] = Array(17).fill(0);
+                });
+                return data;
+            },
+
+            updateStatusBar() {
+                const statusBar = document.getElementById('statusBar');
+                const modeDisplay = document.getElementById('modeDisplay');
+                const roleDisplay = document.getElementById('roleDisplay');
+                const companyDisplay = document.getElementById('companyDisplay');
+                const dateDisplay = document.getElementById('dateDisplay');
+
+                if (statusBar) statusBar.classList.remove('d-none');
+                if (modeDisplay) {
+                    modeDisplay.textContent = this.currentMode === 'edit' ? 'EDIT MODE' : 'VIEW MODE';
+                    modeDisplay.className = `badge mode-badge ${this.currentMode === 'edit' ? 'bg-success' : 'bg-info'}`;
+                }
+                if (roleDisplay) {
+                    roleDisplay.textContent = this.userRole;
+                    roleDisplay.className = `badge role-badge ${this.userRole === 'O CENTRE NCO' ? 'bg-primary' : 'bg-warning'}`;
+                }
+                if (companyDisplay) companyDisplay.textContent = this.currentCompany;
+                if (dateDisplay) dateDisplay.textContent = this.currentDate;
+            },
+
+            showLoading(show) {
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                if (loadingSpinner) {
+                    loadingSpinner.classList.toggle('d-none', !show);
+                }
+            },
+
+            showAlert(message, type) {
+                const alertTypes = {
+                    success: 'alert-success',
+                    error: 'alert-danger',
+                    warning: 'alert-warning',
+                    info: 'alert-info'
+                };
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert ${alertTypes[type] || 'alert-info'} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+                  ${message}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              `;
+                const modalBody = document.querySelector('#paradeDataModal .modal-body');
+                if (modalBody) {
+                    modalBody.insertBefore(alertDiv, modalBody.firstChild);
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.remove();
+                        }
+                    }, 5000);
+                }
+            }
+        };
+
+        // Initialize the manager
+        ParadeDataManager.init();
+    }
+</script>

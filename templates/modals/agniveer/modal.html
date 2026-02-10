@@ -1,0 +1,319 @@
+<!-- AGNIVEER MODAL -->
+<div class="modal fade" id="agniveersModal" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="modal-title fw-bold">Agniveer Assistant Test</h5>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-light btn-sm fw-bold shadow-sm" onclick="printAgniveerTable()">
+            <i class="bi bi-printer-fill pe-1"></i> Print
+          </button>
+          <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Batch Filter -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="input-group shadow-sm">
+              <span class="input-group-text bg-dark text-white">
+                <i class="bi bi-filter"></i> Batch
+              </span>
+              <select id="batchFilter" class="form-select">
+                <option value="all">All Batches</option>
+              </select>
+              <button id="resetFilter" class="btn btn-outline-secondary" type="button">
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle text-center">
+
+            <thead class="table-head-custom">
+              <tr>
+                <th rowspan="2">Batch</th>
+                <th rowspan="2">DOE</th>
+                <th rowspan="2">TOE</th>
+                <th rowspan="2">STR</th>
+
+                <th colspan="2">TENURE (20 MONTHS)</th>
+                <th colspan="4">Timelines for Asst from DOE</th>
+                <th colspan="4">Assmt completed on / or such wef</th>
+
+                <th rowspan="2">Screening Board</th>
+                <th rowspan="2">Remarks</th>
+              </tr>
+              <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>12 Months</th>
+                <th>18 Months</th>
+                <th>30 Months</th>
+                <th>42 Months</th>
+                <th>1st Yr</th>
+                <th>2nd Yr</th>
+                <th>3rd Yr</th>
+                <th>4th Yr</th>
+              </tr>
+            </thead>
+
+            <tbody id="agniveerTableBody">
+              <tr>
+                <td colspan="16" class="text-center text-muted">
+                  No records found
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TABLE STYLES -->
+<style>
+  .table-head-custom tr:first-child th {
+    background: linear-gradient(135deg, #1d3557, #457b9d);
+    color: #fff;
+  }
+
+  .table-head-custom tr:last-child th {
+    background: linear-gradient(135deg, #a8dadc, #f1faee);
+    color: #1d3557;
+    font-weight: 600;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #eef4ff;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+
+    /* Hide everything by default */
+    body * {
+      visibility: hidden;
+    }
+
+    /* Show only the modal content */
+    #agniveersModal,
+    #agniveersModal * {
+      visibility: visible;
+    }
+
+    #agniveersModal {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Hide UI elements that shouldn't be printed */
+    .modal-header .btn,
+    .modal-header .btn-close,
+    .modal-footer,
+    .row.mb-4,
+    /* Filter row */
+    #batchFilter,
+    #resetFilter {
+      display: none !important;
+    }
+
+    /* Ensure modal looks like a flat document */
+    .modal-content {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .modal-dialog {
+      margin: 0 !important;
+      max-width: 100% !important;
+    }
+
+    /* Table optimization for print */
+    .table-responsive {
+      overflow: visible !important;
+    }
+
+    .table {
+      border-collapse: collapse !important;
+      width: 100% !important;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid #333 !important;
+      font-size: 9pt !important;
+      padding: 4px !important;
+      color: #000 !important;
+    }
+
+    .table-head-custom tr:first-child th {
+      background: #f0f0f0 !important;
+      color: #000 !important;
+    }
+
+    .table-head-custom tr:last-child th {
+      background: #ffffff !important;
+      color: #000 !important;
+    }
+
+    .badge {
+      border: 1px solid #333 !important;
+      color: #000 !important;
+      background: none !important;
+    }
+  }
+</style>
+<script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  let allAgniveersData = [];
+  let filteredData = [];
+
+  document.getElementById('agniveersModal')
+    .addEventListener('shown.bs.modal', loadAgniveersData);
+
+  function loadAgniveersData() {
+    // Also load batches for filter if not already loaded
+    fetch('/agni/get_batches')
+      .then(res => res.json())
+      .then(batches => {
+        const batchFilter = document.getElementById('batchFilter');
+        const currentVal = batchFilter.value;
+        batchFilter.innerHTML = '<option value="all">All Batches</option>' +
+          batches.map(b => `<option value="${b}">${b}</option>`).join('');
+        batchFilter.value = currentVal;
+      });
+
+    const tbody = document.getElementById("agniveerTableBody");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="16" class="text-center">
+          <div class="spinner-border spinner-border-sm me-2"></div>
+          Loading data...
+        </td>
+      </tr>`;
+
+    fetch('/agni/get_all_agniveers')
+      .then(res => res.json())
+      .then(data => {
+        allAgniveersData = data;
+        applyFilters();
+      });
+  }
+
+  function applyFilters() {
+    const batch = document.getElementById('batchFilter').value;
+    filteredData = batch === 'all'
+      ? allAgniveersData
+      : allAgniveersData.filter(a => a.batch === batch);
+    renderTable(filteredData);
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById("agniveerTableBody");
+    tbody.innerHTML = '';
+
+    if (!data.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="16" class="text-center text-muted">
+            No records found
+          </td>
+        </tr>`;
+      return;
+    }
+
+    data.forEach(p => {
+
+      function formatMonthYear(dateStr) {
+        if (!dateStr) return '<span class="text-muted">—</span>';
+        return new Date(dateStr).toLocaleDateString('en-GB', {
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      function testCell(date, status) {
+        if (!date) return '<span class="text-muted">—</span>';
+        const badge = status === 1
+          ? '<span class="badge bg-success ms-1">✓</span>'
+          : '<span class="badge bg-warning text-dark ms-1">P</span>';
+        return `<strong>${formatMonthYear(date)}</strong>${badge}`;
+      }
+
+      function emergencyDateCell(date) {
+        if (!date) return '<span class="text-muted">—</span>';
+        return `<strong>${new Date(date).toLocaleDateString(
+          'en-GB',
+          { day: '2-digit', month: 'short', year: 'numeric' }
+        )}</strong>`;
+      }
+
+      tbody.innerHTML += `
+        <tr>
+          <td><span class="badge bg-primary fs-6">${p.batch}</span></td>
+          <td>${formatMonthYear(p.DOE)}</td>
+          <td>${formatMonthYear(p.TOE)}</td>
+          <td>${p.strength}</td>
+
+          <td>${formatMonthYear(p.TOS)}</td>
+          <td>${formatMonthYear(p.END_OF_TENURE)}</td>
+
+          <td>${testCell(p.asst_test1, p.test1_status)}</td>
+          <td>${testCell(p.asst_test2, p.test2_status)}</td>
+          <td>${testCell(p.asst_test3, p.test3_status)}</td>
+          <td>${testCell(p.asst_test4, p.test4_status)}</td>
+
+          <td>${emergencyDateCell(p.assmt_wef_1st)}</td>
+          <td>${emergencyDateCell(p.assmt_wef_2nd)}</td>
+          <td>${emergencyDateCell(p.assmt_wef_3rd)}</td>
+          <td>${emergencyDateCell(p.assmt_wef_4th)}</td>
+
+          <td class="text-start">
+           ${p.screening_board || '<span class="text-muted">—</span>'}
+          </td>
+
+
+
+
+
+
+          <td class="text-start">
+            ${p.remarks || '<span class="text-muted">—</span>'}
+          </td>
+        </tr>`;
+    });
+  }
+
+  function printAgniveerTable() {
+    window.print();
+  }
+
+  document.getElementById('batchFilter').addEventListener('change', applyFilters);
+  document.getElementById('resetFilter').addEventListener('click', () => {
+    document.getElementById('batchFilter').value = 'all';
+    applyFilters();
+  });
+</script>

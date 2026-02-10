@@ -1,0 +1,146 @@
+  <style>
+   
+
+   
+
+    .gallery-section {
+      padding: 20px 5vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .gallery-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: clamp(3.8rem, 9vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: -3px;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(90deg, #b91c1c, #dc2626, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 30px rgba(185, 28, 28, 0.25);
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #94a3b8;
+      margin-bottom: 4rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.6rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #111827;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .gallery-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.04) translateY(-8px);
+      box-shadow: 0 20px 50px rgba(185, 28, 28, 0.3);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.12);
+    }
+
+    /* Staggered appearance */
+    .gallery-item:nth-child(1) { transition-delay: 0.1s; }
+    .gallery-item:nth-child(2) { transition-delay: 0.2s; }
+    .gallery-item:nth-child(3) { transition-delay: 0.3s; }
+    .gallery-item:nth-child(4) { transition-delay: 0.4s; }
+    .gallery-item:nth-child(5) { transition-delay: 0.5s; }
+    .gallery-item:nth-child(6) { transition-delay: 0.6s; }
+  </style>
+
+<body>
+
+  <!-- Just to allow scrolling -->
+  <div></div>
+
+  <section class="gallery-section">
+    <h1>Gallery</h1>
+    <p class="subtitle">Honoring the strength, discipline and courage of our armed forces</p>
+
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif" alt="Army formation">
+      </div>
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif"" alt="Soldiers training">
+      </div>
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif" alt="Military parade">
+      </div>
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif" alt="Army vehicles">
+      </div>
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif" alt="Special forces">
+      </div>
+      <div class="gallery-item">
+        <img src="/static/photos/image1.jfif" alt="Honor guard">
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          // Animate children items with slight delay
+          const items = entry.target.querySelectorAll('.gallery-item');
+          items.forEach((item, index) => {
+            setTimeout(() => {
+              item.classList.add('visible');
+            }, 150 * (index + 1));
+          });
+
+          // Once visible, we can stop observing
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    // Observe the main gallery section
+    observer.observe(document.querySelector('.gallery-section'));
+  </script>
+

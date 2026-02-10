@@ -1,0 +1,1170 @@
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 1800px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    .header p {
+        font-size: 15px;
+        opacity: 0.95;
+        letter-spacing: 1px;
+    }
+
+    .controls {
+        padding: 25px;
+        background: #f8f9fa;
+        border-bottom: 3px solid #e9ecef;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .control-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .date-selector {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .date-selector label {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .date-selector input[type="date"] {
+        padding: 10px 14px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+        font-weight: 600;
+    }
+
+    .date-selector input[type="date"]:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(17,153,142,0.4);
+    }
+
+    .btn-export {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .btn-export:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(240,147,251,0.4);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+    }
+
+    .mode-indicator {
+        padding: 12px 24px;
+        background: white;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 14px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+
+    .mode-indicator.view-mode {
+        color: #0c5460;
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    }
+
+    .mode-indicator.edit-mode {
+        color: #155724;
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    }
+
+    .message {
+        padding: 18px 30px;
+        margin: 0;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    .success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-bottom: 4px solid #28a745;
+    }
+
+    .error {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border-bottom: 4px solid #dc3545;
+    }
+
+    .info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border-bottom: 4px solid #17a2b8;
+    }
+
+    .table-wrapper {
+        padding: 30px;
+        overflow-x: auto;
+        background: #f8f9fa;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+    }
+
+    thead th {
+        padding: 16px 10px;
+        font-weight: 700;
+        text-align: center;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        border-right: 1px solid rgba(255,255,255,0.15);
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    thead th:last-child {
+        border-right: none;
+    }
+
+    tbody tr {
+        transition: all 0.3s;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+
+    tbody tr:hover {
+        background: #e3f2fd;
+        transform: scale(1.005);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    tbody tr.total-row {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        font-weight: 800;
+        font-size: 15px;
+        border-top: 3px solid #ffc107;
+        border-bottom: 3px solid #ffc107;
+    }
+
+    tbody tr.total-row:hover {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    }
+
+    tbody tr.total-row td {
+        padding: 18px 12px;
+        color: #856404;
+    }
+
+    td {
+        padding: 14px 10px;
+        text-align: center;
+        font-size: 13px;
+        border-right: 1px solid #dee2e6;
+    }
+
+    td:last-child {
+        border-right: none;
+    }
+
+    td.sr-no {
+        font-weight: 700;
+        color: #495057;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        font-size: 14px;
+    }
+
+    td.trade-name {
+        font-weight: 700;
+        text-align: left;
+        color: #2c3e50;
+        background: #f1f3f5;
+        padding-left: 20px;
+        font-size: 13px;
+    }
+
+    td input {
+        width: 65px;
+        padding: 8px;
+        border: 2px solid #dee2e6;
+        border-radius: 7px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s;
+        background: white;
+    }
+
+    td input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: #f0f4ff;
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    td input:disabled {
+        background: #e9ecef;
+        cursor: not-allowed;
+        color: #6c757d;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 60px;
+        font-size: 20px;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .loading::after {
+        content: '...';
+        animation: dots 1.5s infinite;
+    }
+
+    @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60%, 100% { content: '...'; }
+    }
+
+    /* Column group headers styling */
+    thead tr:first-child th[colspan] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .control-group {
+            width: 100%;
+            justify-content: center;
+        }
+
+        td input {
+            width: 55px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 24px;
+        }
+
+        thead th, td {
+            padding: 10px 6px;
+            font-size: 10px;
+        }
+
+        td input {
+            width: 45px;
+            padding: 6px;
+            font-size: 11px;
+        }
+    }
+</style>
+
+<!-- Modal Header -->
+<div class="modal-header">
+    <h5 class="modal-title">📊 Trade Wise Manpower State</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="container">
+    <div id="message-container"></div>
+
+    <div class="controls">
+        <div class="control-group">
+            <div class="date-selector">
+                <label for="report-date">📅 Report Date:</label>
+                <input type="date" id="report-date" />
+            </div>
+            <button class="btn btn-primary" onclick="loadData()">🔍 Load Data</button>
+            <button class="btn btn-primary" onclick="toggleEditMode()" id="edit-btn">✏️ Edit Mode</button>
+        </div>
+        <div class="control-group">
+            <div class="mode-indicator view-mode" id="mode-indicator">👁️ View Mode</div>
+            <button class="btn btn-success" onclick="saveData()" id="save-btn" disabled>💾 Save Data</button>
+            <button class="btn btn-export" onclick="exportCSV()" id="export-btn">📥 Export CSV</button>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <div id="loading-container"></div>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">SR NO</th>
+                    <th rowspan="2">TRADE/CAT</th>
+                    <th rowspan="2">AUTH</th>
+                    <th rowspan="2">H/S</th>
+                    <th rowspan="2">HELD</th>
+                    <th rowspan="2">AV</th>
+                    <th colspan="4">COY WISE DISTRIBUTION</th>
+                    <th colspan="4">LVE, COURSE, MH, TD STATE</th>
+                    <th colspan="4">COY WISE PRESENT STR</th>
+                </tr>
+                <tr>
+                    <th>HQ COY</th>
+                    <th>1 COY</th>
+                    <th>2 COY</th>
+                    <th>3 COY</th>
+                    <th>HQ COY</th>
+                    <th>1 COY</th>
+                    <th>2 COY</th>
+                    <th>3 COY</th>
+                    <th>HQ COY</th>
+                    <th>1 COY</th>
+                    <th>2 COY</th>
+                    <th>3 COY</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const TRADE_CATEGORIES = [
+    {sr: 1, name: 'OP CIPH'},
+    {sr: 2, name: 'OSS'},
+    {sr: 3, name: 'OCC'},
+    {sr: 4, name: 'TTC'},
+    {sr: 5, name: 'LMN'},
+    {sr: 6, name: 'EFS'},
+    {sr: 7, name: 'DVR MT'},
+    {sr: 8, name: 'DR'},
+    {sr: 9, name: 'DTMN'},
+    {sr: 10, name: 'SKT'},
+    {sr: 11, name: 'ARTSN'},
+    {sr: 12, name: 'W/MAN'},
+    {sr: 13, name: 'STEWARD'},
+    {sr: 14, name: 'DRESSER'},
+    {sr: 15, name: 'HKEEPER'},
+    {sr: 16, name: 'MKEEPER'},
+    {sr: 17, name: 'CHEF MESS'},
+    {sr: 18, name: 'CHEF COM'},
+    {sr: 19, name: 'ER'},
+    {sr: 20, name: 'TLR'},
+    {sr: 21, name: 'CLK SD'},
+    {sr: 22, name: 'ERE'}
+];
+
+let isEditMode = false;
+let isTemplateMode = false;
+let templateDate = null;
+let currentReportDate = null;
+
+// Set today's date as default
+document.getElementById('report-date').valueAsDate = new Date();
+currentReportDate = document.getElementById('report-date').value;
+
+// Date helper functions
+function isToday(dateString) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);
+    return today.getTime() === inputDate.getTime();
+}
+
+function isPastDate(dateString) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);
+    return inputDate < today;
+}
+
+function isFutureDate(dateString) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateString);
+    inputDate.setHours(0, 0, 0, 0);
+    return inputDate > today;
+}
+
+function showMessage(message, type = 'info') {
+    const container = document.getElementById('message-container');
+    container.innerHTML = `<div class="message ${type}">${message}</div>`;
+    
+    // Auto-hide success/info messages after 5 seconds
+    if (type === 'success' || type === 'info') {
+        setTimeout(() => {
+            const currentMessage = container.querySelector('.message');
+            if (currentMessage && currentMessage.textContent.includes(message)) {
+                container.innerHTML = '';
+            }
+        }, 5000);
+    }
+}
+
+function showLoading(show = true) {
+    const container = document.getElementById('loading-container');
+    if (show) {
+        container.innerHTML = '<div class="loading">⏳ Loading trade manpower data</div>';
+    } else {
+        container.innerHTML = '';
+    }
+}
+
+function toggleEditMode() {
+    const date = document.getElementById('report-date').value;
+    
+    // Check if date is valid for editing
+    if (!date) {
+        showMessage('❌ Please select a date first', 'error');
+        return;
+    }
+    
+    const today = isToday(date);
+    const pastDate = isPastDate(date);
+    const futureDate = isFutureDate(date);
+    
+    // Only allow editing for today and future dates
+    if (pastDate && !today) {
+        showMessage('🔒 Cannot edit past dates. Please select today or a future date.', 'error');
+        return;
+    }
+    
+    isEditMode = !isEditMode;
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const modeIndicator = document.getElementById('mode-indicator');
+    
+    if (isEditMode) {
+        editBtn.innerHTML = '👁️ View Mode';
+        saveBtn.disabled = false;
+        modeIndicator.innerHTML = '✏️ Edit Mode';
+        modeIndicator.className = 'mode-indicator edit-mode';
+        enableInputs();
+        
+        // Show date-specific message
+        if (today) {
+            showMessage('✏️ Edit mode enabled for TODAY\'s data', 'info');
+        } else if (futureDate) {
+            showMessage('✏️ Edit mode enabled for FUTURE date', 'info');
+        } else {
+            showMessage('✏️ Edit mode enabled', 'info');
+        }
+    } else {
+        editBtn.innerHTML = '✏️ Edit Mode';
+        saveBtn.disabled = true;
+        modeIndicator.innerHTML = '👁️ View Mode';
+        modeIndicator.className = 'mode-indicator view-mode';
+        disableInputs();
+        showMessage('👁️ View mode enabled. Data is read-only.', 'info');
+    }
+}
+
+function enableInputs() {
+    document.querySelectorAll('#table-body input').forEach(input => {
+        input.disabled = false;
+        input.style.backgroundColor = '#ffffff';
+        input.style.borderColor = '#667eea';
+    });
+}
+
+function disableInputs() {
+    document.querySelectorAll('#table-body input').forEach(input => {
+        input.disabled = true;
+        input.style.backgroundColor = '#e9ecef';
+        input.style.borderColor = '#dee2e6';
+    });
+}
+
+function createRow(trade, data = null, isTemplate = false) {
+    const row = document.createElement('tr');
+    row.setAttribute('data-trade', trade.name);
+    
+    const d = data || {
+        auth: 0, hs: 0, held: 0, av: 0,
+        dist_hq: 0, dist_1: 0, dist_2: 0, dist_3: 0,
+        state_hq: 0, state_1: 0, state_2: 0, state_3: 0,
+        present_hq: 0, present_1: 0, present_2: 0, present_3: 0
+    };
+
+    const date = document.getElementById('report-date').value;
+    const today = isToday(date);
+    const pastDate = isPastDate(date);
+    
+    // Determine if inputs should be disabled
+    let disabled = true; // Default to disabled
+    if (isEditMode) {
+        disabled = false;
+    } else if (today || !pastDate) {
+        // For today and future dates, allow enabling edit mode
+        disabled = true; // Will be enabled when edit mode is toggled
+    }
+    
+    // Add template indicator class
+    if (isTemplate) {
+        row.classList.add('template-row');
+    }
+
+    row.innerHTML = `
+        <td class="sr-no">${trade.sr}</td>
+        <td class="trade-name">${trade.name}</td>
+        <td><input type="number" min="0" value="${d.auth}" data-field="auth" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.hs}" data-field="hs" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.held}" data-field="held" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.av}" data-field="av" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.dist_hq}" data-field="dist_hq" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.dist_1}" data-field="dist_1" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.dist_2}" data-field="dist_2" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.dist_3}" data-field="dist_3" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.state_hq}" data-field="state_hq" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.state_1}" data-field="state_1" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.state_2}" data-field="state_2" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.state_3}" data-field="state_3" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.present_hq}" data-field="present_hq" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.present_1}" data-field="present_1" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.present_2}" data-field="present_2" ${disabled ? 'disabled' : ''}></td>
+        <td><input type="number" min="0" value="${d.present_3}" data-field="present_3" ${disabled ? 'disabled' : ''}></td>
+    `;
+
+    return row;
+}
+
+function createTotalRow() {
+    const row = document.createElement('tr');
+    row.className = 'total-row';
+    row.id = 'total-row';
+    
+    row.innerHTML = `
+        <td colspan="2" style="text-align: left; padding-left: 20px;">📊 TOTAL</td>
+        <td id="total-auth">0</td>
+        <td id="total-hs">0</td>
+        <td id="total-held">0</td>
+        <td id="total-av">0</td>
+        <td id="total-dist-hq">0</td>
+        <td id="total-dist-1">0</td>
+        <td id="total-dist-2">0</td>
+        <td id="total-dist-3">0</td>
+        <td id="total-state-hq">0</td>
+        <td id="total-state-1">0</td>
+        <td id="total-state-2">0</td>
+        <td id="total-state-3">0</td>
+        <td id="total-present-hq">0</td>
+        <td id="total-present-1">0</td>
+        <td id="total-present-2">0</td>
+        <td id="total-present-3">0</td>
+    `;
+
+    return row;
+}
+
+function calculateTotals() {
+    const fields = [
+        'auth', 'hs', 'held', 'av',
+        'dist_hq', 'dist_1', 'dist_2', 'dist_3',
+        'state_hq', 'state_1', 'state_2', 'state_3',
+        'present_hq', 'present_1', 'present_2', 'present_3'
+    ];
+    
+    fields.forEach(field => {
+        const inputs = document.querySelectorAll(`#table-body input[data-field="${field}"]`);
+        const total = Array.from(inputs).reduce((sum, input) => {
+            return sum + (parseInt(input.value) || 0);
+        }, 0);
+        
+        const totalElement = document.getElementById(`total-${field.replace(/_/g, '-')}`);
+        if (totalElement) {
+            totalElement.textContent = total;
+        }
+    });
+}
+
+function renderTable(data = [], isTemplate = false) {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+
+    // Create a map of data by trade name
+    const dataMap = {};
+    data.forEach(item => {
+        dataMap[item.trade] = item;
+    });
+
+    TRADE_CATEGORIES.forEach(trade => {
+        const tradeData = dataMap[trade.name];
+        const row = createRow(trade, tradeData, isTemplate);
+        
+        // Add visual indicator for template rows
+        if (isTemplate) {
+            row.style.background = 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)';
+            row.style.borderLeft = '4px solid #ffc107';
+            row.title = `Template data from ${templateDate}`;
+        }
+        
+        tbody.appendChild(row);
+    });
+
+    // Add template info row if in template mode
+    if (isTemplate && templateDate) {
+        const templateInfoRow = document.createElement('tr');
+        templateInfoRow.className = 'template-info-row';
+        templateInfoRow.innerHTML = `
+            <td colspan="18" style="text-align: center; padding: 10px; background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); color: #0c5460; font-weight: 600;">
+                📋 Showing template from ${templateDate}. Edit values and click "Save Data" to save for ${currentReportDate}.
+            </td>
+        `;
+        tbody.appendChild(templateInfoRow);
+    }
+
+    tbody.appendChild(createTotalRow());
+
+    // Add input event listeners
+    document.querySelectorAll('#table-body input').forEach(input => {
+        input.addEventListener('input', calculateTotals);
+    });
+
+    calculateTotals();
+}
+
+async function loadData() {
+    const date = document.getElementById('report-date').value;
+    
+    if (!date) {
+        showMessage('❌ Please select a date', 'error');
+        return;
+    }
+
+    // Store current date
+    currentReportDate = date;
+    
+    // Check date permissions
+    const today = isToday(date);
+    const pastDate = isPastDate(date);
+    const futureDate = isFutureDate(date);
+    
+    showLoading(true);
+    
+    // Reset edit mode when loading new date
+    if (isEditMode) {
+        toggleEditMode();
+    }
+
+    try {
+        const response = await fetch(`/api/trade-manpower/get/${date}`);
+        const result = await response.json();
+
+        showLoading(false);
+
+        if (result.success) {
+            // Update template tracking
+            isTemplateMode = result.is_template || false;
+            templateDate = result.template_date || null;
+            
+            // Check if user can edit
+            let canEdit = false;
+            let editMessage = '';
+            
+            if (today) {
+                canEdit = true; // Can always edit today
+                editMessage = 'Today\'s date - Editing enabled';
+            } else if (futureDate) {
+                canEdit = true; // Can edit future dates
+                editMessage = 'Future date - Editing enabled';
+            } else if (pastDate) {
+                canEdit = false; // Cannot edit past dates
+                editMessage = 'Past date - Read only mode';
+            }
+            
+            if (result.has_data) {
+                // Data exists for this date
+                renderTable(result.data, false);
+                showMessage(`✅ Data loaded successfully for ${date}`, 'success');
+                
+                // Enable edit button based on date
+                document.getElementById('edit-btn').disabled = !canEdit;
+                document.getElementById('save-btn').disabled = true;
+                document.getElementById('export-btn').disabled = false;
+                
+                // Show edit permission message
+                if (editMessage) {
+                    setTimeout(() => {
+                        showMessage(editMessage, 'info');
+                    }, 500);
+                }
+                
+                // Auto-enable edit mode for today
+                if (today && !isEditMode) {
+                    setTimeout(() => {
+                        toggleEditMode();
+                        showMessage('✏️ Auto-enabled edit mode for today\'s data', 'info');
+                    }, 1000);
+                }
+            } else {
+                // No data for this date
+                if (isTemplateMode) {
+                    // Show template data
+                    renderTable(result.data, true);
+                    showMessage(`🔄 Showing template from ${templateDate}.`, 'warning');
+                    
+                    // Enable edit for new entries based on date
+                    if (!isEditMode && canEdit) {
+                        setTimeout(() => {
+                            toggleEditMode();
+                            showMessage('✏️ Edit mode enabled for new entry', 'info');
+                        }, 1000);
+                    }
+                } else {
+                    // No template available
+                    renderTable([], false);
+                    showMessage(`📝 No data found for ${date}.`, 'info');
+                    
+                    // Enable edit for new entries based on date
+                    if (!isEditMode && canEdit) {
+                        setTimeout(() => {
+                            toggleEditMode();
+                            showMessage('✏️ Edit mode enabled for new entry', 'info');
+                        }, 1000);
+                    }
+                }
+                
+                // Set button states based on date
+                document.getElementById('edit-btn').disabled = !canEdit;
+                document.getElementById('save-btn').disabled = !canEdit; // Allow save if can edit
+                document.getElementById('export-btn').disabled = true;
+                
+                // Show edit permission message
+                if (editMessage) {
+                    setTimeout(() => {
+                        showMessage(editMessage, 'info');
+                    }, 500);
+                }
+            }
+        } else {
+            showMessage('❌ ' + (result.error || 'Failed to load data'), 'error');
+            renderTable([]);
+            document.getElementById('edit-btn').disabled = true;
+            document.getElementById('save-btn').disabled = true;
+            document.getElementById('export-btn').disabled = true;
+        }
+    } catch (error) {
+        showLoading(false);
+        showMessage('❌ Error loading data: ' + error.message, 'error');
+        console.error('Load error:', error);
+        renderTable([]);
+        document.getElementById('edit-btn').disabled = true;
+        document.getElementById('save-btn').disabled = true;
+        document.getElementById('export-btn').disabled = true;
+    }
+}
+
+async function saveData() {
+    const date = document.getElementById('report-date').value;
+    
+    if (!date) {
+        showMessage('❌ Please select a date', 'error');
+        return;
+    }
+
+    // Validate date is not in past (unless explicitly confirmed)
+    if (isPastDate(date) && !isToday(date)) {
+        if (!confirm(`⚠️ You are trying to save data for a PAST date (${date}).\n\nThis should only be done to correct historical records.\n\nAre you sure you want to continue?`)) {
+            return;
+        }
+    }
+
+    // Validate that there's data to save
+    const inputs = document.querySelectorAll('#table-body input');
+    let hasData = false;
+    let allZeros = true;
+    
+    inputs.forEach(input => {
+        const value = parseInt(input.value) || 0;
+        if (value > 0) {
+            hasData = true;
+            allZeros = false;
+        }
+    });
+    
+    if (allZeros) {
+        if (!confirm(`⚠️ All values are zero. Are you sure you want to save empty data for ${date}?`)) {
+            return;
+        }
+        hasData = true; // Allow saving zeros if confirmed
+    }
+    
+    if (!hasData) {
+        showMessage('⚠️ No data to save. Please enter some values.', 'warning');
+        return;
+    }
+
+    let confirmMessage = `🔄 Save all trade data for ${date}?`;
+    if (isTemplateMode) {
+        confirmMessage = `🔄 Save data for ${date} (based on template from ${templateDate})?`;
+    }
+
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+
+    const trades = [];
+    
+    TRADE_CATEGORIES.forEach(trade => {
+        const row = document.querySelector(`tr[data-trade="${trade.name}"]`);
+        if (!row) return;
+        
+        const inputs = row.querySelectorAll('input');
+        
+        const tradeData = {
+            trade: trade.name,
+            auth: parseInt(inputs[0].value) || 0,
+            hs: parseInt(inputs[1].value) || 0,
+            held: parseInt(inputs[2].value) || 0,
+            av: parseInt(inputs[3].value) || 0,
+            dist_hq: parseInt(inputs[4].value) || 0,
+            dist_1: parseInt(inputs[5].value) || 0,
+            dist_2: parseInt(inputs[6].value) || 0,
+            dist_3: parseInt(inputs[7].value) || 0,
+            state_hq: parseInt(inputs[8].value) || 0,
+            state_1: parseInt(inputs[9].value) || 0,
+            state_2: parseInt(inputs[10].value) || 0,
+            state_3: parseInt(inputs[11].value) || 0,
+            present_hq: parseInt(inputs[12].value) || 0,
+            present_1: parseInt(inputs[13].value) || 0,
+            present_2: parseInt(inputs[14].value) || 0,
+            present_3: parseInt(inputs[15].value) || 0
+        };
+        
+        trades.push(tradeData);
+    });
+
+    const saveBtn = document.getElementById('save-btn');
+    const originalBtnText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '⏳ Saving...';
+
+    try {
+        showMessage('⏳ Saving data...', 'info');
+        
+        const response = await fetch('/api/trade-manpower/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                date: date,
+                trades: trades
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showMessage('✅ ' + result.message, 'success');
+            
+            // Reset template mode after successful save
+            isTemplateMode = false;
+            templateDate = null;
+            
+            // Reload data to refresh display
+            setTimeout(() => {
+                loadData();
+            }, 1500);
+        } else {
+            showMessage('❌ ' + (result.error || 'Failed to save data'), 'error');
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalBtnText;
+        }
+    } catch (error) {
+        showMessage('❌ Error saving data: ' + error.message, 'error');
+        console.error('Save error:', error);
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalBtnText;
+    }
+}
+
+async function exportCSV() {
+    const date = document.getElementById('report-date').value;
+    
+    if (!date) {
+        showMessage('❌ Please select a date', 'error');
+        return;
+    }
+
+    // Check if there's actual data to export
+    const inputs = document.querySelectorAll('#table-body input');
+    let hasData = false;
+    inputs.forEach(input => {
+        if (parseInt(input.value) > 0) {
+            hasData = true;
+        }
+    });
+    
+    if (!hasData && isTemplateMode) {
+        if (!confirm(`⚠️ You are exporting template data from ${templateDate} for ${date}. Continue?`)) {
+            return;
+        }
+    } else if (!hasData) {
+        showMessage('⚠️ No data to export. Please enter some values first.', 'warning');
+        return;
+    }
+
+    try {
+        showMessage('📥 Preparing export...', 'info');
+        
+        // Create a temporary link for download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = `/api/trade-manpower/export-csv/${date}`;
+        downloadLink.target = '_blank';
+        downloadLink.download = `trade_manpower_${date}.csv`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        showMessage('✅ Export started! Check your downloads.', 'success');
+    } catch (error) {
+        showMessage('❌ Error exporting data: ' + error.message, 'error');
+        console.error('Export error:', error);
+    }
+}
+
+// Add CSS for template rows and better styling
+const style = document.createElement('style');
+style.textContent = `
+    .template-row:hover {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%) !important;
+        border-left: 4px solid #ffc107 !important;
+    }
+    
+    .template-info-row {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%) !important;
+        font-weight: 600;
+        color: #0c5460;
+    }
+    
+    .template-info-row:hover {
+        background: linear-gradient(135deg, #bee5eb 0%, #9bd4e4 100%) !important;
+    }
+    
+    input[disabled] {
+        background-color: #f8f9fa !important;
+        cursor: not-allowed;
+        color: #6c757d;
+    }
+    
+    input:not([disabled]) {
+        background-color: white !important;
+        color: #2c3e50;
+        border-color: #667eea !important;
+    }
+    
+    .today-indicator {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%) !important;
+        border-left: 4px solid #28a745 !important;
+    }
+    
+    .future-date-indicator {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%) !important;
+        border-left: 4px solid #17a2b8 !important;
+    }
+    
+    .past-date-indicator {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%) !important;
+        border-left: 4px solid #dc3545 !important;
+    }
+    
+    .date-status-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+`;
+document.head.appendChild(style);
+
+// Add event listener for date change
+document.getElementById('report-date').addEventListener('change', function() {
+    const newDate = this.value;
+    if (newDate !== currentReportDate) {
+        loadData();
+    }
+});
+
+// Add beforeunload warning for unsaved changes
+window.addEventListener('beforeunload', function(e) {
+    const saveBtn = document.getElementById('save-btn');
+    if (!saveBtn.disabled && isEditMode) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+    }
+});
+
+// Load data on page load
+window.addEventListener('DOMContentLoaded', () => {
+    loadData();
+    
+    // Auto-save warning
+    setInterval(() => {
+        const saveBtn = document.getElementById('save-btn');
+        if (!saveBtn.disabled && isEditMode) {
+            showMessage('💡 Remember to save your changes!', 'info');
+        }
+    }, 300000); // Remind every 5 minutes
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Ctrl+S or Cmd+S to save
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (!document.getElementById('save-btn').disabled) {
+            saveData();
+        }
+    }
+    
+    // Ctrl+E or Cmd+E to toggle edit mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+        e.preventDefault();
+        toggleEditMode();
+    }
+    
+    // Escape to exit edit mode
+    if (e.key === 'Escape' && isEditMode) {
+        e.preventDefault();
+        toggleEditMode();
+    }
+});
+
+// Add date validation to input
+document.getElementById('report-date').addEventListener('input', function() {
+    const date = this.value;
+    if (!date) return;
+    
+    const today = isToday(date);
+    const pastDate = isPastDate(date);
+    const futureDate = isFutureDate(date);
+    
+    // Update button states based on date
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    
+    if (pastDate && !today) {
+        editBtn.disabled = true;
+        saveBtn.disabled = true;
+        editBtn.title = "Cannot edit past dates";
+        saveBtn.title = "Cannot save to past dates";
+    } else {
+        editBtn.disabled = false;
+        editBtn.title = "Click to toggle edit mode";
+        saveBtn.title = "Save current data";
+    }
+});
+
+// Initialize date validation on page load
+window.addEventListener('load', function() {
+    const dateInput = document.getElementById('report-date');
+    if (dateInput.value) {
+        dateInput.dispatchEvent(new Event('input'));
+    }
+});
+</script>

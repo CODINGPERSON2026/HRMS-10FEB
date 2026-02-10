@@ -142,14 +142,11 @@ def classify_question(question):
     rank = _extract_rank(q)
     if rank:
         entities["rank"] = rank
-
-    # Leave type
     for lt in LEAVE_TYPES:
         if lt.lower() in q_lower:
             entities["leave_type"] = "AL" if lt in ("AL", "annual", "leave") else ("CL" if lt in ("CL", "casual") else lt)
             break
 
-    # Question type classification (order matters)
     if re.search(r"\b(details?|info|information|show|get|find|look\s*up|who\s+is)\b.*(army\s*number|778G|156WE|\d{5,})", q_lower) or (army and re.search(r"\b(show|details?|info|about)\b", q_lower)):
         entities["type"] = TYPE_PERSONNEL_LOOKUP
         return entities
@@ -192,12 +189,9 @@ def classify_question(question):
     if re.search(r"\btable[s]?|schema|column[s]?|database\s*structure\b", q_lower):
         entities["type"] = TYPE_SCHEMA
         return entities
-    # Explicit request for CO dashboard-style overview
     if "dashboard" in q_lower or "co dashboard" in q_lower or "overall status" in q_lower:
         entities["type"] = TYPE_DASHBOARD_SUMMARY
         return entities
-
-    # Default: if we have army number, treat as personnel lookup
     if army:
         entities["type"] = TYPE_PERSONNEL_LOOKUP
     return entities

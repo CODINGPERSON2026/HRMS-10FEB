@@ -137,7 +137,7 @@ def get_leave_details():
 
 
 
-# ########################################################### UPDATED CERTIFICATE DOWNLOAD FUNCTIONLAITY
+
 
 
 @leave_bp.route("/search_personnel")
@@ -195,139 +195,8 @@ def search_personnel():
 
 
 
-# download route
 
-@leave_bp.route("/leave/download_certificate/<army_number>")
-def download_leave_certificate(army_number):
-    try:
-        # DB connection
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
 
-        # Fetch approved leave + personnel details
-        # We join leave_status_info with personnel to get all needed data
-        # We take the latest APPROVED leave for this user or a specific one if ID was passed (but URL uses army_number)
-        # Assuming we want the LATEST approved leave for this user.
-        
-        cursor.execute("""
-            SELECT 
-                l.id as leave_id,
-                l.leave_type,
-                l.leave_days,
-                l.from_date,
-                l.to_date,
-                l.prefix_date,
-                l.suffix_date,
-                l.created_at as applied_on,
-                l.updated_at as issue_date,
-                p.name,
-                p.army_number,
-                p.rank,
-                p.company,
-                p.section,
-                p.trade,
-                p.home_house_no,
-                p.home_village,
-                p.home_po,
-                p.home_teh,
-                p.home_district,
-                p.home_state
-                
-            FROM leave_status_info l
-            JOIN personnel p 
-                ON p.army_number = l.army_number
-            WHERE l.army_number = %s
-              AND l.request_status = 'Approved'
-            ORDER BY l.created_at DESC
-            LIMIT 1
-        """, (army_number,))
-
-        data = cursor.fetchone()
-
-        if not data:
-            return "No approved leave certificate found for this user.", 404
-
-        # Prepare Applicant Object
-        applicant = {
-            "name": data['name'],
-            "rank": data['rank'],
-            "army_number": data['army_number'],
-            "unit": "15 CORPS ENGG SIG REGT", # Hardcoded as per header
-            "company_name": data['company'],
-            "section_name": data['section'] if data['section'] else "HQ"
-        }
-
-        # Format Address from personnel table
-        # Construct address from components: House No, Village, PO, Tehsil, District, State
-        parts = []
-        if data.get('home_house_no'): parts.append(f"House No: {data['home_house_no']}")
-        if data.get('home_village'): parts.append(f"Vill: {data['home_village']}")
-        if data.get('home_po'): parts.append(f"PO: {data['home_po']}")
-        if data.get('home_teh'): parts.append(f"Teh: {data['home_teh']}")
-        if data.get('home_district'): parts.append(f"Dist: {data['home_district']}")
-        if data.get('home_state'): parts.append(data['home_state'])
-        
-        details_address = ", ".join(parts)
-
-        if not details_address.strip():
-             details_address = "Address not updated in records."
-
-        # Prepare Leave Object
-        # Certificate Number: LEAVE/YEAR/ID
-        current_year = datetime.now().year
-        cert_no = f"LEAVE/{current_year}/{data['leave_id']}"
-
-        # Calculate Duration
-        # We can use logic to calculate duration or just use leave_days
-        # data['from_date'] and data['to_date'] are likely date objects
-        
-        leave_info = {
-            "certificate_number": cert_no,
-            "leave_type": data['leave_type'],
-            "start_date": data['from_date'],
-            "end_date": data['to_date'],
-            "total_days": data['leave_days'],
-            "applied_on": data['applied_on'],
-            "issue_date": data['issue_date'] if data['issue_date'] else datetime.now(),
-            "prefix_details": data['prefix_date'] if data['prefix_date'] else "NIL",
-            "suffix_details": data['suffix_date'] if data['suffix_date'] else "NIL",
-            "address_during_leave": details_address,
-            
-            "reporting_date": data['to_date'] 
-        }
-
-        # Render HTML template
-        html = render_template(
-            "leave_certificate.html",
-            applicant=applicant,
-            leave=leave_info
-        )
-
-        # Create PDF using xhtml2pdf (pisa) - Stable on Windows
-        pdf_buffer = BytesIO()
-        pisa_status = pisa.CreatePDF(html, dest=pdf_buffer)
-
-        if pisa_status.err:
-            return "Error generating PDF", 500
-
-        # Prepare response
-        response = make_response(pdf_buffer.getvalue())
-        response.headers["Content-Type"] = "application/pdf"
-        response.headers["Content-Disposition"] = (
-            f"inline; filename=Leave_Certificate_{army_number}.pdf"
-        )
-
-        return response
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return str(e), 500
-
-    finally:
-        if 'cursor' in locals() and cursor:
-            cursor.close()
-        if 'conn' in locals() and conn:
-            conn.close()
 
 
 @leave_bp.route("/submit_leave", methods=["POST"])
@@ -463,59 +332,124 @@ def update_leave_status():
 @leave_bp.route("/get_leave_requests", methods=["GET"])
 def get_leave_requests():
     print('in this route')
-    conn = get_db_connection()
-    print("hitting this from the dashboard of co")
-
-    cursor = conn.cursor(dictionary=True)
-    user = require_login()
     
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    user = require_login()
     current_user_role = user['role']
     current_user_company = user['company']
-    print(current_user_role)
+
+    print("Current Role:", current_user_role)
+
     request_status = f'Pending at {current_user_role}'
-    print(request_status)
+    print("Request Status:", request_status)
+
     try:
-        query = '''
-  SELECT id,name, army_number, leave_type, leave_days,
-                   request_status, remarks, created_at
-            FROM leave_status_info
-            WHERE request_sent_to = %s AND request_status = %s 
-            
-'''
-        
+        # =========================
+        # CASE 1: NORMAL ROLES
+        # =========================
         if current_user_role != '2IC' and current_user_role != 'CO':
-            query = query + 'AND company = %s' + 'ORDER BY created_at DESC'
-            print(current_user_role,request_status,current_user_company)
-            cursor.execute(query, (current_user_role,request_status,current_user_company))
-            print("in the route that sjould worldds  adsdsfdjfklfjdlf fljalfjdsklfjs ")
+
+            query = '''
+                SELECT 
+                    l.id,
+                    l.name,
+                    l.army_number,
+                    p.rank,
+                    l.leave_type,
+                    l.leave_days,
+                    l.request_status,
+                    l.remarks,
+                    l.created_at
+                FROM leave_status_info l
+                LEFT JOIN personnel p 
+                    ON l.army_number = p.army_number
+                WHERE l.request_sent_to = %s 
+                AND l.request_status = %s
+                AND l.company = %s
+                ORDER BY l.created_at DESC
+            '''
+
+            cursor.execute(query, (
+                current_user_role,
+                request_status,
+                current_user_company
+            ))
+
+        # =========================
+        # CASE 2: CO ROLE
+        # =========================
         elif current_user_role == 'CO':
+
             print('IN CO USER ROLE')
-            query =  '''SELECT
-    id,
-    army_number,
-    `rank`,
-    name,
-    company,
-    leave_type,
-    leave_days,
-    request_status
-FROM leave_status_info
-WHERE request_status LIKE 'Pending%'
-AND updated_at < NOW() - INTERVAL 5 MINUTE;'''
+
+            query = '''
+                SELECT
+                    l.id,
+                    l.army_number,
+                    l.name,
+                    p.rank,
+                    l.company,
+                    l.leave_type,
+                    l.leave_days,
+                    l.request_status,
+                    l.created_at
+                FROM leave_status_info l
+                LEFT JOIN personnel p 
+                    ON l.army_number = p.army_number
+                WHERE l.request_status LIKE 'Pending%%'
+                AND l.updated_at < NOW() - INTERVAL 5 MINUTE
+                ORDER BY l.created_at DESC
+            '''
+
             cursor.execute(query)
-            print('in CO TYPE')
-        
+
+        # =========================
+        # CASE 3: 2IC ROLE
+        # =========================
         else:
-            query = query + 'ORDER BY created_at DESC'
-            cursor.execute(query, (current_user_role,request_status,))
+
+            query = '''
+                SELECT 
+                    l.id,
+                    l.name,
+                    l.army_number,
+                    p.rank,
+                    l.leave_type,
+                    l.leave_days,
+                    l.request_status,
+                    l.remarks,
+                    l.created_at
+                FROM leave_status_info l
+                LEFT JOIN personnel p 
+                    ON l.army_number = p.army_number
+                WHERE l.request_sent_to = %s 
+                AND l.request_status = %s
+                ORDER BY l.created_at DESC
+            '''
+
+            cursor.execute(query, (
+                current_user_role,
+                request_status
+            ))
 
         rows = cursor.fetchall()
-        print(rows)
-        return jsonify({"status": "success", "data": rows})
+
+        print("Fetched Rows:", rows)
+
+        return jsonify({
+            "status": "success",
+            "data": rows
+        })
 
     except Exception as e:
         print("Error fetching leave requests:", e)
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
     finally:
         cursor.close()
         conn.close()
@@ -1119,6 +1053,140 @@ def co_rejected_leaves():
         cursor.close()
         conn.close()
 
+
+@leave_bp.route("/download_certificate/<army_number>")
+def download_leave_certificate(army_number):
+    try:
+        print(
+            'adsjfkljsaj fdsjfkljsfkljadsfjasfjdsljfdsjfslfjsdljfslafjsa;ljfaslj fldsf '
+        )
+        
+        # DB connection
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # Fetch leave and personnel data
+        
+        cursor.execute("""
+    SELECT 
+        l.id as leave_id,
+        l.leave_type,
+        l.leave_days,
+        l.from_date,
+        l.to_date,
+        l.prefix_date,
+        l.suffix_date,
+        l.created_at as applied_on,
+        l.updated_at as issue_date,
+        p.name,
+        p.army_number,
+        p.rank,
+        p.company,
+        p.section,
+        p.trade,
+        p.home_house_no,
+        p.home_village,
+        p.home_po,
+        p.home_teh,
+        p.home_district,
+        p.home_state,
+        m.number AS mobile_number
+        
+    FROM leave_status_info l
+    JOIN personnel p 
+        ON p.army_number = l.army_number
+    LEFT JOIN mobile_phones m
+        ON m.army_number = l.army_number
+        
+    WHERE l.army_number = %s
+      AND l.request_status = 'Approved'
+    ORDER BY l.created_at DESC
+    LIMIT 1
+""", (army_number,))
+        
+        data = cursor.fetchone()
+        if not data:
+            return "No approved leave certificate found for this user.", 404
+
+        # Prepare Applicant Object
+        applicant = {
+            "name": data['name'],
+            "rank": data['rank'],
+            "army_number": data['army_number'],
+            "unit": "15 CORPS ENGG SIG REGT",  # Hardcoded as per header
+            "company_name": data['company'],
+            "section_name": data['section'] if data['section'] else "HQ",
+            'contact': data['mobile_number'] if data['mobile_number'] else 'N/A'
+        }
+
+        # Construct address from components
+        parts = []
+        if data.get('home_house_no'): parts.append(f"House No: {data['home_house_no']}")
+        if data.get('home_village'): parts.append(f"Vill: {data['home_village']}")
+        if data.get('home_po'): parts.append(f"PO: {data['home_po']}")
+        if data.get('home_teh'): parts.append(f"Teh: {data['home_teh']}")
+        if data.get('home_district'): parts.append(f"Dist: {data['home_district']}")
+        if data.get('home_state'): parts.append(data['home_state'])
+        details_address = ", ".join(parts) if parts else "Address not updated in records."
+
+        # Prepare Leave Object
+        current_year = datetime.now().year
+        cert_no = f"LEAVE/{current_year}/{data['leave_id']}"
+        leave_info = {
+            "certificate_number": cert_no,
+            "leave_type": data['leave_type'],
+            "start_date": data['from_date'],
+            "end_date": data['to_date'],
+            "total_days": data['leave_days'],
+            "applied_on": data['applied_on'],
+            "issue_date": data['issue_date'] if data['issue_date'] else datetime.now(),
+            "prefix_details": data['prefix_date'] if data['prefix_date'] else "NIL",
+            "suffix_details": data['suffix_date'] if data['suffix_date'] else "NIL",
+            "address_during_leave": details_address,
+            "reporting_date": data['suffix_date'] if data['suffix_date'] else data['to_date'],
+        }
+        print(leave_info["reporting_date"])
+        print('thisi s dsjafkljdsfj dsaklfjdsklfjsljflasdjfladsfjldksfjadsklfjldskjfsladfjasdkfj ')
+        
+        # Render HTML template
+        html = render_template(
+            "leave_certificate.html",
+            applicant=applicant,
+            leave=leave_info
+        )
+
+        # Create PDF
+        pdf_buffer = BytesIO()
+        pisa_status = pisa.CreatePDF(html, dest=pdf_buffer)
+        if pisa_status.err:
+            return "Error generating PDF", 500
+
+        # Optional: Save PDF on server in Downloads folder
+        downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+        os.makedirs(downloads_folder, exist_ok=True)
+        pdf_path = os.path.join(downloads_folder, f"Leave_Certificate_{army_number}.pdf")
+        with open(pdf_path, "wb") as f:
+            f.write(pdf_buffer.getvalue())
+        print(f"PDF saved on server at: {pdf_path}")
+
+        # Send PDF to client
+        pdf_buffer.seek(0)
+        return send_file(
+            pdf_buffer,
+            as_attachment=True,
+            download_name=f"Leave_Certificate_{army_number}.pdf",
+            mimetype='application/pdf'
+        )
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return str(e), 500
+
+    finally:
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if 'conn' in locals() and conn:
+            conn.close()
 
 
 

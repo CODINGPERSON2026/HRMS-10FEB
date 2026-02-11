@@ -575,7 +575,7 @@
       <!-- <a class="nav-link" href="{{ url_for('mt') }}">MT Management</a> -->
       <!-- {% endif %} -->
       {% if role in ['CO', '2IC', 'ADJUTANT','PROJECT OFFICER','PROJECT JCO'] %}
-      <a class="nav-link" href="{{ url_for('get_projects') }}">Project Management</a>
+      <a class="nav-link" href="{{ url_for('projects_dashboard') }}">Project Management</a>
       {% endif %}
       {% if role in ['CO', '2IC', 'ADJUTANT','JCO','ACCOUNT OFFICER','ACCOUNT JCO'] %}
       <a class="nav-link" href="/account">Account Management</a>

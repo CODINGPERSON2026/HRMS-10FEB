@@ -1,5 +1,4 @@
-{% extends "baseView.html" %}
-{% block content %}
+{% extends "baseView.html" %} {% block content %}
 
 <style>
   /* Dashboard-specific styles (theme variables inherited from baseView.html) */
@@ -15,7 +14,12 @@
   .shimmer {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
+    background: linear-gradient(
+      90deg,
+      var(--border-color) 25%,
+      var(--text-secondary) 50%,
+      var(--border-color) 75%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
@@ -47,7 +51,12 @@
   .shimmer-line,
   .shimmer-title,
   .shimmer-number {
-    background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
+    background: linear-gradient(
+      90deg,
+      var(--border-color) 25%,
+      var(--text-secondary) 50%,
+      var(--border-color) 75%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 5px;
@@ -105,7 +114,12 @@
 
   .action-btn-progress-loader .loader-progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 50%,
+      var(--primary-color) 100%
+    );
     background-size: 200% 100%;
     width: 0%;
     transition: width 0.5s ease-out;
@@ -148,7 +162,14 @@
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
+    background: linear-gradient(
+      90deg,
+      #ff9933 0%,
+      #ff9933 33%,
+      #ffffff 33%,
+      #ffffff 66%,
+      #138808 66%
+    );
   }
 
   .action-section-title {
@@ -175,7 +196,11 @@
   }
 
   .action-buttons .btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
     color: white;
     border: none;
     transition: all 0.3s ease;
@@ -192,7 +217,8 @@
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
     margin-bottom: 10px;
-    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease, padding 0.3s ease, margin 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease,
+      padding 0.3s ease, margin 0.3s ease;
     overflow: hidden;
   }
 
@@ -221,7 +247,11 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -283,7 +313,11 @@
   }
 
   .view-details {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
     color: white;
     border: none;
     padding: 8px 16px;
@@ -395,42 +429,44 @@
       font-size: 1.3rem;
     }
   }
+
   /* ==================== MAIN CONTENT MESSENGER ==================== */
-.sidebar-messenger {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, #0084ff, #006aff);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+  .sidebar-messenger {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #0084ff, #006aff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
 
-.sidebar-messenger:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
-}
+  .sidebar-messenger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
+  }
 
-.sidebar-messenger {
-  cursor: pointer;
-}
-.sidebar-messenger {
-  position: relative;
-  cursor: pointer;
-}
+  .sidebar-messenger {
+    cursor: pointer;
+  }
 
-#unreadBadge {
-  font-size: 0.7rem;
-  padding: 0.25em 0.5em;
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .sidebar-messenger {
+    position: relative;
+    cursor: pointer;
+  }
+
+  #unreadBadge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
 
 <!-- Dashboard -->
@@ -440,7 +476,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">📅 Today's Events</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <ul id="eventList" class="list-group"></ul>
@@ -449,18 +489,18 @@
     </div>
   </div>
 
-  {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %}
-  {% set subscript = 'Welcome ' ~ role ~ ' ' ~ current_user_name %}
-  {% include 'navbar/navbar.html' %}
+  {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %} {% set subscript =
+  'Welcome ' ~ role ~ ' ' ~ current_user_name %} {% include 'navbar/navbar.html'
+  %}
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <div style="margin-bottom: 10px">
-      {% include 'modals/alarm/alarm.html' %}
-      {% include 'modals/alarm/attachment_alarm.html' %}
-      {% include 'modals/alarm/leave_alarm.html' %}
-      {% include 'modals/alarm/agniveer_test_alarms.html' %}
-      {% include 'modals/alarm/event_alarm.html' %}
+      {% include 'modals/alarm/alarm.html' %} {% include
+      'modals/alarm/attachment_alarm.html' %} {% include
+      'modals/alarm/leave_alarm.html' %} {% include
+      'modals/alarm/agniveer_test_alarms.html' %} {% include
+      'modals/alarm/event_alarm.html' %}
     </div>
 
     <!-- Action Buttons Loader -->
@@ -474,31 +514,57 @@
         <i class="fas fa-chevron-down"></i>
       </button>
 
-      <button class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#coRejectedModal"
-        id="coRejectedBtn">
+      <button
+        class="btn btn-primary position-relative"
+        data-bs-toggle="modal"
+        data-bs-target="#coRejectedModal"
+        id="coRejectedBtn"
+      >
         REJECTED LEAVES
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-          id="coRejectedCount">
-          <span class="shimmer-line" style="width: 20px; height: 8px; display: inline-block;"></span>
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          id="coRejectedCount"
+        >
+          <span
+            class="shimmer-line"
+            style="width: 20px; height: 8px; display: inline-block"
+          ></span>
           <span class="visually-hidden">unread messages</span>
         </span>
       </button>
 
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#addEventModal"
+      >
         ADD EVENT
       </button>
-        <div class="sidebar-messenger position-relative" title="Chat with us" id="chatBtn">
-  <i class="fab fa-facebook-messenger"></i>
-  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="unreadBadge" style="display: none;">
-    0
-  </span>
-</div>
+      <div
+        class="sidebar-messenger position-relative"
+        title="Chat with us"
+        id="chatBtn"
+      >
+        <i class="fab fa-facebook-messenger"></i>
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          id="unreadBadge"
+          style="display: none"
+        >
+          0
+        </span>
+      </div>
     </div>
 
     <div id="stats-card-grid" class="stats-grid show">
       <!-- Dashboard Cards -->
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-target="#paradeStateModal"
-        data-bs-toggle="modal" id="card-parade">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-target="#paradeStateModal"
+        data-bs-toggle="modal"
+        id="card-parade"
+      >
         <div class="icon-circle">
           <i class="fas fa-book-open"></i>
         </div>
@@ -508,8 +574,13 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#attachmentModal"
-        id="card-attachment">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#attachmentModal"
+        id="card-attachment"
+      >
         <div class="icon-circle mb-2">
           <i class="fas fa-cloud-upload-alt"></i>
         </div>
@@ -519,9 +590,13 @@
         </h3>
       </div>
 
-
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#dutySearchModal"
-        id="card-duty-search">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#dutySearchModal"
+        id="card-duty-search"
+      >
         <div class="icon-circle mb-2">
           <i class="fas fa-user-tag"></i>
         </div>
@@ -531,8 +606,11 @@
         </h3>
       </div>
 
-
-      <div class="card p-3 text-center" style="cursor: pointer" id="openCourses">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="openCourses"
+      >
         <div class="icon-circle mb-2">
           <i class="fas fa-graduation-cap"></i>
         </div>
@@ -542,24 +620,41 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" id="interview-card">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="interview-card"
+      >
         <div class="icon-circle mb-2">
           <i class="fa fa-male" aria-hidden="true"></i>
         </div>
         <small class="text-muted">KUNBA INTERVIEW</small>
         <h3>
           <span id="interview-Count">
-            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
-          </span>/<span id="total-count">
-            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
+            <div
+              class="shimmer-line"
+              style="width: 30px; height: 24px; display: inline-block"
+            ></div> </span
+          >/<span id="total-count">
+            <div
+              class="shimmer-line"
+              style="width: 30px; height: 24px; display: inline-block"
+            ></div>
           </span>
         </h3>
         <span id="interview%" class="text-danger">
-          <div class="shimmer-line" style="width: 50px; height: 14px; display: inline-block;"></div>
+          <div
+            class="shimmer-line"
+            style="width: 50px; height: 14px; display: inline-block"
+          ></div>
         </span>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" id="viewDetailsBtn">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="viewDetailsBtn"
+      >
         <div class="mb-2">
           <i class="fas fa-user-plus fa-2x text-primary"></i>
         </div>
@@ -569,7 +664,11 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" id="openSensitive">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="openSensitive"
+      >
         <div class="icon-circle mb-2">
           <i class="fas fa-exclamation-circle"></i>
         </div>
@@ -589,8 +688,13 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" id="loanDetailGraph" data-bs-toggle="modal"
-        data-bs-target="#loanModal">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="loanDetailGraph"
+        data-bs-toggle="modal"
+        data-bs-target="#loanModal"
+      >
         <div class="loan-icon">
           <i class="fa-solid fa-hand-holding-dollar"></i>
         </div>
@@ -600,18 +704,30 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer; transition: all 0.3s ease" id="openProjects">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer; transition: all 0.3s ease"
+        data-bs-toggle="modal"
+        data-bs-target="#projDash_modal">
+      
         <div class="icon-circle mb-2">
           <i class="fas fa-rocket"></i>
         </div>
+
         <small class="text-muted">TOTAL PROJECTS</small>
+
         <h3 class="mb-0" id="get_projects_count">
           <div class="shimmer-number mx-auto"></div>
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal"
-        data-bs-target="#centerRollCallModal" id="card-rollcall">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#centerRollCallModal"
+        id="card-rollcall"
+      >
         <div class="mb-2">
           <i class="fas fa-clipboard-list fa-2x text-primary"></i>
         </div>
@@ -621,8 +737,13 @@
         </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#agniveersModal"
-        id="card-agniveer">
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#agniveersModal"
+        id="card-agniveer"
+      >
         <div class="icon-circle">
           <i class="fas fa-user-shield"></i>
         </div>
@@ -639,14 +760,29 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Add Today's Event</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             <form id="eventForm">
               <label>Event Date:</label>
-              <input type="date" class="form-control" name="event_date" value="{{ today }}" required />
+              <input
+                type="date"
+                class="form-control"
+                name="event_date"
+                value="{{ today }}"
+                required
+              />
               <label class="mt-2">Event Name:</label>
-              <input type="text" class="form-control" name="event_name" required />
+              <input
+                type="text"
+                class="form-control"
+                name="event_name"
+                required
+              />
               <label class="mt-2">Venue:</label>
               <input type="text" class="form-control" name="venue" required />
             </form>
@@ -657,36 +793,41 @@
         </div>
       </div>
     </div>
-
-    {% include 'modals/detachmentModal/detachment.html' %}
-    {% include 'modals/personnelModal/personal_modal.html' %}
-    {% include 'modals/personnelModal/duty_search_modal.html' %}
-    {% include 'modals/salesmodal/salesModal.html' %}
-    {% include 'modals/leaverequest/leave_request.html' %}
-    {% include 'modals/interview_pending/modal.html' %}
-    {% include 'modals/count_parade/modal.html' %}
-    {% include 'modals/attachment-modal/modal.html' %}
-    {% include 'modals/loan/loans.html' %}
-    {% include 'modals/roll_call/modal.html' %}
-    {% include 'modals/roll_call/view_roll_call.html' %}
-    {% include 'modals/course/courses.html' %}
-    {% include 'modals/interview_pending/jco-update-modal.html' %}
-    {% include 'modals/success-modal/modal.html' %}
-    {% include 'task_manager/update_task_by_jco.html' %}
-    {% include 'modals/adduser/user.html' %}
-    {% include 'modals/oncourses/modal.html' %}
-    {% include 'modals/leaverequest/co-rejected-view.html' %}
-    {% include 'modals/alarm/agniveer_test_alarms.html' %}
-    {% include 'modals/agniveer/modal.html' %}
-    {% include 'modals/messenger/modal.html' %}
+    {%include 'modals/Projects/modal.html'%} {% include
+    'modals/detachmentModal/detachment.html' %} {% include
+    'modals/personnelModal/personal_modal.html' %} {% include
+    'modals/personnelModal/duty_search_modal.html' %} {% include
+    'modals/salesmodal/salesModal.html' %} {% include
+    'modals/leaverequest/leave_request.html' %} {% include
+    'modals/interview_pending/modal.html' %} {% include
+    'modals/count_parade/modal.html' %} {% include
+    'modals/attachment-modal/modal.html' %} {% include 'modals/loan/loans.html'
+    %} {% include 'modals/roll_call/modal.html' %} {% include
+    'modals/roll_call/view_roll_call.html' %} {% include
+    'modals/course/courses.html' %} {% include
+    'modals/interview_pending/jco-update-modal.html' %} {% include
+    'modals/success-modal/modal.html' %} {% include
+    'task_manager/update_task_by_jco.html' %} {% include
+    'modals/adduser/user.html' %} {% include 'modals/oncourses/modal.html' %} {%
+    include 'modals/leaverequest/co-rejected-view.html' %} {% include
+    'modals/alarm/agniveer_test_alarms.html' %} {% include
+    'modals/agniveer/modal.html' %} {% include 'modals/messenger/modal.html' %}
 
     <!-- Parade State Modal -->
-    <div class="modal fade modal-fullscreen" id="paradeStateModal" tabindex="-1">
+    <div
+      class="modal fade modal-fullscreen"
+      id="paradeStateModal"
+      tabindex="-1"
+    >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Parade State</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             {% include 'modals/parade_state/index.html' %}
@@ -726,18 +867,18 @@
 
   // ========== START LOADER ==========
   function startActionButtonsLoader() {
-    const loader = document.getElementById('actionBtnProgressLoader');
+    const loader = document.getElementById("actionBtnProgressLoader");
     if (loader) {
       setTimeout(() => {
-        loader.classList.add('loader-active');
+        loader.classList.add("loader-active");
       }, 200);
     }
   }
 
   // ========== UPDATE LOADER PROGRESS ==========
   function updateLoaderProgress(percentage) {
-    const loader = document.getElementById('actionBtnProgressLoader');
-    const progressBar = loader?.querySelector('.loader-progress-bar');
+    const loader = document.getElementById("actionBtnProgressLoader");
+    const progressBar = loader?.querySelector(".loader-progress-bar");
     if (progressBar) {
       progressBar.style.width = `${percentage}%`;
     }
@@ -745,17 +886,17 @@
 
   // ========== SHOW ACTION BUTTONS AFTER LOADING ==========
   function showActionButtons() {
-    const loader = document.getElementById('actionBtnProgressLoader');
-    const buttonsContainer = document.getElementById('actionButtonsContainer');
+    const loader = document.getElementById("actionBtnProgressLoader");
+    const buttonsContainer = document.getElementById("actionButtonsContainer");
 
     if (loader && buttonsContainer) {
       setTimeout(() => {
-        loader.style.opacity = '0';
-        loader.style.transition = 'opacity 0.3s ease';
+        loader.style.opacity = "0";
+        loader.style.transition = "opacity 0.3s ease";
 
         setTimeout(() => {
-          loader.style.display = 'none';
-          buttonsContainer.classList.add('show');
+          loader.style.display = "none";
+          buttonsContainer.classList.add("show");
         }, 300);
       }, 500);
     }
@@ -774,13 +915,6 @@
     if (openSensitive) {
       openSensitive.addEventListener("click", function () {
         window.location.href = "/mark_personnel";
-      });
-    }
-
-    const openProjects = safeQuerySelector("#openProjects");
-    if (openProjects) {
-      openProjects.addEventListener("click", function () {
-        window.location.href = "/projects";
       });
     }
 
@@ -842,7 +976,8 @@
             initFillUpTestForm();
           })
           .catch(() => {
-            modalBody.innerHTML = "<p class='text-danger'>Failed to load form</p>";
+            modalBody.innerHTML =
+              "<p class='text-danger'>Failed to load form</p>";
           });
       });
 
@@ -862,10 +997,26 @@
           const payload = {
             army_number: form.army_number.value,
             tests: [
-              { test: "1st", status: form.test1.value, date: form.test1_date.value },
-              { test: "2nd", status: form.test2.value, date: form.test2_date.value },
-              { test: "3rd", status: form.test3.value, date: form.test3_date.value },
-              { test: "4th", status: form.test4.value, date: form.test4_date.value },
+              {
+                test: "1st",
+                status: form.test1.value,
+                date: form.test1_date.value,
+              },
+              {
+                test: "2nd",
+                status: form.test2.value,
+                date: form.test2_date.value,
+              },
+              {
+                test: "3rd",
+                status: form.test3.value,
+                date: form.test3_date.value,
+              },
+              {
+                test: "4th",
+                status: form.test4.value,
+                date: form.test4_date.value,
+              },
             ],
           };
 
@@ -949,18 +1100,21 @@
         roll_call_pending_points,
         boards_count,
         tasks = {},
-        duty_count
+        duty_count,
       } = await res.json();
 
       updateLoaderProgress(50);
 
       const pendingTasks = tasks.pending ?? 0;
       const totalTasks = tasks.total ?? 0;
-      const taskPercentage = totalTasks > 0 ? ((pendingTasks / totalTasks) * 100).toFixed(1) : "0";
+      const taskPercentage =
+        totalTasks > 0 ? ((pendingTasks / totalTasks) * 100).toFixed(1) : "0";
 
       const dashboardMap = {
         locationCount: detachments,
-        mainPower: `${manpower.officerCount ?? 0} - ${manpower.jcoCount ?? 0} - ${manpower.orCount ?? 0}`,
+        mainPower: `${manpower.officerCount ?? 0} - ${
+          manpower.jcoCount ?? 0
+        } - ${manpower.orCount ?? 0}`,
         "interview-Count": interview.pending_count ?? 0,
         "total-count": interview.total_count ?? 0,
         "interview%": `Pending ${interview.percentage ?? 0}%`,
@@ -972,7 +1126,7 @@
         totalCoursesDone: courses_count ?? 0,
         "center-roll-points": roll_call_pending_points ?? 0,
         "board-count": boards_count ?? 0,
-        "duty-search-count": duty_count ?? 0
+        "duty-search-count": duty_count ?? 0,
       };
 
       Object.entries(dashboardMap).forEach(([id, value]) =>
@@ -985,7 +1139,6 @@
       await loadTodayEvents();
       updateLoaderProgress(100);
       showActionButtons();
-
     } catch (err) {
       console.error("Error loading dashboard data:", err);
       updateLoaderProgress(100);

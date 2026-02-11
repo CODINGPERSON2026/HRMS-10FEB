@@ -227,7 +227,9 @@ document.addEventListener("DOMContentLoaded", async function () {
      SETTINGS DROPDOWN TOGGLE
   ========================== */
   if (settingsBtn) {
+    
     settingsBtn.addEventListener('click', function(e) {
+      alert('button clicked')
       e.stopPropagation();
       settingsDropdown.classList.toggle('show');
     });

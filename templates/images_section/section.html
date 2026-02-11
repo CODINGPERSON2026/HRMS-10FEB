@@ -1,8 +1,9 @@
+
+
   <style>
    
 
-   
-
+    /* ===== Gallery Section ===== */
     .gallery-section {
       padding: 20px 5vw;
       text-align: center;
@@ -16,19 +17,18 @@
       transform: translateY(0);
     }
 
-    h1 {
+    .gallery-title {
       font-size: clamp(3.8rem, 9vw, 7.5rem);
       font-weight: 900;
       letter-spacing: -3px;
       margin-bottom: 1.2rem;
-      background: linear-gradient(90deg, #b91c1c, #dc2626, #f87171);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      
+      
+      
       text-shadow: 0 4px 30px rgba(185, 28, 28, 0.25);
     }
 
-    .subtitle {
+    .gallery-subtitle {
       font-size: 1.3rem;
       color: #94a3b8;
       margin-bottom: 4rem;
@@ -37,6 +37,7 @@
       margin-right: auto;
     }
 
+    /* ===== Grid ===== */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -49,7 +50,7 @@
       position: relative;
       aspect-ratio: 4 / 3;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 14px;
       background: #111827;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       transition: all 0.4s ease;
@@ -77,70 +78,71 @@
     .gallery-item:hover img {
       transform: scale(1.12);
     }
-
-    /* Staggered appearance */
-    .gallery-item:nth-child(1) { transition-delay: 0.1s; }
-    .gallery-item:nth-child(2) { transition-delay: 0.2s; }
-    .gallery-item:nth-child(3) { transition-delay: 0.3s; }
-    .gallery-item:nth-child(4) { transition-delay: 0.4s; }
-    .gallery-item:nth-child(5) { transition-delay: 0.5s; }
-    .gallery-item:nth-child(6) { transition-delay: 0.6s; }
   </style>
+</head>
 
 <body>
 
-  <!-- Just to allow scrolling -->
-  <div></div>
+<section class="gallery-section" id="gallerySection">
+  <h1 class="gallery-title" id="galleryTitle">Gallery</h1>
+  <p class="gallery-subtitle" id="gallerySubtitle"></p>
 
-  <section class="gallery-section">
-    <h1>Gallery</h1>
-    <p class="subtitle">Honoring the strength, discipline and courage of our armed forces</p>
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- Images injected by JS -->
+  </div>
+</section>
 
-    <div class="gallery-grid">
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif" alt="Army formation">
-      </div>
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif"" alt="Soldiers training">
-      </div>
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif" alt="Military parade">
-      </div>
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif" alt="Army vehicles">
-      </div>
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif" alt="Special forces">
-      </div>
-      <div class="gallery-item">
-        <img src="/static/photos/image1.jfif" alt="Honor guard">
-      </div>
-    </div>
-  </section>
+<script>
+  const gallerySection = document.getElementById('gallerySection');
+  const galleryGrid = document.getElementById('galleryGrid');
 
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+  /* Intersection Observer */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
 
-          // Animate children items with slight delay
-          const items = entry.target.querySelectorAll('.gallery-item');
-          items.forEach((item, index) => {
-            setTimeout(() => {
-              item.classList.add('visible');
-            }, 150 * (index + 1));
-          });
+        const items = entry.target.querySelectorAll('.gallery-item');
+        items.forEach((item, index) => {
+          setTimeout(() => item.classList.add('visible'), 150 * (index + 1));
+        });
 
-          // Once visible, we can stop observing
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.15
+        observer.unobserve(entry.target);
+      }
     });
+  }, { threshold: 0.15 });
 
-    // Observe the main gallery section
-    observer.observe(document.querySelector('.gallery-section'));
-  </script>
+  /* Fetch gallery data */
+  fetch('/api/gallery')
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.length) return;
+
+      // Title & subtitle from first record
+      document.getElementById('galleryTitle').innerText =
+        data[0].title || 'Gallery';
+
+      document.getElementById('gallerySubtitle').innerText =
+        data[0].subtitle || '';
+
+      // Images
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+
+        div.innerHTML = `
+          <img src="/static/uploads/gallery/${item.image}" alt="Gallery Image">
+        `;
+
+        galleryGrid.appendChild(div);
+      });
+
+      observer.observe(gallerySection);
+    })
+    .catch(err => {
+      console.error('Gallery load failed:', err);
+    });
+</script>
+
+</body>
 

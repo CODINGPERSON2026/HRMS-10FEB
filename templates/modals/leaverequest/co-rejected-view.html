@@ -54,6 +54,7 @@
             <thead>
               <tr>
                 <th>Army No</th>
+                <th>Rank</th>
                 <th>Name</th>
                 <th>Rejection Status</th>
                 <th>Action</th>
@@ -87,6 +88,10 @@
               <div class="col-md-6">
                 <label class="fw-bold">Army Number</label>
                 <div class="form-control bg-light" id="co_army_number">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="fw-bold">Rank</label>
+                <div class="form-control bg-light" id="co_rank">-</div>
               </div>
               <div class="col-md-6">
                 <label class="fw-bold">Name</label>
@@ -152,11 +157,14 @@
       const { data } = await res.json();
   
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No rejected leaves found</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No rejected leaves found</td></tr>`;
       } else {
         tbody.innerHTML = data.map(row => `
           <tr>
             <td>${row.army_number || '-'}</td>
+            <td>${row.rank|| '-'}</td>
+
+            
             <td>${row.name || '-'}</td>
             <td>${row.request_status || 'Rejected'}</td>
             <td>
@@ -217,6 +225,12 @@
       const { data } = await res.json();
   
       document.getElementById("co_army_number").innerText = data.army_number || '-';
+      
+
+      document.getElementById("co_rank").innerText =
+      data.rank || data.rank_name || data.army_rank || '-';
+    
+
       document.getElementById("co_name").innerText = data.name || '-';
       document.getElementById("co_leave_type").innerText = data.leave_type || '-';
       document.getElementById("co_leave_days").innerText = data.leave_days || '-';

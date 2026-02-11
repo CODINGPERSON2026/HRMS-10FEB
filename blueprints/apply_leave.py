@@ -395,7 +395,7 @@ def submit_leave_request():
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO leave_status_info
-            (army_number, rank, name, company, leave_type, leave_days, from_date, to_date, prefix_date, suffix_date, prefix_days, suffix_days, request_sent_to, request_status, recommend_date, rejected_date, remarks, leave_reason, created_at, updated_at)
+            (army_number, `rank`, name, company, leave_type, leave_days, from_date, to_date, prefix_date, suffix_date, prefix_days, suffix_days, request_sent_to, request_status, recommend_date, rejected_date, remarks, leave_reason, created_at, updated_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, NULL, %s, %s, NOW(), NOW())
         """, (
             army_number,
@@ -493,7 +493,7 @@ def get_leave_requests():
             query =  '''SELECT
     id,
     army_number,
-    rank,
+    `rank`,
     name,
     company,
     leave_type,
@@ -535,7 +535,7 @@ def get_leave_request(leave_id):
             SELECT 
                 id,
                 army_number,
-                rank,
+                `rank`,
                 name,
                 company,
                 leave_type,
@@ -973,7 +973,7 @@ def get_rejected_requests():
     SELECT
         id,
         army_number,
-        rank,
+        `rank`,
         name,
         company,
         leave_type,
@@ -1093,20 +1093,22 @@ def co_rejected_leaves():
         # Fetch leaves that were rejected
         cursor.execute("""
             SELECT 
-                id,
-                army_number,
-                name,
-                leave_type,
-                leave_days,
-                reject_reason,
-                request_status,
-                updated_at
-            FROM leave_status_info
-            WHERE request_status = 'Rejected at OC' 
-            ORDER BY updated_at DESC
+                p.rank,
+                lsi.id,
+               lsi.army_number,
+                p.name,
+                lsi.leave_type,
+                lsi.leave_days,
+                lsi.reject_reason,
+                lsi.request_status,
+                lsi.updated_at
+                    
+            FROM leave_status_info as lsi left join personnel as p  on lsi.army_number =   p.army_number
+            WHERE lsi.request_status = 'Rejected at OC' 
+            ORDER BY lsi.updated_at DESC
         """)
-
         leaves = cursor.fetchall()
+        print(leaves)
         return jsonify({"data": leaves}), 200
 
     except Exception as e:
@@ -1134,7 +1136,7 @@ def get_leave(leave_id):
 
     try:
         cursor.execute("""
-            SELECT id, army_number, name, leave_type, leave_days, from_date, to_date,
+            SELECT id, army_number,`rank`, name, leave_type, leave_days, from_date, to_date,
                    prefix_date, suffix_date, prefix_days, suffix_days,
                    leave_reason, reject_reason, request_status
             FROM leave_status_info

@@ -27,6 +27,7 @@ app.register_blueprint(task_bp)
 app.register_blueprint(accounts_bp)
 app.register_blueprint(loan_bp)
 app.register_blueprint(roll_call_bp)
+app.register_blueprint(projects_bp)
 app.register_blueprint(inteview_bp)
 app.register_blueprint(add_user_bp)
 app.register_blueprint(oncourses_bp)
@@ -1412,77 +1413,57 @@ def assistant_test_alarm_api():
 # ===============================================
 # PROJECTS
 # ===============================================
+@app.route('/projects-dashboard')
+def projects_dashboard():
+    return render_template('/projects/projects.html')
 
-@app.route('/projects')
-def get_projects():
-    print('in this project route')
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    user = require_login()
-    company = user['company']
-
-    try:
-        # 1️⃣ Fetch projects
-        project_query = """
-            SELECT project_id, head, project_name, current_stage, project_cost, project_items, quantity, project_description
-            FROM projects
-        """
-        params = []
-
-        # Apply company filter if not Admin
-        if company != "Admin":
-            project_query += " WHERE company = %s"
-            params.append(company)
-
-        cursor.execute(project_query, params)
-        projects = cursor.fetchall()
-
-        # 2️⃣ Fetch all heads from project_heads table
-       
-
-        # 3️⃣ Render template with both projects and heads
-        return render_template("projects/projects.html", projects=projects)
-
-    except Exception as e:
-        print("Error fetching projects or heads:", str(e))
-        return "Server Error", 500
-
-    finally:
-        cursor.close()
-        conn.close()
-
-@app.route('/api/get_projects')
-def api_get_projects():
-    print("this is in new route of getting projects")
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    user = require_login()
-    role = user['role']
-    company = user['company']
+@app.route('/stats/cost_by_head', methods=['GET'])
+def get_cost_by_head():
+    connection = get_db_connection()
+    if not connection:
+        return jsonify({
+            "status": "error",
+            "message": "Database connection failed"
+        }), 500
 
     try:
+        cursor = connection.cursor(dictionary=True)
+
         query = """
-            SELECT project_id, head, project_name, current_stage, 
-                   project_cost, project_items, quantity, project_description
-            FROM projects
+        SELECT 
+            COALESCE(head, 'Unassigned') AS head,
+            ROUND(SUM(project_cost), 2) AS total_cost,
+            COUNT(*) AS count
+        FROM projects
+        GROUP BY head
+        ORDER BY total_cost DESC
         """
-        params = []
 
-        if company != "Admin" and role != 'PROJECT JCO' and  role != 'PROJECT OFFICER':
-            query += " WHERE company = %s"
-            params.append(company)
+        cursor.execute(query)
+        results = cursor.fetchall()
 
-        cursor.execute(query, params)
-        projects = cursor.fetchall()
+        # Convert decimal to float for JSON serialization
+        for row in results:
+            row['total_cost'] = float(row['total_cost'])
 
-        return jsonify(projects)  
+        return jsonify({
+            "status": "success",
+            "data": results
+        })
 
-    except Exception as e:
-        print("Error:", str(e))
-        return jsonify([]), 500
+    except Error as e:
+        print(f"Database error: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
     finally:
-        cursor.close()
-        conn.close()
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
 
 
 
@@ -1505,53 +1486,6 @@ def get_project_heads():
     except Exception as e:
         print(f"Error fetching heads: {e}")
         return jsonify([]), 500
-
-
-@app.route("/add_project", methods=["POST"])
-def add_project():
-    data = request.form
-    print(data)
-    user = require_login()
-    user_company = user['company']
-
-    project_items_json = json.dumps(data.get('project_items', ''))
-
-    project_cost = float(data.get("project_cost", 0))
-    quantity = int(data.get("quantity", 0))
-
-    values = (
-        data.get("project_name", ""),
-        data.get("head", ""),
-        data.get("current_stage", ""),
-        project_cost,
-        project_items_json,
-        quantity,
-        data.get("project_description", ""),
-        user_company
-    )
-
-    print("Inserting values:", values)
-    print("Values count:", len(values))  # Should print 8
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO projects (
-            project_name,
-            head,
-            current_stage,
-            project_cost,
-            project_items,
-            quantity,
-            project_description,
-            company
-        )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """, values)
-    conn.commit()
-    conn.close()
-
-    return jsonify({"status": "success"})
 
 
 @app.route("/get_projects_count", methods=["GET"])
@@ -4877,5 +4811,101 @@ def mark_interview_done():
     conn.close()
     return jsonify({"success": True})
 
+
+
+
+@app.route('/gallery/manage')
+def manager_file():
+    return render_template('gallery/manage.html')
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in {
+        "jpg", "jpeg", "png", "webp"
+    }
+
+from werkzeug.utils import secure_filename
+import time
+import os
+@app.route("/gallery/save", methods=["POST"])
+def save_gallery():
+    try:
+        print("🟢 STEP 1: Request received")
+
+        title = request.form.get("title", "").strip()
+        subtitle = request.form.get("subtitle", "").strip()
+        image = request.files.get("image")
+
+        print("🟢 STEP 2: Form data")
+        print("Title:", title)
+        print("Subtitle:", subtitle)
+        print("Image:", image)
+
+        if not image or image.filename == "":
+            print("🔴 ERROR: No image selected")
+            return jsonify(success=False, message="No image selected")
+
+        if not allowed_file(image.filename):
+            print("🔴 ERROR: Invalid file type")
+            return jsonify(success=False, message="Invalid image type")
+
+        print("🟢 STEP 3: File validation passed")
+
+        filename = f"{int(time.time())}_{secure_filename(image.filename)}"
+        upload_folder = os.path.join("static", "uploads", "gallery")
+        os.makedirs(upload_folder, exist_ok=True)
+
+        image_path = os.path.join(upload_folder, filename)
+        image.save(image_path)
+
+        print("🟢 STEP 4: Image saved at", image_path)
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        print("🟢 STEP 5: DB connected")
+
+        cursor.execute(
+            "INSERT INTO gallery_settings (title, subtitle, image) VALUES (%s, %s, %s)",
+            (title, subtitle, filename)
+        )
+
+        conn.commit()
+        print("🟢 STEP 6: DB commit success")
+
+        cursor.close()
+        conn.close()
+
+        print("✅ DONE: Gallery saved successfully")
+
+        return jsonify(success=True, filename=filename)
+
+    except Exception as e:
+        print("❌ Gallery upload error (FULL):", repr(e))
+        return jsonify(success=False, message=str(e)), 500
+@app.route("/api/gallery", methods=["GET"])
+def get_gallery():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT title, subtitle, image
+            FROM gallery_settings
+            ORDER BY id DESC
+        """)
+
+        data = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify(data)
+
+    except Exception as e:
+        print("❌ Gallery fetch error:", e)
+        return jsonify([]), 500
+
+
 if __name__ == '__main__':
-    app.run(host='172.20.10.2',port=4000,debug=True)
+    app.run(host='127.0.0.1',port=4000,debug=True)

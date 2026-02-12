@@ -33,7 +33,12 @@ app.register_blueprint(add_user_bp)
 app.register_blueprint(oncourses_bp)
 app.register_blueprint(agniveer_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(chatbot_bp)
 
+
+@app.route('/chat_bot')
+def chat_bot():
+    return render_template('/chat_ai.html')
 
 @app.route("/admin_login", methods=["POST",'GET'])
 def admin_login():
@@ -96,13 +101,15 @@ def inject_user():
         return {
             "current_user": user,
             "current_user_name": user['username'],
-            "role": user['role']
+            "role": user['role'],
+            'company':user['company']
         }
     # Return empty or default values if no user
     return {
         "current_user": None,
         "current_user_name": None,
-        "role": None
+        "role": None,
+        'company':None
     }
 
 
@@ -353,43 +360,71 @@ def get_pending_interview_list():
 
     search = request.args.get("search", "").strip()
 
+    current_user = require_login()
+    current_user_company = current_user['company']
+    print('Current user company:', current_user_company)
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     try:
         excluded_ranks = ('Naib Subedar', 'Subedar', 'Sub Maj', 'Subedar Major')
         rank_placeholders = ",".join(["%s"] * len(excluded_ranks))
-        
-        # 1️⃣ Fetch pending interviews (with optional search)
-        if search:
-            cursor.execute(f"""
-                SELECT name, army_number, home_state, company, `rank`
-                FROM personnel
-                WHERE interview_status = 0
-                AND `rank` NOT IN ({rank_placeholders})
-                AND (
-                    army_number LIKE %s
-                    OR name LIKE %s
-                )
-                ORDER BY home_state
-            """, excluded_ranks + (f"%{search}%", f"%{search}%"))
-        else:
-            cursor.execute(f"""
-                SELECT name, army_number, home_state, company, `rank`
-                FROM personnel
-                WHERE interview_status = 0
-                AND `rank` NOT IN ({rank_placeholders})
-                ORDER BY home_state
-            """, excluded_ranks)
 
+        # =========================
+        # 🔹 BASE CONDITION BUILD
+        # =========================
+        base_condition = f"""
+            FROM personnel
+            WHERE interview_status = 0
+            AND `rank` NOT IN ({rank_placeholders})
+        """
+
+        params = list(excluded_ranks)
+
+        # 👉 Company filter (if not Admin)
+        if current_user_company != 'Admin':
+            base_condition += " AND company = %s"
+            params.append(current_user_company)
+
+        # 👉 Search filter
+        if search:
+            base_condition += " AND (army_number LIKE %s OR name LIKE %s)"
+            params.extend([f"%{search}%", f"%{search}%"])
+
+        # =========================
+        # 🔹 COUNT QUERY (DEBUG)
+        # =========================
+        count_query = "SELECT COUNT(*) as total " + base_condition
+        cursor.execute(count_query, tuple(params))
+        count_result = cursor.fetchone()
+        total_count = count_result['total']
+
+        print("🔵 Total Pending Interviews Count:", total_count)
+
+        # =========================
+        # 🔹 DATA QUERY
+        # =========================
+        data_query = f"""
+            SELECT name, army_number, home_state, company, `rank`
+        """ + base_condition + " ORDER BY home_state"
+
+        cursor.execute(data_query, tuple(params))
         pending_data = cursor.fetchall()
 
-        # 2️⃣ Collect unique home_states from pending interviews
+        print("🟢 Records Fetched:", len(pending_data))
+
+        # =========================
+        # 2️⃣ Collect home_states
+        # =========================
         home_states = list({row['home_state'] for row in pending_data if row['home_state']})
 
-        # 3️⃣ Fetch senior ranks for these home_states
+        # =========================
+        # 3️⃣ Fetch senior ranks
+        # =========================
         senior_ranks = []
-        senior_map = {}          # home_state -> JCO name
+        senior_map = {}
+
         if home_states:
             format_strings = ",".join(["%s"] * len(home_states))
             query = f"""
@@ -401,35 +436,38 @@ def get_pending_interview_list():
             """
             cursor.execute(query, home_states)
             senior_ranks = cursor.fetchall()
-            print(senior_ranks,"these are senior ranks")
 
-            # Build map for quick lookup
             for jco in senior_ranks:
                 state = jco['home_state']
                 if state not in senior_map:
                     senior_map[state] = jco['name']
 
-        # 4️⃣ Fetch assigned JCOs from jco_assignment for home_states without senior JCO
+        # =========================
+        # 4️⃣ Assigned JCO fallback
+        # =========================
         assigned_jco_map = {}
+
         if home_states:
             placeholders = ",".join(["%s"] * len(home_states))
             cursor.execute(f"""
-                SELECT ja.additional_assigned_home_state AS home_state, p.name AS jco_name
+                SELECT ja.additional_assigned_home_state AS home_state, 
+                       p.name AS jco_name
                 FROM jco_kunda_assignment ja
                 JOIN personnel p ON p.army_number = ja.army_number
                 WHERE ja.additional_assigned_home_state IN ({placeholders})
-                  AND ja.interview_status = 'Pending'
+                AND ja.interview_status = 'Pending'
             """, home_states)
 
             assigned_rows = cursor.fetchall()
-            print("these are assigned rows",assigned_rows)
+
             for row in assigned_rows:
                 state = row['home_state']
-                if state not in senior_map:  # only fallback if no live senior
-                    assigned_jco_map[state] = f"Temporary Assigned  JCO {row['jco_name']}"
-                    print(assigned_jco_map)
+                if state not in senior_map:
+                    assigned_jco_map[state] = f"Temporary Assigned JCO {row['jco_name']}"
 
-        # 5️⃣ Attach JCO info to pending_data (no change to response keys)
+        # =========================
+        # 5️⃣ Attach JCO info
+        # =========================
         for row in pending_data:
             state = row['home_state']
             if state in senior_map:
@@ -441,16 +479,16 @@ def get_pending_interview_list():
             else:
                 row['jco_name'] = None
                 row['jco_source'] = None
-        print(senior_ranks)
-        print(pending_data)
+
         return jsonify({
             "status": "success",
+            "total_count": total_count,  # 👈 Added count in response
             "pending_interviews": pending_data,
             "senior_same_state": senior_ranks
         })
 
     except Exception as e:
-        print("Error fetching pending interview list:", str(e))
+        print("❌ Error fetching pending interview list:", str(e))
         import traceback
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Server error"}), 500
@@ -463,12 +501,12 @@ def get_pending_interview_list():
 @app.route('/assign_personnel', methods=['POST'])
 def assign_personnel():
     data = request.get_json()
-    
+
     # Get logged-in user
     user = require_login()
     if not user:
         return jsonify({'error': 'Authentication required'}), 401
-    
+
     user_company = user.get('company')
     if not user_company:
         return jsonify({'error': 'User company not found'}), 400
@@ -481,52 +519,44 @@ def assign_personnel():
         return jsonify({"error": "Missing data"}), 400
 
     conn = get_db_connection()
+    conn.start_transaction()  # ✅ Explicit Transaction Start
     cursor = conn.cursor(dictionary=True)
 
     try:
-        # VERIFY ALL PERSONNEL BELONG TO USER'S COMPANY
-        if personnel_ids:
-            placeholders = ', '.join(['%s'] * len(personnel_ids))
-            query = f"""
-                SELECT COUNT(*) as count 
-                FROM personnel 
-                WHERE army_number IN ({placeholders}) 
-                AND company = %s
-            """
-            cursor.execute(query, tuple(personnel_ids) + (user_company,))
-            result = cursor.fetchone()
-            
-            if result['count'] != len(personnel_ids):
-                return jsonify({"error": "Some personnel not found in your company"}), 403
+        # 🔐 Lock rows to prevent race condition
+        placeholders = ', '.join(['%s'] * len(personnel_ids))
+        verify_query = f"""
+            SELECT army_number, detachment_status, posting_status, td_status
+            FROM personnel
+            WHERE army_number IN ({placeholders})
+            AND company = %s
+            FOR UPDATE
+        """
+        cursor.execute(verify_query, tuple(personnel_ids) + (user_company,))
+        rows = cursor.fetchall()
 
-        # STATUS CHECK (existing code with company filter)
-        for pid in personnel_ids:
-            cursor.execute("""
-                SELECT detachment_status, posting_status, td_status, company
-                FROM personnel
-                WHERE army_number=%s AND company=%s
-            """, (pid, user_company))  # Added company filter
-            status = cursor.fetchone()
+        if len(rows) != len(personnel_ids):
+            conn.rollback()
+            return jsonify({"error": "Some personnel not found in your company"}), 403
 
-            if not status:
-                return jsonify({"error": f"{pid} not found in your company"}), 404
+        # 🔎 Validate status before assignment
+        for status in rows:
+            pid = status['army_number']
 
             if action_type == "det" and status['detachment_status'] == 1:
+                conn.rollback()
                 return jsonify({"error": f"{pid} is already in Detachment"}), 400
 
             if action_type == "posting" and status['posting_status'] == 1:
+                conn.rollback()
                 return jsonify({"error": f"{pid} is already Posted"}), 400
 
             if action_type == "td" and status['td_status'] == 1:
+                conn.rollback()
                 return jsonify({"error": f"{pid} is already on TD"}), 400
 
-        # ASSIGN (existing code - no changes needed here)
+        # ✅ Perform Assignment
         for pid in personnel_ids:
-            cursor.execute("""
-                SELECT company FROM personnel WHERE army_number=%s
-            """, (pid,))
-            row = cursor.fetchone()
-            company = row['company'] if row else None
 
             if action_type == "det":
                 cursor.execute("""
@@ -535,24 +565,25 @@ def assign_personnel():
                 """, (pid, remarks))
 
                 cursor.execute("""
-                    UPDATE personnel SET detachment_status=1
-                    WHERE army_number=%s
+                    UPDATE personnel 
+                    SET detachment_status = 1
+                    WHERE army_number = %s
                 """, (pid,))
 
             elif action_type == "posting":
                 cursor.execute("""
                     INSERT INTO posting_details_table
-                    (army_number, action_type, posting_date)
+                    (army_number, location_posted_to, posting_date)
                     VALUES (%s, %s, NOW())
                 """, (pid, remarks))
 
                 cursor.execute("""
-                    UPDATE personnel SET posting_status=1
-                    WHERE army_number=%s
+                    DELETE FROM personnel
+                    WHERE army_number = %s
                 """, (pid,))
 
             elif action_type == "td":
-                # 🔹 Parse Location & Authority
+
                 td_location = ""
                 td_authority = ""
 
@@ -577,14 +608,16 @@ def assign_personnel():
                     remarks,
                     td_location,
                     td_authority,
-                    company
+                    user_company
                 ))
 
                 cursor.execute("""
-                    UPDATE personnel SET td_status=1
-                    WHERE army_number=%s
+                    UPDATE personnel 
+                    SET td_status = 1
+                    WHERE army_number = %s
                 """, (pid,))
 
+        # ✅ Commit Only If Everything Successful
         conn.commit()
         return jsonify({"message": f"{action_type.upper()} Assigned Successfully"}), 200
 
@@ -1292,7 +1325,7 @@ def leave_pending_alarm():
                 COUNT(*) AS pending_count
             FROM leave_status_info
             WHERE request_status LIKE 'Pending%'
-            AND updated_at < NOW() - INTERVAL 5 MINUTE
+            AND updated_at < NOW() - INTERVAL 7 DAY
         """
         cursor.execute(query)
         result = cursor.fetchone()
@@ -3605,7 +3638,7 @@ def get_manpower_data():
     finally:
         cursor.close()
         conn.close()
-
+excluded_ranks = ('Naib Subedar', 'Subedar', 'Sub Maj', 'Subedar Major')
 # ========== 3. INTERVIEW DATA ==========
 @app.route('/api/dashboard/interviews', methods=['GET'])
 def get_interview_data():
@@ -3647,7 +3680,7 @@ def get_interview_data():
                     COALESCE(SUM(interview_status = 0), 0) AS pending_count,
                     COUNT(*) AS total_count
                 FROM personnel
-                WHERE `rank` IN ('AGNIVEER', ' SIGNAL MAN', 'L/NK', 'NK', 'HAV')
+                WHERE `rank` NOT IN ('Naib Subedar', 'Subedar', 'Sub Maj', 'Subedar Major')
             """
             params = []
             if company != "Admin":

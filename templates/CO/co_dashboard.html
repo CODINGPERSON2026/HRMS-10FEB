@@ -793,7 +793,8 @@
         </div>
       </div>
     </div>
-    {%include 'modals/Projects/modal.html'%} {% include
+    {%include 'modals/Projects/modal.html'%}
+     {% include
     'modals/detachmentModal/detachment.html' %} {% include
     'modals/personnelModal/personal_modal.html' %} {% include
     'modals/personnelModal/duty_search_modal.html' %} {% include
@@ -811,7 +812,8 @@
     'modals/adduser/user.html' %} {% include 'modals/oncourses/modal.html' %} {%
     include 'modals/leaverequest/co-rejected-view.html' %} {% include
     'modals/alarm/agniveer_test_alarms.html' %} {% include
-    'modals/agniveer/modal.html' %} {% include 'modals/messenger/modal.html' %}
+    'modals/agniveer/modal.html' %}
+     {% include 'modals/messenger/modal.html' %}
 
     <!-- Parade State Modal -->
     <div
@@ -838,8 +840,8 @@
     {% include 'images_section/section.html' %}
   </div>
 </div>
-<!--  -->
-<div></div>
+
+
 <script>
   document.addEventListener("hidden.bs.modal", function () {
     document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());

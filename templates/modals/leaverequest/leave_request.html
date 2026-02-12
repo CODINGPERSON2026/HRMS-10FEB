@@ -20,6 +20,7 @@
             <button class="nav-link active" id="pending-tab" data-bs-toggle="tab"
               data-bs-target="#pending">Pending</button>
           </li>
+          {%if role != 'CO' %}
           <li class="nav-item">
             <button class="nav-link" id="recommended-tab" data-bs-toggle="tab"
               data-bs-target="#recommended">Approved</button>
@@ -27,6 +28,7 @@
           <li class="nav-item">
             <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected">Rejected</button>
           </li>
+          {% endif %}
         </ul>
 
         <div class="tab-content">

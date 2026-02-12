@@ -357,6 +357,7 @@ def get_leave_requests():
                     l.name,
                     l.army_number,
                     p.rank,
+                    l.company,
                     l.leave_type,
                     l.leave_days,
                     l.request_status,
@@ -399,7 +400,7 @@ def get_leave_requests():
                 LEFT JOIN personnel p 
                     ON l.army_number = p.army_number
                 WHERE l.request_status LIKE 'Pending%%'
-                AND l.updated_at < NOW() - INTERVAL 5 MINUTE
+                AND l.updated_at < NOW() - INTERVAL 7 DAY
                 ORDER BY l.created_at DESC
             '''
 
@@ -900,37 +901,55 @@ def get_rejected_requests():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     user = require_login()
+
     company = user['company']
     role = user['role']
-    print(user,"this is user")
+    army_number = user['army_number']
+    print(army_number,"this is users army number")
+    cursor.execute('''
+select section from personnel where army_number = %s
+''',(army_number,))
+    result = cursor.fetchone()
+    print("result",result)
+    if result:
+        section_result = result['section']
+        print(section_result,"this is USERS SECTION")
+    elif result == None:
+        return jsonify({
+            "error": 'User not found in personnel table'
+        }), 400
     query = """
     SELECT
-        id,
-        army_number,
-        `rank`,
-        name,
-        company,
-        leave_type,
-        leave_days,
-        reject_reason,
-        request_status
-    FROM leave_status_info
-    WHERE request_status LIKE '%Rejected at%'
-"""
+        l.id,
+        l.army_number,
+        p.`rank`,
+        p.company,
+        l.name,
+        l.leave_type,
+        l.leave_days,
+        l.reject_reason,
+        l.request_status
+    FROM leave_status_info l
+    LEFT JOIN personnel p 
+        ON l.army_number = p.army_number
+    WHERE l.request_status LIKE %s
+    """
 
     try:
-        # Unit 2IC → sees all companies
-        if role == '2IC':
-            query += " ORDER BY updated_at DESC"
-            cursor.execute(query)
+        status_pattern = "%Rejected at%"
 
-        # Company-level users → restricted to own company
+        # 2IC → can see all companies
+        if role == '2IC':
+            query += " ORDER BY l.updated_at DESC"
+            cursor.execute(query, (status_pattern,))
+
+        # Other roles → restricted to their own company
         else:
-            query += " AND company = %s ORDER BY updated_at DESC"
-            cursor.execute(query, (company,))
+            query += " AND p.company = %s AND p.section = %s AND ORDER BY l.updated_at DESC"
+            cursor.execute(query, (status_pattern, company,section_result))
 
         data = cursor.fetchall()
-        print(data)
+
         return jsonify({
             "data": data
         }), 200
@@ -944,7 +963,6 @@ def get_rejected_requests():
     finally:
         cursor.close()
         conn.close()
-
 
 
 

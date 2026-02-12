@@ -510,6 +510,8 @@
         right: 10px;
       }
     }
+
+
   </style>
 
   {% block extra_css %}{% endblock %}
@@ -580,12 +582,19 @@
       {% if role in ['CO', '2IC', 'ADJUTANT','JCO','ACCOUNT OFFICER','ACCOUNT JCO'] %}
       <a class="nav-link" href="/account">Account Management</a>
       {% endif %}
+
+
       {% if role in ['NCO PWR','SEC JCO','Subedar Major','NCO CHQ','NCO IT','NCO LINE','NCO OP','NCO PWR','NCO MW','NCO
       MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO
       RP/NA','NCO QM'] %}
       <a class="nav-link" href="/apply_leave/">Leave Management</a>
       {% endif %}
       <a class="nav-link" href="/logout" id="logoutLink">Logout</a>
+      <a href="/chat_bot" class="ai-assistant-btn">
+        <i class="fa-solid fa-robot"></i>
+    </a>
+    
+    
     </nav>
   </div>
 

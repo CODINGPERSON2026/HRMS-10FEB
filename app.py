@@ -3235,6 +3235,7 @@ def get_courses():
             coc.army_number,
             p.name,
             p.rank,
+            p.company,
             coc.course_name,
             DATE_FORMAT(coc.course_starting_date, '%d-%m-%Y') AS from_date,
             DATE_FORMAT(coc.course_end_date, '%d-%m-%Y') AS to_date,

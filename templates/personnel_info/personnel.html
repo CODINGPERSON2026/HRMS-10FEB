@@ -662,9 +662,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
               <table class="table table-hover personnel-table" id="modalPersonnelTable">
                 <thead>
                   <tr>
-                    <th>Name</th>
                     <th>Army Number</th>
                     <th>Rank</th>
+                    <th>Name</th>
                     <th>Trade</th>
                     <th>Company</th>
                     <th>Enrollment Date</th>
@@ -869,9 +869,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
     }
 
     tableBody.innerHTML = personnel.map(person => {
-      const name = person.name || 'N/A';
       const armyNumber = person.army_number || 'N/A';
       const rank = person.rank || 'N/A';
+      const name = person.name || 'N/A';
       const trade = person.trade || 'N/A';
       const company = person.company || 'Unknown';
       const enrollmentDate = person.date_of_enrollment
@@ -884,9 +884,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
 
       return `
         <tr data-company="${company}" data-medical="${person.med_cat || 'No'}">
-          <td class="fw-semibold">${name}</td>
           <td class="text-mono fw-bold">${armyNumber}</td>
           <td class="fw-bold text-uppercase">${rank}</td>
+          <td class="fw-semibold">${name}</td>
           <td>${trade}</td>
           <td>${companyBadge}</td>
           <td>${enrollmentDate}</td>

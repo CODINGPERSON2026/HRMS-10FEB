@@ -34,9 +34,9 @@ def compute_authorization(company=None):
     cursor = connection.cursor(dictionary=True)
 
     if company and company != "All":
-        cursor.execute("SELECT army_number, name,`rank`,company, age, height, actual_weight,status_type FROM weight_info WHERE company = %s", (company,))
+        cursor.execute("SELECT army_number,`rank`, name, company, age, height, actual_weight,status_type FROM weight_info WHERE company = %s", (company,))
     else:
-        cursor.execute("SELECT army_number, name,`rank`, company, age, height, actual_weight,status_type FROM weight_info")
+        cursor.execute("SELECT army_number,`rank`, name, company, age, height, actual_weight,status_type FROM weight_info")
     
     soldiers = cursor.fetchall()
     

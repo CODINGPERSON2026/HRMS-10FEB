@@ -16,6 +16,7 @@
                   <th>Army No</th>
                   <th>Rank</th>
                   <th>Name </th>
+                  <th>Company </th>
                   
                   <th>Course Name</th>
                   <th>From</th>
@@ -53,19 +54,20 @@
     
           if (!data.length) {
             tbody.innerHTML = `
-              <tr>
-                <td colspan="8" class="text-center text-muted">No courses found</td>
-              </tr>`;
+            <tr>
+              <td colspan="8" class="text-center text-muted">No courses found</td>
+            </tr>`;
             return;
           }
-    
+          
           data.forEach((row, index) => {
             tbody.innerHTML += `
-              <tr>
-                
-                <td>${row.army_number}</td>
-                <td>${row.rank}</td>
-                <td>${row.name}</td>
+            <tr>
+              
+              <td>${row.army_number}</td>
+              <td>${row.rank}</td>
+              <td>${row.name}</td>
+              <td>${row.company}</td>
                 <td>${row.course_name}</td>
                 <td>${row.from_date}</td>
                 <td>${row.to_date}</td>

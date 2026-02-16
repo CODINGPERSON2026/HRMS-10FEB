@@ -1953,349 +1953,365 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // ========== VALIDATION SYSTEM ==========
-    const validationRules = {
-      // Personal Information
-      name: {
-        pattern: /^[a-zA-Z\s\-.'()]+$/,
-        message: "Only letters, spaces, hyphens, dots, and apostrophes are allowed",
-        required: true
-      },
-      armyNumber: {
-        pattern: /^[a-zA-Z0-9\-_\/]+$/,
-        message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
-        required: true
-      },
-      rank: {
-        pattern: /^[a-zA-Z0-9\-_\s.()]+$/,
-        message: "Only letters, numbers, hyphens, underscores, and spaces are allowed",
-        required: true
-      },
-      trade: {
-        pattern: /^[a-zA-Z0-9\-_\s.()\/]+$/,
-        message: "Only letters, numbers, hyphens, underscores, and spaces are allowed",
-        required: true
-      },
-      religion: {
-        pattern: /^[a-zA-Z\s\-_]+$/,
-        message: "Only letters, spaces, hyphens, and underscores are allowed",
-        required: true
-      },
+  // ========== UPDATE PAGE JAVASCRIPT - COMPLETE FILE ==========
 
-      // Qualifications and Awards
-      civQualifications: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      decorationAwards: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      lackingQualifications: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
+document.addEventListener("DOMContentLoaded", function () {
+  // ========== VALIDATION SYSTEM ==========
+  const validationRules = {
+    // Personal Information
+    name: {
+      pattern: /^[a-zA-Z\s\-.'()]+$/,
+      message: "Only letters, spaces, hyphens, dots, and apostrophes are allowed",
+      required: true
+    },
+    armyNumber: {
+      pattern: /^[a-zA-Z0-9\-_\/]+$/,
+      message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
+      required: true
+    },
+    rank: {
+      pattern: /^[a-zA-Z0-9\-_\s.()]+$/,
+      message: "Only letters, numbers, hyphens, underscores, and spaces are allowed",
+      required: true
+    },
+    trade: {
+      pattern: /^[a-zA-Z0-9\-_\s.()\/]+$/,
+      message: "Only letters, numbers, hyphens, underscores, and spaces are allowed",
+      required: true
+    },
+    religion: {
+      pattern: /^[a-zA-Z\s\-_]+$/,
+      message: "Only letters, spaces, hyphens, and underscores are allowed",
+      required: true
+    },
 
-      // Card and Document Numbers
-      iCardNo: {
-        pattern: /^[a-zA-Z0-9\-_\/]*$/,
-        message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
-        required: false
-      },
-      iCardIssuedBy: {
-        pattern: /^[a-zA-Z0-9\s\-_.,]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      panCardNo: {
-        pattern: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-        message: "Invalid PAN format (e.g., ABCDE1234F)",
-        required: false
-      },
-      panPartII: {
-        pattern: /^[a-zA-Z0-9\-_\/]*$/,
-        message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
-        required: false
-      },
-      aadharCardNo: {
-        pattern: /^[0-9]{12}$/,
-        message: "Aadhar must be exactly 12 digits",
-        required: false
-      },
-      aadharPartII: {
-        pattern: /^[a-zA-Z0-9\-_\/]*$/,
-        message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
-        required: false
-      },
+    // Qualifications and Awards
+    civQualifications: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    decorationAwards: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    lackingQualifications: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
 
-      // Grading Fields
-      bpetGrading: {
-        pattern: /^[A-Z0-9\-+]*$/,
-        message: "Only uppercase letters, numbers, hyphens, and plus signs are allowed",
-        required: false
-      },
-      pptGrading: {
-        pattern: /^[A-Z0-9\-+]*$/,
-        message: "Only uppercase letters, numbers, hyphens, and plus signs are allowed",
-        required: false
-      },
+    // Card and Document Numbers
+    iCardNo: {
+      pattern: /^[a-zA-Z0-9\-_\/]*$/,
+      message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
+      required: false
+    },
+    iCardIssuedBy: {
+      pattern: /^[a-zA-Z0-9\s\-_.,]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    panCardNo: {
+      pattern: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+      message: "Invalid PAN format (e.g., ABCDE1234F)",
+      required: false
+    },
+    panPartII: {
+      pattern: /^[a-zA-Z0-9\-_\/]*$/,
+      message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
+      required: false
+    },
+    aadharCardNo: {
+      pattern: /^[0-9]{12}$/,
+      message: "Aadhar must be exactly 12 digits",
+      required: false
+    },
+    aadharPartII: {
+      pattern: /^[a-zA-Z0-9\-_\/]*$/,
+      message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
+      required: false
+    },
 
-      // Bank Account Details
-      jointAccountNo: {
-        pattern: /^[0-9]{9,18}$/,
-        message: "Account number must be 9-18 digits",
-        required: false
-      },
-      jointAccountBank: {
-        pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      jointAccountIFSC: {
-        pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
-        message: "Invalid IFSC code format (e.g., SBIN0001234)",
-        required: false
-      },
+    // Grading Fields
+    bpetGrading: {
+      pattern: /^[A-Z0-9\-+]*$/,
+      message: "Only uppercase letters, numbers, hyphens, and plus signs are allowed",
+      required: false
+    },
+    pptGrading: {
+      pattern: /^[A-Z0-9\-+]*$/,
+      message: "Only uppercase letters, numbers, hyphens, and plus signs are allowed",
+      required: false
+    },
 
-      // Address Fields
-      homeHouseNo: {
-        pattern: /^[a-zA-Z0-9\s\-_.,\/]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeVillage: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homePhone: {
-        pattern: /^[0-9+\-\s()]{10,15}$/,
-        message: "Invalid phone number format (10-15 digits with optional +, -, spaces, or parentheses)",
-        required: false
-      },
-      homeTO: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homePO: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homePS: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeTeh: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeNRS: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeNMH: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeDistrict: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      homeState: {
-        pattern: /^[a-zA-Z\s\-_.']*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
+    // Bank Account Details
+    jointAccountNo: {
+      pattern: /^[0-9]{9,18}$/,
+      message: "Account number must be 9-18 digits",
+      required: false
+    },
+    jointAccountBank: {
+      pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    jointAccountIFSC: {
+      pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+      message: "Invalid IFSC code format (e.g., SBIN0001234)",
+      required: false
+    },
 
-      // Physical Measurements
-      distanceFromIB: {
-        pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
-        message: "Only numbers with up to 2 decimal places allowed",
-        required: false
-      },
-      height: {
-        pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
-        message: "Only numbers with up to 2 decimal places allowed",
-        required: false
-      },
-      weight: {
-        pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
-        message: "Only numbers with up to 2 decimal places allowed",
-        required: false
-      },
-      chest: {
-        pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
-        message: "Only numbers with up to 2 decimal places allowed",
-        required: false
-      },
-      identificationMarks: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
+    // Address Fields
+    homeHouseNo: {
+      pattern: /^[a-zA-Z0-9\s\-_.,\/]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeVillage: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homePhone: {
+      pattern: /^[0-9+\-\s()]{10,15}$/,
+      message: "Invalid phone number format (10-15 digits with optional +, -, spaces, or parentheses)",
+      required: false
+    },
+    homeTO: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homePO: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homePS: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeTeh: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeNRS: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeNMH: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeDistrict: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    homeState: {
+      pattern: /^[a-zA-Z\s\-_.']*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
 
-      // Service Details
-      courtCases: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      lastRecatBDAt: {
-        pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      medicalProblem: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      restrictions: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      participationActivities: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      presentFamilyLocation: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      workedUnitTenure: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
+    // Physical Measurements
+    distanceFromIB: {
+      pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+      message: "Only numbers with up to 2 decimal places allowed",
+      required: false
+    },
+    height: {
+      pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+      message: "Only numbers with up to 2 decimal places allowed",
+      required: false
+    },
+    weight: {
+      pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+      message: "Only numbers with up to 2 decimal places allowed",
+      required: false
+    },
+    chest: {
+      pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+      message: "Only numbers with up to 2 decimal places allowed",
+      required: false
+    },
+    identificationMarks: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
 
-      // Family Details
-      kinName: {
-        pattern: /^[a-zA-Z\s\-.'()]*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      kinRelation: {
-        pattern: /^[a-zA-Z\s\-]*$/,
-        message: "Only letters, spaces, and hyphens are allowed",
-        required: false
-      },
-      kinAccountNo: {
-        pattern: /^[0-9]{9,18}$/,
-        message: "Account number must be 9-18 digits",
-        required: false
-      },
-      kinBank: {
-        pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      kinIFSC: {
-        pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
-        message: "Invalid IFSC code format (e.g., SBIN0001234)",
-        required: false
-      },
-      kinPartII: {
-        pattern: /^[a-zA-Z0-9\-_\/]*$/,
-        message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
-        required: false
-      },
+    // Service Details
+    courtCases: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    lastRecatBDAt: {
+      pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    medicalProblem: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    restrictions: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    participationActivities: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    presentFamilyLocation: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    workedUnitTenure: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
 
-      // Vehicle Details
-      vehicleRegNo: {
-        pattern: /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{1,4}$/,
-        message: "Invalid vehicle registration format (e.g., DL01AB1234)",
-        required: false
-      },
-      vehicleModel: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      drivingLicenseNo: {
-        pattern: /^[A-Z]{2}[0-9]{13,15}$/,
-        message: "Invalid driving license format",
-        required: false
-      },
+    // Family Details
+    kinName: {
+      pattern: /^[a-zA-Z\s\-.'()]*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    kinRelation: {
+      pattern: /^[a-zA-Z\s\-]*$/,
+      message: "Only letters, spaces, and hyphens are allowed",
+      required: false
+    },
+    kinAccountNo: {
+      pattern: /^[0-9]{9,18}$/,
+      message: "Account number must be 9-18 digits",
+      required: false
+    },
+    kinBank: {
+      pattern: /^[a-zA-Z0-9\s\-_.,&]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    kinIFSC: {
+      pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+      message: "Invalid IFSC code format (e.g., SBIN0001234)",
+      required: false
+    },
+    kinPartII: {
+      pattern: /^[a-zA-Z0-9\-_\/]*$/,
+      message: "Only alphanumeric characters, hyphens, underscores, and slashes are allowed",
+      required: false
+    },
 
-      // Additional Information
-      counselling: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      folderCheckedBy: {
-        pattern: /^[a-zA-Z\s\-.'()]*$/,
-        message: "Only letters, spaces, and common punctuation are allowed",
-        required: false
-      },
-      domesticIssues: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      otherRequests: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      familyMedicalIssues: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      qualityPoints: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      strengths: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      weaknesses: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
-      },
-      otherSports: {
-        pattern: /^[a-zA-Z]+(,[a-zA-Z]+)*$|^$/,
-        message: "Sports must be separated by commas only (no spaces). Example: Cricket,Tennis,Swimming",
-        required: false
-      },
-      physicalRestrictions: {
-        pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
-        message: "Only letters, numbers, spaces, and common punctuation are allowed",
-        required: false
+    // Vehicle Details
+    vehicleRegNo: {
+      pattern: /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{1,4}$/,
+      message: "Invalid vehicle registration format (e.g., DL01AB1234)",
+      required: false
+    },
+    vehicleModel: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    drivingLicenseNo: {
+      pattern: /^[A-Z]{2}[0-9]{13,15}$/,
+      message: "Invalid driving license format",
+      required: false
+    },
+
+    // Additional Information
+    counselling: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    folderCheckedBy: {
+      pattern: /^[a-zA-Z\s\-.'()]*$/,
+      message: "Only letters, spaces, and common punctuation are allowed",
+      required: false
+    },
+    domesticIssues: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    otherRequests: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    familyMedicalIssues: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    qualityPoints: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    strengths: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    weaknesses: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    },
+    otherSports: {
+      pattern: /^[a-zA-Z]+(,[a-zA-Z]+)*$|^$/,
+      message: "Sports must be separated by commas only (no spaces). Example: Cricket,Tennis,Swimming",
+      required: false
+    },
+    physicalRestrictions: {
+      pattern: /^[a-zA-Z0-9\s\-_.,()\/\n]*$/,
+      message: "Only letters, numbers, spaces, and common punctuation are allowed",
+      required: false
+    }
+  };
+
+  // Real-time validation function
+  function validateField(fieldId, value) {
+    const rules = validationRules[fieldId];
+    if (!rules) return true;
+
+    const errorElement = document.getElementById(`${fieldId}-error`);
+    const field = document.getElementById(fieldId);
+
+    // Check if required
+    if (rules.required && (!value || value.trim() === '')) {
+      if (errorElement) {
+        errorElement.textContent = 'This field is required';
+        errorElement.style.display = 'block';
       }
-    };
+      if (field) {
+        field.classList.add('is-invalid');
+        field.classList.remove('is-valid');
+      }
+      return false;
+    }
 
-    // Real-time validation function
-    function validateField(fieldId, value) {
-      const rules = validationRules[fieldId];
-      if (!rules) return true;
-
-      const errorElement = document.getElementById(`${fieldId}-error`);
-      const field = document.getElementById(fieldId);
-
-      // Check if required
-      if (rules.required && (!value || value.trim() === '')) {
+    // Check pattern if value exists
+    if (value && value.trim() !== '' && rules.pattern) {
+      if (!rules.pattern.test(value.trim())) {
         if (errorElement) {
-          errorElement.textContent = 'This field is required';
+          errorElement.textContent = rules.message;
           errorElement.style.display = 'block';
         }
         if (field) {
@@ -2304,176 +2320,174 @@
         }
         return false;
       }
+    }
 
-      // Check pattern if value exists
-      if (value && value.trim() !== '' && rules.pattern) {
-        if (!rules.pattern.test(value.trim())) {
-          if (errorElement) {
-            errorElement.textContent = rules.message;
-            errorElement.style.display = 'block';
-          }
-          if (field) {
-            field.classList.add('is-invalid');
-            field.classList.remove('is-valid');
-          }
-          return false;
-        }
+    // Clear error if validation passes
+    if (errorElement) {
+      errorElement.style.display = 'none';
+    }
+    if (field) {
+      field.classList.remove('is-invalid');
+      if (value && value.trim() !== '') {
+        field.classList.add('is-valid');
+      } else {
+        field.classList.remove('is-valid');
       }
+    }
+    return true;
+  }
 
-      // Clear error if validation passes
+  // Setup real-time validation for all fields
+  function setupRealTimeValidation() {
+    Object.keys(validationRules).forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.addEventListener('input', function () {
+          validateField(fieldId, this.value);
+        });
+
+        field.addEventListener('blur', function () {
+          validateField(fieldId, this.value);
+        });
+
+        // Initial validation
+        validateField(fieldId, field.value);
+      }
+    });
+
+    setupSpecialValidation();
+  }
+
+  // Setup validation for radio buttons, selects, and other special fields
+  function setupSpecialValidation() {
+    // Radio button groups
+    const radioGroups = [
+      'foodPreference', 'drinker', 'willingPromotions', 'clothingCard',
+      'borderArea', 'loan', 'detailedCourse', 'medCat', 'priorStation',
+      'workedIT', 'vehicleAGIF', 'disabilityChild', 'maritalDiscord', 'bringFamily',
+      'physicalStatus', 'categoryType'
+    ];
+
+    radioGroups.forEach(groupName => {
+      const radios = document.querySelectorAll(`input[name="${groupName}"]`);
+      radios.forEach(radio => {
+        radio.addEventListener('change', function () {
+          validateRadioGroup(groupName);
+        });
+      });
+    });
+
+    // Select elements
+    const selectElements = ['bloodGroup', 'company', 'computerKnowledge', 'itLiterature'];
+    selectElements.forEach(selectId => {
+      const select = document.getElementById(selectId);
+      if (select) {
+        select.addEventListener('change', function () {
+          validateSelect(selectId, this.value);
+        });
+      }
+    });
+
+    // Date validation
+    setupDateValidation();
+  }
+
+  // Validate radio button groups
+  function validateRadioGroup(groupName) {
+    const radios = document.querySelectorAll(`input[name="${groupName}"]`);
+    const errorElement = document.getElementById(`${groupName}-error`);
+    const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+
+    const isRequired = Array.from(radios).some(radio => radio.hasAttribute('required'));
+
+    if (isRequired && !checkedRadio) {
+      if (errorElement) {
+        errorElement.textContent = 'This selection is required';
+        errorElement.style.display = 'block';
+      }
+      radios.forEach(radio => {
+        radio.classList.add('is-invalid');
+      });
+      return false;
+    } else {
       if (errorElement) {
         errorElement.style.display = 'none';
       }
-      if (field) {
-        field.classList.remove('is-invalid');
-        if (value && value.trim() !== '') {
-          field.classList.add('is-valid');
-        } else {
-          field.classList.remove('is-valid');
+      radios.forEach(radio => {
+        radio.classList.remove('is-invalid');
+        if (checkedRadio === radio) {
+          radio.classList.add('is-valid');
         }
+      });
+      return true;
+    }
+  }
+
+  // Validate select elements
+  function validateSelect(selectId, value) {
+    const select = document.getElementById(selectId);
+    const errorElement = document.getElementById(`${selectId}-error`);
+    const isRequired = select.hasAttribute('required');
+
+    if (isRequired && (!value || value === '')) {
+      if (errorElement) {
+        errorElement.textContent = 'This selection is required';
+        errorElement.style.display = 'block';
+      }
+      select.classList.add('is-invalid');
+      select.classList.remove('is-valid');
+      return false;
+    } else {
+      if (errorElement) {
+        errorElement.style.display = 'none';
+      }
+      select.classList.remove('is-invalid');
+      if (value && value !== '') {
+        select.classList.add('is-valid');
       }
       return true;
     }
+  }
 
-    // Setup real-time validation for all fields
-    function setupRealTimeValidation() {
-      Object.keys(validationRules).forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-          field.addEventListener('input', function () {
-            validateField(fieldId, this.value);
-          });
+  // Date validation
+  function setupDateValidation() {
+    const dateFields = [
+      'dateOfEnrollment', 'dateOfBirth', 'dateOfTOS', 'dateOfTORS',
+      'iCardDate', 'bpetDate', 'kinMarriageDate', 'vehiclePurchaseDate',
+      'licenseIssueDate', 'licenseExpiryDate', 'folderPreparedOn',
+      'priorStationDate', 'lastRecatBDDate', 'nextRecatDue'
+    ];
 
-          field.addEventListener('blur', function () {
-            validateField(fieldId, this.value);
-          });
-
-          // Initial validation
-          validateField(fieldId, field.value);
-        }
-      });
-
-      setupSpecialValidation();
-    }
-
-    // Setup validation for radio buttons, selects, and other special fields
-    function setupSpecialValidation() {
-      // Radio button groups
-      const radioGroups = [
-        'foodPreference', 'drinker', 'willingPromotions', 'clothingCard',
-        'borderArea', 'loan', 'detailedCourse', 'medCat', 'priorStation',
-        'workedIT', 'vehicleAGIF', 'disabilityChild', 'maritalDiscord', 'bringFamily',
-        'physicalStatus', 'categoryType'
-      ];
-
-      radioGroups.forEach(groupName => {
-        const radios = document.querySelectorAll(`input[name="${groupName}"]`);
-        radios.forEach(radio => {
-          radio.addEventListener('change', function () {
-            validateRadioGroup(groupName);
-          });
+    dateFields.forEach(dateFieldId => {
+      const field = document.getElementById(dateFieldId);
+      if (field) {
+        field.addEventListener('change', function () {
+          validateDateField(dateFieldId, this.value);
         });
-      });
-
-      // Select elements
-      const selectElements = ['bloodGroup', 'company', 'computerKnowledge', 'itLiterature'];
-      selectElements.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        if (select) {
-          select.addEventListener('change', function () {
-            validateSelect(selectId, this.value);
-          });
-        }
-      });
-
-      // Date validation
-      setupDateValidation();
-    }
-
-    // Validate radio button groups
-    function validateRadioGroup(groupName) {
-      const radios = document.querySelectorAll(`input[name="${groupName}"]`);
-      const errorElement = document.getElementById(`${groupName}-error`);
-      const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
-
-      const isRequired = Array.from(radios).some(radio => radio.hasAttribute('required'));
-
-      if (isRequired && !checkedRadio) {
-        if (errorElement) {
-          errorElement.textContent = 'This selection is required';
-          errorElement.style.display = 'block';
-        }
-        radios.forEach(radio => {
-          radio.classList.add('is-invalid');
-        });
-        return false;
-      } else {
-        if (errorElement) {
-          errorElement.style.display = 'none';
-        }
-        radios.forEach(radio => {
-          radio.classList.remove('is-invalid');
-          if (checkedRadio === radio) {
-            radio.classList.add('is-valid');
-          }
-        });
-        return true;
       }
-    }
+    });
+  }
 
-    // Validate select elements
-    function validateSelect(selectId, value) {
-      const select = document.getElementById(selectId);
-      const errorElement = document.getElementById(`${selectId}-error`);
-      const isRequired = select.hasAttribute('required');
+  function validateDateField(fieldId, value) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(`${fieldId}-error`);
+    const isRequired = field.hasAttribute('required');
 
-      if (isRequired && (!value || value === '')) {
-        if (errorElement) {
-          errorElement.textContent = 'This selection is required';
-          errorElement.style.display = 'block';
-        }
-        select.classList.add('is-invalid');
-        select.classList.remove('is-valid');
-        return false;
-      } else {
-        if (errorElement) {
-          errorElement.style.display = 'none';
-        }
-        select.classList.remove('is-invalid');
-        if (value && value !== '') {
-          select.classList.add('is-valid');
-        }
-        return true;
+    if (isRequired && (!value || value.trim() === '')) {
+      if (errorElement) {
+        errorElement.textContent = 'This date field is required';
+        errorElement.style.display = 'block';
       }
+      field.classList.add('is-invalid');
+      field.classList.remove('is-valid');
+      return false;
     }
 
-    // Date validation
-    function setupDateValidation() {
-      const dateFields = [
-        'dateOfEnrollment', 'dateOfBirth', 'dateOfTOS', 'dateOfTORS',
-        'iCardDate', 'bpetDate', 'kinMarriageDate', 'vehiclePurchaseDate',
-        'licenseIssueDate', 'licenseExpiryDate', 'folderPreparedOn',
-        'priorStationDate', 'lastRecatBDDate', 'nextRecatDue'
-      ];
-
-      dateFields.forEach(dateFieldId => {
-        const field = document.getElementById(dateFieldId);
-        if (field) {
-          field.addEventListener('change', function () {
-            validateDateField(dateFieldId, this.value);
-          });
-        }
-      });
-    }
-
-    function validateDateField(fieldId, value) {
-      const field = document.getElementById(fieldId);
-      const errorElement = document.getElementById(`${fieldId}-error`);
-      const isRequired = field.hasAttribute('required');
-
-      if (isRequired && (!value || value.trim() === '')) {
+    if (value && value.trim() !== '') {
+      const date = new Date(value);
+      if (isNaN(date.getTime())) {
         if (errorElement) {
-          errorElement.textContent = 'This date field is required';
+          errorElement.textContent = 'Invalid date format';
           errorElement.style.display = 'block';
         }
         field.classList.add('is-invalid');
@@ -2481,26 +2495,30 @@
         return false;
       }
 
-      if (value && value.trim() !== '') {
-        const date = new Date(value);
-        if (isNaN(date.getTime())) {
+      // Additional date logic
+      if (fieldId === 'dateOfBirth') {
+        const today = new Date();
+        const birthDate = new Date(value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        if (age < 18 || age > 60) {
           if (errorElement) {
-            errorElement.textContent = 'Invalid date format';
+            errorElement.textContent = 'Age must be between 18 and 60 years';
             errorElement.style.display = 'block';
           }
           field.classList.add('is-invalid');
           field.classList.remove('is-valid');
           return false;
         }
+      }
 
-        // Additional date logic
-        if (fieldId === 'dateOfBirth') {
-          const today = new Date();
-          const birthDate = new Date(value);
-          const age = today.getFullYear() - birthDate.getFullYear();
-          if (age < 18 || age > 60) {
+      if (fieldId === 'dateOfEnrollment') {
+        const dobField = document.getElementById('dateOfBirth');
+        if (dobField && dobField.value) {
+          const dob = new Date(dobField.value);
+          const enrollment = new Date(value);
+          if (enrollment < dob) {
             if (errorElement) {
-              errorElement.textContent = 'Age must be between 18 and 60 years';
+              errorElement.textContent = 'Date of enrollment cannot be before date of birth';
               errorElement.style.display = 'block';
             }
             field.classList.add('is-invalid');
@@ -2508,371 +2526,361 @@
             return false;
           }
         }
-
-        if (fieldId === 'dateOfEnrollment') {
-          const dobField = document.getElementById('dateOfBirth');
-          if (dobField && dobField.value) {
-            const dob = new Date(dobField.value);
-            const enrollment = new Date(value);
-            if (enrollment < dob) {
-              if (errorElement) {
-                errorElement.textContent = 'Date of enrollment cannot be before date of birth';
-                errorElement.style.display = 'block';
-              }
-              field.classList.add('is-invalid');
-              field.classList.remove('is-valid');
-              return false;
-            }
-          }
-        }
       }
+    }
 
+    if (errorElement) {
+      errorElement.style.display = 'none';
+    }
+    field.classList.remove('is-invalid');
+    if (value && value.trim() !== '') {
+      field.classList.add('is-valid');
+    }
+    return true;
+  }
+
+  // Dynamic table validation
+  function setupDynamicTableValidation() {
+    const tableConfigs = [
+      { className: 'course-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'unit-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'loan-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'punishment-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'detailed-course-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'leave-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'family-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'children-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'mobile-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
+      { className: 'discord-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ }
+    ];
+
+    tableConfigs.forEach(config => {
+      document.addEventListener('input', function (e) {
+        if (e.target.classList.contains(config.className)) {
+          validateDynamicInput(e.target, config.pattern);
+        }
+      });
+    });
+  }
+
+  function validateDynamicInput(input, pattern) {
+    const value = input.value;
+
+    if (value && !pattern.test(value)) {
+      input.classList.add('is-invalid');
+      let errorElement = input.parentNode.querySelector('.error-message');
+      if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        input.parentNode.appendChild(errorElement);
+      }
+      errorElement.textContent = 'Invalid input format';
+      errorElement.style.display = 'block';
+    } else {
+      input.classList.remove('is-invalid');
+      if (value) {
+        input.classList.add('is-valid');
+      }
+      const errorElement = input.parentNode.querySelector('.error-message');
       if (errorElement) {
         errorElement.style.display = 'none';
       }
-      field.classList.remove('is-invalid');
-      if (value && value.trim() !== '') {
-        field.classList.add('is-valid');
-      }
-      return true;
     }
+  }
 
-    // Dynamic table validation
-    function setupDynamicTableValidation() {
-      const tableConfigs = [
-        { className: 'course-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'unit-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'loan-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'punishment-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'detailed-course-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'leave-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'family-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'children-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'mobile-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ },
-        { className: 'discord-input', pattern: /^[a-zA-Z0-9\s\-_.,()\/]*$/ }
-      ];
+  // Form submission validation
+  function validateForm() {
+    let isValid = true;
 
-      tableConfigs.forEach(config => {
-        document.addEventListener('input', function (e) {
-          if (e.target.classList.contains(config.className)) {
-            validateDynamicInput(e.target, config.pattern);
-          }
-        });
-      });
-    }
-
-    function validateDynamicInput(input, pattern) {
-      const value = input.value;
-
-      if (value && !pattern.test(value)) {
-        input.classList.add('is-invalid');
-        let errorElement = input.parentNode.querySelector('.error-message');
-        if (!errorElement) {
-          errorElement = document.createElement('div');
-          errorElement.className = 'error-message';
-          input.parentNode.appendChild(errorElement);
-        }
-        errorElement.textContent = 'Invalid input format';
-        errorElement.style.display = 'block';
-      } else {
-        input.classList.remove('is-invalid');
-        if (value) {
-          input.classList.add('is-valid');
-        }
-        const errorElement = input.parentNode.querySelector('.error-message');
-        if (errorElement) {
-          errorElement.style.display = 'none';
-        }
-      }
-    }
-
-    // Form submission validation
-    function validateForm() {
-      let isValid = true;
-
-      // Validate all fields with validation rules
-      Object.keys(validationRules).forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-          if (!validateField(fieldId, field.value)) {
-            isValid = false;
-          }
-        }
-      });
-
-      // Validate radio groups
-      const requiredRadioGroups = ['foodPreference', 'drinker', 'willingPromotions', 'company'];
-      requiredRadioGroups.forEach(group => {
-        if (!validateRadioGroup(group)) {
+    // Validate all fields with validation rules
+    Object.keys(validationRules).forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        if (!validateField(fieldId, field.value)) {
           isValid = false;
         }
-      });
-
-      // Validate select elements
-      const requiredSelectElements = ['bloodGroup', 'company'];
-      requiredSelectElements.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        if (select && !validateSelect(selectId, select.value)) {
-          isValid = false;
-        }
-      });
-
-      // Validate date fields
-      const requiredDateFields = ['dateOfEnrollment', 'dateOfBirth'];
-      requiredDateFields.forEach(dateFieldId => {
-        const field = document.getElementById(dateFieldId);
-        if (field && !validateDateField(dateFieldId, field.value)) {
-          isValid = false;
-        }
-      });
-
-      return isValid;
-    }
-
-    // ========== SEARCH FUNCTIONALITY ==========
-    const searchInput = document.getElementById('searchArmyNumber');
-    const btnSearch = document.getElementById('btnSearchPersonnel');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const formContainer = document.getElementById('formContainer');
-    const updateForm = document.getElementById('updateArmyForm');
-    const btnCancel = document.getElementById('btnCancelUpdate');
-
-    // Search functionality
-    btnSearch.addEventListener('click', searchPersonnel);
-    searchInput.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        searchPersonnel();
       }
     });
 
-    async function searchPersonnel() {
-      const armyNumber = searchInput.value.trim();
-
-      if (!armyNumber) {
-        alert('Please enter an army number');
-        return;
+    // Validate radio groups
+    const requiredRadioGroups = ['foodPreference', 'drinker', 'willingPromotions', 'company'];
+    requiredRadioGroups.forEach(group => {
+      if (!validateRadioGroup(group)) {
+        isValid = false;
       }
+    });
 
-      loadingSpinner.style.display = 'block';
-      formContainer.style.display = 'none';
-
-      try {
-        const response = await fetch(`/personnel_information/api/personnel/search/${armyNumber}`);
-        const result = await response.json();
-
-        loadingSpinner.style.display = 'none';
-
-        if (response.ok && result.success) {
-          populateForm(result.data);
-          formContainer.style.display = 'block';
-          document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
-        } else {
-          alert(result.message || 'Personnel not found');
-        }
-      } catch (error) {
-        console.error('Search error:', error);
-        alert('An error occurred while searching');
-        loadingSpinner.style.display = 'none';
+    // Validate select elements
+    const requiredSelectElements = ['bloodGroup', 'company'];
+    requiredSelectElements.forEach(selectId => {
+      const select = document.getElementById(selectId);
+      if (select && !validateSelect(selectId, select.value)) {
+        isValid = false;
       }
+    });
+
+    // Validate date fields
+    const requiredDateFields = ['dateOfEnrollment', 'dateOfBirth'];
+    requiredDateFields.forEach(dateFieldId => {
+      const field = document.getElementById(dateFieldId);
+      if (field && !validateDateField(dateFieldId, field.value)) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  }
+
+  // ========== SEARCH FUNCTIONALITY ==========
+  const searchInput = document.getElementById('searchArmyNumber');
+  const btnSearch = document.getElementById('btnSearchPersonnel');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const formContainer = document.getElementById('formContainer');
+  const updateForm = document.getElementById('updateArmyForm');
+  const btnCancel = document.getElementById('btnCancelUpdate');
+
+  // Search functionality
+  btnSearch.addEventListener('click', searchPersonnel);
+  searchInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      searchPersonnel();
+    }
+  });
+
+  async function searchPersonnel() {
+    const armyNumber = searchInput.value.trim();
+
+    if (!armyNumber) {
+      alert('Please enter an army number');
+      return;
     }
 
-    // ========== FORM POPULATION ==========
-    function populateForm(data) {
-      const p = data.personnel; // Shorthand
+    loadingSpinner.style.display = 'block';
+    formContainer.style.display = 'none';
 
-      // Store hidden IDs
-      document.getElementById('personnelId').value = p.id;
-      document.getElementById('originalArmyNumber').value = p.army_number;
+    try {
+      const response = await fetch(`/personnel_information/api/personnel/search/${armyNumber}`);
+      const result = await response.json();
 
-      // Basic Information
-      setValue('name', p.name);
-      setValue('armyNumber', p.army_number);
-      setValue('rank', p.rank);
-      setValue('trade', p.trade);
-      setValue('dateOfEnrollment', p.date_of_enrollment);
-      setValue('dateOfBirth', p.date_of_birth);
-      setValue('dateOfTOS', p.date_of_tos);
-      setValue('dateOfTORS', p.date_of_tors);
-      setValue('bloodGroup', p.blood_group);
-      setValue('religion', p.religion);
-      setValue('company', p.company);
+      loadingSpinner.style.display = 'none';
 
-      // Radio buttons
-      setRadioValue('foodPreference', p.food_preference);
-      setRadioValue('drinker', p.drinker);
-      setRadioValue('willingPromotions', p.willing_promotions);
-      setRadioValue('clothingCard', p.clothing_card);
-      setRadioValue('borderArea', p.border_area);
-      setRadioValue('loan', p.loan);
-      setRadioValue('detailedCourse', p.detailed_course);
-      setRadioValue('medCat', p.med_cat);
-      setRadioValue('priorStation', p.prior_station);
-      setRadioValue('workedIT', p.worked_it);
-      setRadioValue('vehicleAGIF', p.vehicle_agif);
-      setRadioValue('disabilityChild', p.disability_child);
-      setRadioValue('maritalDiscord', p.marital_discord);
-      setRadioValue('bringFamily', p.bring_family);
+      if (response.ok && result.success) {
+        populateForm(result.data);
+        formContainer.style.display = 'block';
+        document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        alert(result.message || 'Personnel not found');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      alert('An error occurred while searching');
+      loadingSpinner.style.display = 'none';
+    }
+  }
 
-      // ADDED: Physical Status fields
-      setRadioValue('physicalStatus', p.physical_status);
+  // ========== FORM POPULATION ==========
+  function populateForm(data) {
+    const p = data.personnel; // Shorthand
+
+    // Store hidden IDs
+    document.getElementById('personnelId').value = p.id;
+    document.getElementById('originalArmyNumber').value = p.army_number;
+
+    // Basic Information
+    setValue('name', p.name);
+    setValue('armyNumber', p.army_number);
+    setValue('rank', p.rank);
+    setValue('trade', p.trade);
+    setValue('dateOfEnrollment', p.date_of_enrollment);
+    setValue('dateOfBirth', p.date_of_birth);
+    setValue('dateOfTOS', p.date_of_tos);
+    setValue('dateOfTORS', p.date_of_tors);
+    setValue('bloodGroup', p.blood_group);
+    setValue('religion', p.religion);
+    setValue('company', p.company);
+
+    // Radio buttons
+    setRadioValue('foodPreference', p.food_preference);
+    setRadioValue('drinker', p.drinker);
+    setRadioValue('willingPromotions', p.willing_promotions);
+    setRadioValue('clothingCard', p.clothing_card);
+    setRadioValue('borderArea', p.border_area);
+    setRadioValue('loan', p.loan);
+    setRadioValue('detailedCourse', p.detailed_course);
+    setRadioValue('medCat', p.med_cat);
+    setRadioValue('priorStation', p.prior_station);
+    setRadioValue('workedIT', p.worked_it);
+    setRadioValue('vehicleAGIF', p.vehicle_agif);
+    setRadioValue('disabilityChild', p.disability_child);
+    setRadioValue('maritalDiscord', p.marital_discord);
+    setRadioValue('bringFamily', p.bring_family);
+
+    // UPDATED: Physical Status fields from weight_info
+    setRadioValue('physicalStatus', p.physical_status || 'shape');
+    if (p.physical_status === 'category') {
       setRadioValue('categoryType', p.category_type);
-      setValue('physicalRestrictions', p.physical_restrictions);
-
-      // Qualifications and Awards
-      setValue('civQualifications', p.civ_qualifications);
-      setValue('decorationAwards', p.decoration_awards);
-      setValue('lackingQualifications', p.lacking_qualifications);
-
-      // Card Details
-      setValue('iCardNo', p.i_card_no);
-      setValue('iCardDate', p.i_card_date);
-      setValue('iCardIssuedBy', p.i_card_issued_by);
-      setValue('bpetGrading', p.bpet_grading);
-      setValue('pptGrading', p.ppt_grading);
-      setValue('bpetDate', p.bpet_date);
-
-      // Documents
-      setValue('panCardNo', p.pan_card_no);
-      setValue('panPartII', p.pan_part_ii);
-      setValue('aadharCardNo', p.aadhar_card_no);
-      setValue('aadharPartII', p.aadhar_part_ii);
-
-      // Bank Account
-      setValue('jointAccountNo', p.joint_account_no);
-      setValue('jointAccountBank', p.joint_account_bank);
-      setValue('jointAccountIFSC', p.joint_account_ifsc);
-
-      // Address
-      setValue('homeHouseNo', p.home_house_no);
-      setValue('homeVillage', p.home_village);
-      setValue('homePhone', p.home_phone);
-      setValue('homeTO', p.home_to);
-      setValue('homePO', p.home_po);
-      setValue('homePS', p.home_ps);
-      setValue('homeTeh', p.home_teh);
-      setValue('homeNRS', p.home_nrs);
-      setValue('homeNMH', p.home_nmh);
-      setValue('homeDistrict', p.home_district);
-      setValue('homeState', p.home_state);
-      setValue('distanceFromIB', p.distance_from_ib);
-
-      // Physical Details
-      setValue('height', p.height);
-      setValue('weight', p.weight);
-      setValue('chest', p.chest);
-      setValue('identificationMarks', p.identification_marks);
-
-      // Service Details
-      setValue('courtCases', p.court_cases);
-      setValue('totalLeavesEncashed', p.total_leaves_encashed);
-      setValue('participationActivities', p.participation_activities);
-      setValue('presentFamilyLocation', p.present_family_location);
-      setValue('priorStationDate', p.prior_station_date);
-      setValue('workedUnitTenure', p.worked_unit_tenure);
-
-      // Medical Details
-      setValue('lastRecatBDDate', p.last_recat_bd_date);
-      setValue('lastRecatBDAt', p.last_recat_bd_at);
-      setValue('nextRecatDue', p.next_recat_due);
-      setValue('medicalProblem', p.medical_problem);
-      setValue('restrictions', p.restrictions);
-      setValue('computerKnowledge', p.computer_knowledge);
-      setValue('itLiterature', p.it_literature);
-
-      // Next of Kin
-      setValue('kinName', p.kin_name);
-      setValue('kinRelation', p.kin_relation);
-      setValue('kinMarriageDate', p.kin_marriage_date);
-      setValue('kinAccountNo', p.kin_account_no);
-      setValue('kinBank', p.kin_bank);
-      setValue('kinIFSC', p.kin_ifsc);
-      setValue('kinPartII', p.kin_part_ii);
-
-      // Vehicle Details
-      setValue('vehicleRegNo', p.vehicle_reg_no);
-      setValue('vehicleModel', p.vehicle_model);
-      setValue('vehiclePurchaseDate', p.vehicle_purchase_date);
-      setValue('drivingLicenseNo', p.driving_license_no);
-      setValue('licenseIssueDate', p.license_issue_date);
-      setValue('licenseExpiryDate', p.license_expiry_date);
-
-      // ADDED: Sports fields
-      populateSports(data.sports || []);
-      setValue('otherSports', p.other_sports);
-
-      // Additional Information
-      setValue('counselling', p.counselling);
-      setValue('folderPreparedOn', p.folder_prepared_on);
-      setValue('folderCheckedBy', p.folder_checked_by);
-      setValue('domesticIssues', p.domestic_issues);
-      setValue('otherRequests', p.other_requests);
-      setValue('familyMedicalIssues', p.family_medical_issues);
-      setValue('qualityPoints', p.quality_points);
-      setValue('strengths', p.strengths);
-      setValue('weaknesses', p.weaknesses);
-
-      // Populate dynamic tables
-      populateCourses(data.courses);
-      populateUnits(data.units);
-      populateLoans(data.loans);
-      populatePunishments(data.punishments);
-      populateDetailedCourses(data.detailed_courses);
-      populateLeaves(data.leaves);
-      populateFamily(data.family);
-      populateChildren(data.children);
-      populateMobiles(data.mobiles);
-      populateDiscordCases(data.discord_cases);
-
-      // Trigger conditional sections
-      triggerConditionalSections();
     }
+    setValue('physicalRestrictions', p.physical_restrictions);
 
-    function setValue(id, value) {
-      const element = document.getElementById(id);
-      if (element) {
-        element.value = value || '';
+    // Qualifications and Awards
+    setValue('civQualifications', p.civ_qualifications);
+    setValue('decorationAwards', p.decoration_awards);
+    setValue('lackingQualifications', p.lacking_qualifications);
+
+    // Card Details
+    setValue('iCardNo', p.i_card_no);
+    setValue('iCardDate', p.i_card_date);
+    setValue('iCardIssuedBy', p.i_card_issued_by);
+    setValue('bpetGrading', p.bpet_grading);
+    setValue('pptGrading', p.ppt_grading);
+    setValue('bpetDate', p.bpet_date);
+
+    // Documents
+    setValue('panCardNo', p.pan_card_no);
+    setValue('panPartII', p.pan_part_ii);
+    setValue('aadharCardNo', p.aadhar_card_no);
+    setValue('aadharPartII', p.aadhar_part_ii);
+
+    // Bank Account
+    setValue('jointAccountNo', p.joint_account_no);
+    setValue('jointAccountBank', p.joint_account_bank);
+    setValue('jointAccountIFSC', p.joint_account_ifsc);
+
+    // Address
+    setValue('homeHouseNo', p.home_house_no);
+    setValue('homeVillage', p.home_village);
+    setValue('homePhone', p.home_phone);
+    setValue('homeTO', p.home_to);
+    setValue('homePO', p.home_po);
+    setValue('homePS', p.home_ps);
+    setValue('homeTeh', p.home_teh);
+    setValue('homeNRS', p.home_nrs);
+    setValue('homeNMH', p.home_nmh);
+    setValue('homeDistrict', p.home_district);
+    setValue('homeState', p.home_state);
+    setValue('distanceFromIB', p.distance_from_ib);
+
+    // Physical Details
+    setValue('height', p.height);
+    setValue('weight', p.weight);
+    setValue('chest', p.chest);
+    setValue('identificationMarks', p.identification_marks);
+
+    // Service Details
+    setValue('courtCases', p.court_cases);
+    setValue('totalLeavesEncashed', p.total_leaves_encashed);
+    setValue('participationActivities', p.participation_activities);
+    setValue('presentFamilyLocation', p.present_family_location);
+    setValue('priorStationDate', p.prior_station_date);
+    setValue('workedUnitTenure', p.worked_unit_tenure);
+
+    // Medical Details
+    setValue('lastRecatBDDate', p.last_recat_bd_date);
+    setValue('lastRecatBDAt', p.last_recat_bd_at);
+    setValue('nextRecatDue', p.next_recat_due);
+    setValue('medicalProblem', p.medical_problem);
+    setValue('restrictions', p.restrictions);
+    setValue('computerKnowledge', p.computer_knowledge);
+    setValue('itLiterature', p.it_literature);
+
+    // Next of Kin
+    setValue('kinName', p.kin_name);
+    setValue('kinRelation', p.kin_relation);
+    setValue('kinMarriageDate', p.kin_marriage_date);
+    setValue('kinAccountNo', p.kin_account_no);
+    setValue('kinBank', p.kin_bank);
+    setValue('kinIFSC', p.kin_ifsc);
+    setValue('kinPartII', p.kin_part_ii);
+
+    // Vehicle Details
+    setValue('vehicleRegNo', p.vehicle_reg_no);
+    setValue('vehicleModel', p.vehicle_model);
+    setValue('vehiclePurchaseDate', p.vehicle_purchase_date);
+    setValue('drivingLicenseNo', p.driving_license_no);
+    setValue('licenseIssueDate', p.license_issue_date);
+    setValue('licenseExpiryDate', p.license_expiry_date);
+
+    // UPDATED: Sports fields - data.sports is now an array of strings
+    populateSports(data.sports || []);
+
+    // Additional Information
+    setValue('counselling', p.counselling);
+    setValue('folderPreparedOn', p.folder_prepared_on);
+    setValue('folderCheckedBy', p.folder_checked_by);
+    setValue('domesticIssues', p.domestic_issues);
+    setValue('otherRequests', p.other_requests);
+    setValue('familyMedicalIssues', p.family_medical_issues);
+    setValue('qualityPoints', p.quality_points);
+    setValue('strengths', p.strengths);
+    setValue('weaknesses', p.weaknesses);
+
+    // Populate dynamic tables
+    populateCourses(data.courses);
+    populateUnits(data.units);
+    populateLoans(data.loans);
+    populatePunishments(data.punishments);
+    populateDetailedCourses(data.detailed_courses);
+    populateLeaves(data.leaves);
+    populateFamily(data.family);
+    populateChildren(data.children);
+    populateMobiles(data.mobiles);
+    populateDiscordCases(data.discord_cases);
+
+    // Trigger conditional sections
+    triggerConditionalSections();
+  }
+
+  function setValue(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.value = value || '';
+    }
+  }
+
+  function setRadioValue(name, value) {
+    if (value) {
+      const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+      if (radio) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
       }
     }
+  }
 
-    function setRadioValue(name, value) {
-      if (value) {
-        const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
-        if (radio) {
-          radio.checked = true;
-        }
+  // UPDATED: Sports population function
+  function populateSports(sportsList) {
+    // Clear all checkboxes first
+    document.querySelectorAll('.sports-checkbox').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    if (!sportsList || sportsList.length === 0) return;
+
+    // sportsList is now an array of strings like ['Football', 'Basketball', 'Cricket']
+    sportsList.forEach(sportName => {
+      const checkbox = document.querySelector(`.sports-checkbox[value="${sportName}"]`);
+      if (checkbox) {
+        checkbox.checked = true;
       }
+    });
+  }
+
+  // ========== DYNAMIC TABLE POPULATION (all functions here) ==========
+  // [Include all your existing populateCourses, populateUnits, etc. functions]
+  // I'm including them below...
+
+  function populateCourses(courses) {
+    const tbody = document.querySelector('#coursesTable tbody');
+    tbody.innerHTML = '';
+
+    if (!courses || courses.length === 0) {
+      addCourseRow();
+      return;
     }
 
-    // ADDED: Sports population function
-    function populateSports(sportsList) {
-      // Clear all checkboxes first
-      document.querySelectorAll('.sports-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-      });
-
-      if (!sportsList || sportsList.length === 0) return;
-
-      sportsList.forEach(sport => {
-        const checkbox = document.querySelector(`.sports-checkbox[value="${sport}"]`);
-        if (checkbox) {
-          checkbox.checked = true;
-        }
-      });
-    }
-
-    // ========== DYNAMIC TABLE POPULATION ==========
-    function populateCourses(courses) {
-      const tbody = document.querySelector('#coursesTable tbody');
-      tbody.innerHTML = '';
-
-      if (!courses || courses.length === 0) {
-        addCourseRow();
-        return;
-      }
-
-      courses.forEach((course, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    courses.forEach((course, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm course-input" name="course[]" value="${course.course || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="courseFrom[]" value="${course.from_date || ''}"></td>
@@ -2881,42 +2889,42 @@
         <td><input type="text" class="form-control form-control-sm course-input" name="courseGrading[]" value="${course.grading || ''}"></td>
         <td><input type="text" class="form-control form-control-sm course-input" name="courseRemarks[]" value="${course.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateUnits(units) {
+    const tbody = document.querySelector('#unitsTable tbody');
+    tbody.innerHTML = '';
+
+    if (!units || units.length === 0) {
+      addUnitRow();
+      return;
     }
 
-    function populateUnits(units) {
-      const tbody = document.querySelector('#unitsTable tbody');
-      tbody.innerHTML = '';
-
-      if (!units || units.length === 0) {
-        addUnitRow();
-        return;
-      }
-
-      units.forEach((unit, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    units.forEach((unit, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm unit-input" name="unit[]" value="${unit.unit || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="unitFrom[]" value="${unit.from_date || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="unitTo[]" value="${unit.to_date || ''}"></td>
         <td><input type="text" class="form-control form-control-sm unit-input" name="unitDuty[]" value="${unit.duty_performed || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateLoans(loans) {
+    const tbody = document.querySelector('#loansTable tbody');
+    tbody.innerHTML = '';
+
+    if (!loans || loans.length === 0) {
+      addLoanRow();
+      return;
     }
 
-    function populateLoans(loans) {
-      const tbody = document.querySelector('#loansTable tbody');
-      tbody.innerHTML = '';
-
-      if (!loans || loans.length === 0) {
-        addLoanRow();
-        return;
-      }
-
-      loans.forEach((loan, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    loans.forEach((loan, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm loan-input" name="loanType[]" value="${loan.loan_type || ''}"></td>
         <td><input type="text" class="form-control form-control-sm loan-input" name="loanAmount[]" value="${loan.total_amount || ''}"></td>
@@ -2925,63 +2933,63 @@
         <td><input type="text" class="form-control form-control-sm loan-input" name="loanPending[]" value="${loan.pending || ''}"></td>
         <td><input type="text" class="form-control form-control-sm loan-input" name="loanRemarks[]" value="${loan.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populatePunishments(punishments) {
+    const tbody = document.querySelector('#punishmentTable tbody');
+    tbody.innerHTML = '';
+
+    if (!punishments || punishments.length === 0) {
+      addPunishmentRow();
+      return;
     }
 
-    function populatePunishments(punishments) {
-      const tbody = document.querySelector('#punishmentTable tbody');
-      tbody.innerHTML = '';
-
-      if (!punishments || punishments.length === 0) {
-        addPunishmentRow();
-        return;
-      }
-
-      punishments.forEach((punishment, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    punishments.forEach((punishment, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="date" class="form-control form-control-sm" name="punishmentDate[]" value="${punishment.punishment_date || ''}"></td>
         <td><input type="text" class="form-control form-control-sm punishment-input" name="punishment[]" value="${punishment.punishment || ''}"></td>
         <td><input type="text" class="form-control form-control-sm punishment-input" name="punishmentAASec[]" value="${punishment.aa_sec || ''}"></td>
         <td><input type="text" class="form-control form-control-sm punishment-input" name="punishmentRemarks[]" value="${punishment.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateDetailedCourses(courses) {
+    const tbody = document.querySelector('#detailedCoursesTable tbody');
+    tbody.innerHTML = '';
+
+    if (!courses || courses.length === 0) {
+      addDetailedCourseRow();
+      return;
     }
 
-    function populateDetailedCourses(courses) {
-      const tbody = document.querySelector('#detailedCoursesTable tbody');
-      tbody.innerHTML = '';
-
-      if (!courses || courses.length === 0) {
-        addDetailedCourseRow();
-        return;
-      }
-
-      courses.forEach((course, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    courses.forEach((course, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm detailed-course-input" name="detailedCourseName[]" value="${course.course_name || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="detailedCourseFrom[]" value="${course.from_date || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="detailedCourseTo[]" value="${course.to_date || ''}"></td>
         <td><input type="text" class="form-control form-control-sm detailed-course-input" name="detailedCourseRemarks[]" value="${course.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateLeaves(leaves) {
+    const tbody = document.querySelector('#leaveTable tbody');
+    tbody.innerHTML = '';
+
+    if (!leaves || leaves.length === 0) {
+      addLeaveRow();
+      return;
     }
 
-    function populateLeaves(leaves) {
-      const tbody = document.querySelector('#leaveTable tbody');
-      tbody.innerHTML = '';
-
-      if (!leaves || leaves.length === 0) {
-        addLeaveRow();
-        return;
-      }
-
-      leaves.forEach((leave, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    leaves.forEach((leave, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm leave-input" name="leaveYear[]" value="${leave.year || ''}"></td>
         <td><input type="number" class="form-control form-control-sm" name="leaveAL[]" value="${leave.al_days || ''}"></td>
@@ -2990,42 +2998,42 @@
         <td><input type="number" class="form-control form-control-sm" name="leaveTotal[]" value="${leave.total_days || ''}"></td>
         <td><input type="text" class="form-control form-control-sm leave-input" name="leaveRemarks[]" value="${leave.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateFamily(family) {
+    const tbody = document.querySelector('#familyTable tbody');
+    tbody.innerHTML = '';
+
+    if (!family || family.length === 0) {
+      addFamilyRow();
+      return;
     }
 
-    function populateFamily(family) {
-      const tbody = document.querySelector('#familyTable tbody');
-      tbody.innerHTML = '';
-
-      if (!family || family.length === 0) {
-        addFamilyRow();
-        return;
-      }
-
-      family.forEach((member) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    family.forEach((member) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td><input type="text" class="form-control form-control-sm family-input" name="familyRelation[]" value="${member.relation || ''}"></td>
         <td><input type="text" class="form-control form-control-sm family-input" name="familyName[]" value="${member.name || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="familyDOB[]" value="${member.date_of_birth || ''}"></td>
         <td><input type="text" class="form-control form-control-sm family-input" name="familyUID[]" value="${member.uid_no || ''}"></td>
         <td><input type="text" class="form-control form-control-sm family-input" name="familyPartII[]" value="${member.part_ii_order || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateChildren(children) {
+    const tbody = document.querySelector('#childrenTable tbody');
+    tbody.innerHTML = '';
+
+    if (!children || children.length === 0) {
+      addChildRow();
+      return;
     }
 
-    function populateChildren(children) {
-      const tbody = document.querySelector('#childrenTable tbody');
-      tbody.innerHTML = '';
-
-      if (!children || children.length === 0) {
-        addChildRow();
-        return;
-      }
-
-      children.forEach((child, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    children.forEach((child, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm children-input" name="childName[]" value="${child.name || ''}"></td>
         <td><input type="date" class="form-control form-control-sm" name="childDOB[]" value="${child.date_of_birth || ''}"></td>
@@ -3033,234 +3041,235 @@
         <td><input type="text" class="form-control form-control-sm children-input" name="childPartII[]" value="${child.part_ii_order || ''}"></td>
         <td><input type="text" class="form-control form-control-sm children-input" name="childUID[]" value="${child.uid_no || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateMobiles(mobiles) {
+    const tbody = document.querySelector('#mobileTable tbody');
+    tbody.innerHTML = '';
+
+    if (!mobiles || mobiles.length === 0) {
+      addMobileRow();
+      return;
     }
 
-    function populateMobiles(mobiles) {
-      const tbody = document.querySelector('#mobileTable tbody');
-      tbody.innerHTML = '';
-
-      if (!mobiles || mobiles.length === 0) {
-        addMobileRow();
-        return;
-      }
-
-      mobiles.forEach((mobile, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    mobiles.forEach((mobile, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileType[]" value="${mobile.type || ''}"></td>
         <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileNumber[]" value="${mobile.number || ''}"></td>
         <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileProvider[]" value="${mobile.service_provider || ''}"></td>
         <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileRemarks[]" value="${mobile.remarks || ''}"></td>
       `;
-      });
+    });
+  }
+
+  function populateDiscordCases(cases) {
+    const tbody = document.querySelector('#discordTable tbody');
+    tbody.innerHTML = '';
+
+    if (!cases || cases.length === 0) {
+      addDiscordRow();
+      return;
     }
 
-    function populateDiscordCases(cases) {
-      const tbody = document.querySelector('#discordTable tbody');
-      tbody.innerHTML = '';
-
-      if (!cases || cases.length === 0) {
-        addDiscordRow();
-        return;
-      }
-
-      cases.forEach((discordCase, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
+    cases.forEach((discordCase, index) => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
         <td>${index + 1}</td>
         <td><input type="text" class="form-control form-control-sm discord-input" name="discordCaseNo[]" value="${discordCase.case_no || ''}"></td>
         <td><input type="text" class="form-control form-control-sm discord-input" name="discordAmount[]" value="${discordCase.amount_to_pay || ''}"></td>
         <td><input type="text" class="form-control form-control-sm discord-input" name="discordSanction[]" value="${discordCase.sanction_letter_no || ''}"></td>
       `;
-      });
-    }
+    });
+  }
 
-    function triggerConditionalSections() {
-      // Trigger change events on all checked radio buttons to show/hide conditional sections
-      document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-        radio.dispatchEvent(new Event('change'));
-      });
-
-      // Handle physical status conditional sections
-      const physicalStatus = document.querySelector('input[name="physicalStatus"]:checked');
-      if (physicalStatus && physicalStatus.value === 'category') {
-        document.getElementById('category-options').style.display = 'block';
-        const categoryType = document.querySelector('input[name="categoryType"]:checked');
-        if (categoryType) {
-          document.getElementById('restrictions-group').style.display = 'block';
-        }
-      }
-    }
-
-    // ========== TAB NAVIGATION ==========
-    const formTabs = document.getElementById("formTabs");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const submitBtn = document.querySelector(".btn-submit");
-    const progressBar = document.querySelector(".progress-bar");
-
-    let currentTab = 0;
-    const tabs = document.querySelectorAll(".tab-pane");
-
-    function showTab(n) {
-      tabs.forEach((tab) => tab.classList.remove("show", "active"));
-      tabs[n].classList.add("show", "active");
-
-      const tabButtons = formTabs.querySelectorAll(".nav-link");
-      tabButtons.forEach((button) => button.classList.remove("active"));
-      tabButtons[n].classList.add("active");
-
-      // Update progress bar
-      const progress = ((n + 1) / tabs.length) * 100;
-      progressBar.style.width = `${progress}%`;
-      progressBar.setAttribute("aria-valuenow", progress);
-
-      // Update buttons
-      if (n === 0) {
-        prevBtn.style.display = "none";
-      } else {
-        prevBtn.style.display = "inline-block";
-      }
-
-      if (n === tabs.length - 1) {
-        nextBtn.style.display = "none";
-        submitBtn.style.display = "inline-block";
-      } else {
-        nextBtn.style.display = "inline-block";
-        submitBtn.style.display = "none";
-      }
-
-      currentTab = n;
-    }
-
-    prevBtn.addEventListener("click", function () {
-      if (currentTab > 0) {
-        showTab(currentTab - 1);
-      }
+  function triggerConditionalSections() {
+    // Trigger change events on all checked radio buttons to show/hide conditional sections
+    document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+      radio.dispatchEvent(new Event('change'));
     });
 
-    nextBtn.addEventListener("click", function () {
-      if (currentTab < tabs.length - 1) {
-        showTab(currentTab + 1);
-      }
-    });
-    showTab(0);
-
-    // ========== CONDITIONAL SECTIONS ==========
-    const medCatYes = document.getElementById("medCatYes");
-    const medCatNo = document.getElementById("medCatNo");
-    const medCatDetails = document.getElementById("medCatDetails");
-
-    function toggleMedCatDetails() {
-      if (medCatYes.checked) {
-        medCatDetails.style.display = "block";
-      } else {
-        medCatDetails.style.display = "none";
+    // Handle physical status conditional sections
+    const physicalStatus = document.querySelector('input[name="physicalStatus"]:checked');
+    if (physicalStatus && physicalStatus.value === 'category') {
+      document.getElementById('category-options').style.display = 'block';
+      const categoryType = document.querySelector('input[name="categoryType"]:checked');
+      if (categoryType) {
+        document.getElementById('restrictions-group').style.display = 'block';
       }
     }
+  }
 
-    medCatYes.addEventListener("change", toggleMedCatDetails);
-    medCatNo.addEventListener("change", toggleMedCatDetails);
+  // ========== TAB NAVIGATION ==========
+  const formTabs = document.getElementById("formTabs");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const submitBtn = document.querySelector(".btn-submit");
+  const progressBar = document.querySelector(".progress-bar");
 
-    const borderYes = document.getElementById("borderYes");
-    const borderNo = document.getElementById("borderNo");
-    const borderDistance = document.getElementById("borderDistance");
+  let currentTab = 0;
+  const tabs = document.querySelectorAll(".tab-pane");
 
-    function toggleBorderDistance() {
-      if (borderYes.checked) {
-        borderDistance.style.display = "block";
-      } else {
-        borderDistance.style.display = "none";
-      }
+  function showTab(n) {
+    tabs.forEach((tab) => tab.classList.remove("show", "active"));
+    tabs[n].classList.add("show", "active");
+
+    const tabButtons = formTabs.querySelectorAll(".nav-link");
+    tabButtons.forEach((button) => button.classList.remove("active"));
+    tabButtons[n].classList.add("active");
+
+    // Update progress bar
+    const progress = ((n + 1) / tabs.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    progressBar.setAttribute("aria-valuenow", progress);
+
+    // Update buttons
+    if (n === 0) {
+      prevBtn.style.display = "none";
+    } else {
+      prevBtn.style.display = "inline-block";
     }
 
-    borderYes.addEventListener("change", toggleBorderDistance);
-    borderNo.addEventListener("change", toggleBorderDistance);
-
-    const loanYes = document.getElementById("loanYes");
-    const loanNo = document.getElementById("loanNo");
-    const loanDetails = document.getElementById("loanDetails");
-
-    function toggleLoanDetails() {
-      if (loanYes.checked) {
-        loanDetails.style.display = "block";
-      } else {
-        loanDetails.style.display = "none";
-      }
+    if (n === tabs.length - 1) {
+      nextBtn.style.display = "none";
+      submitBtn.style.display = "inline-block";
+    } else {
+      nextBtn.style.display = "inline-block";
+      submitBtn.style.display = "none";
     }
 
-    loanYes.addEventListener("change", toggleLoanDetails);
-    loanNo.addEventListener("change", toggleLoanDetails);
+    currentTab = n;
+  }
 
-    const detailedYes = document.getElementById("detailedYes");
-    const detailedNo = document.getElementById("detailedNo");
-    const detailedCourseDetails = document.getElementById("detailedCourseDetails");
-
-    function toggleDetailedCourseDetails() {
-      if (detailedYes.checked) {
-        detailedCourseDetails.style.display = "block";
-      } else {
-        detailedCourseDetails.style.display = "none";
-      }
+  prevBtn.addEventListener("click", function () {
+    if (currentTab > 0) {
+      showTab(currentTab - 1);
     }
+  });
 
-    detailedYes.addEventListener("change", toggleDetailedCourseDetails);
-    detailedNo.addEventListener("change", toggleDetailedCourseDetails);
-
-    const discordYes = document.getElementById("discordYes");
-    const discordNo = document.getElementById("discordNo");
-    const maritalDiscordDetails = document.getElementById("maritalDiscordDetails");
-
-    function toggleDiscordDetails() {
-      if (discordYes.checked) {
-        maritalDiscordDetails.style.display = "block";
-      } else {
-        maritalDiscordDetails.style.display = "none";
-      }
+  nextBtn.addEventListener("click", function () {
+    if (currentTab < tabs.length - 1) {
+      showTab(currentTab + 1);
     }
+  });
+  
+  showTab(0);
 
-    discordYes.addEventListener("change", toggleDiscordDetails);
-    discordNo.addEventListener("change", toggleDiscordDetails);
+  // ========== CONDITIONAL SECTIONS ==========
+  const medCatYes = document.getElementById("medCatYes");
+  const medCatNo = document.getElementById("medCatNo");
+  const medCatDetails = document.getElementById("medCatDetails");
 
-    // Physical Status toggle
-    const shapeStatus = document.getElementById("shapeStatus");
-    const categoryStatus = document.getElementById("categoryStatus");
-    const categoryOptions = document.getElementById("category-options");
-    const restrictionsGroup = document.getElementById("restrictions-group");
-    const permanentCategory = document.getElementById("permanentCategory");
-    const temporaryCategory = document.getElementById("temporaryCategory");
-
-    function togglePhysicalStatus() {
-      if (categoryStatus.checked) {
-        categoryOptions.style.display = "block";
-        toggleCategoryType();
-      } else {
-        categoryOptions.style.display = "none";
-        restrictionsGroup.style.display = "none";
-      }
+  function toggleMedCatDetails() {
+    if (medCatYes.checked) {
+      medCatDetails.style.display = "block";
+    } else {
+      medCatDetails.style.display = "none";
     }
+  }
 
-    function toggleCategoryType() {
-      if (permanentCategory.checked || temporaryCategory.checked) {
-        restrictionsGroup.style.display = "block";
-      } else {
-        restrictionsGroup.style.display = "none";
-      }
+  medCatYes.addEventListener("change", toggleMedCatDetails);
+  medCatNo.addEventListener("change", toggleMedCatDetails);
+
+  const borderYes = document.getElementById("borderYes");
+  const borderNo = document.getElementById("borderNo");
+  const borderDistance = document.getElementById("borderDistance");
+
+  function toggleBorderDistance() {
+    if (borderYes.checked) {
+      borderDistance.style.display = "block";
+    } else {
+      borderDistance.style.display = "none";
     }
+  }
 
-    shapeStatus.addEventListener("change", togglePhysicalStatus);
-    categoryStatus.addEventListener("change", togglePhysicalStatus);
-    permanentCategory.addEventListener("change", toggleCategoryType);
-    temporaryCategory.addEventListener("change", toggleCategoryType);
+  borderYes.addEventListener("change", toggleBorderDistance);
+  borderNo.addEventListener("change", toggleBorderDistance);
 
-    // ========== ADD EMPTY ROW FUNCTIONS ==========
-    function addCourseRow() {
-      const tbody = document.querySelector('#coursesTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  const loanYes = document.getElementById("loanYes");
+  const loanNo = document.getElementById("loanNo");
+  const loanDetails = document.getElementById("loanDetails");
+
+  function toggleLoanDetails() {
+    if (loanYes.checked) {
+      loanDetails.style.display = "block";
+    } else {
+      loanDetails.style.display = "none";
+    }
+  }
+
+  loanYes.addEventListener("change", toggleLoanDetails);
+  loanNo.addEventListener("change", toggleLoanDetails);
+
+  const detailedYes = document.getElementById("detailedYes");
+  const detailedNo = document.getElementById("detailedNo");
+  const detailedCourseDetails = document.getElementById("detailedCourseDetails");
+
+  function toggleDetailedCourseDetails() {
+    if (detailedYes.checked) {
+      detailedCourseDetails.style.display = "block";
+    } else {
+      detailedCourseDetails.style.display = "none";
+    }
+  }
+
+  detailedYes.addEventListener("change", toggleDetailedCourseDetails);
+  detailedNo.addEventListener("change", toggleDetailedCourseDetails);
+
+  const discordYes = document.getElementById("discordYes");
+  const discordNo = document.getElementById("discordNo");
+  const maritalDiscordDetails = document.getElementById("maritalDiscordDetails");
+
+  function toggleDiscordDetails() {
+    if (discordYes.checked) {
+      maritalDiscordDetails.style.display = "block";
+    } else {
+      maritalDiscordDetails.style.display = "none";
+    }
+  }
+
+  discordYes.addEventListener("change", toggleDiscordDetails);
+  discordNo.addEventListener("change", toggleDiscordDetails);
+
+  // Physical Status toggle
+  const shapeStatus = document.getElementById("shapeStatus");
+  const categoryStatus = document.getElementById("categoryStatus");
+  const categoryOptions = document.getElementById("category-options");
+  const restrictionsGroup = document.getElementById("restrictions-group");
+  const permanentCategory = document.getElementById("permanentCategory");
+  const temporaryCategory = document.getElementById("temporaryCategory");
+
+  function togglePhysicalStatus() {
+    if (categoryStatus.checked) {
+      categoryOptions.style.display = "block";
+      toggleCategoryType();
+    } else {
+      categoryOptions.style.display = "none";
+      restrictionsGroup.style.display = "none";
+    }
+  }
+
+  function toggleCategoryType() {
+    if (permanentCategory.checked || temporaryCategory.checked) {
+      restrictionsGroup.style.display = "block";
+    } else {
+      restrictionsGroup.style.display = "none";
+    }
+  }
+
+  shapeStatus.addEventListener("change", togglePhysicalStatus);
+  categoryStatus.addEventListener("change", togglePhysicalStatus);
+  permanentCategory.addEventListener("change", toggleCategoryType);
+  temporaryCategory.addEventListener("change", toggleCategoryType);
+
+  // ========== ADD EMPTY ROW FUNCTIONS ==========
+  function addCourseRow() {
+    const tbody = document.querySelector('#coursesTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm course-input" name="course[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="courseFrom[]"></td>
@@ -3269,26 +3278,26 @@
       <td><input type="text" class="form-control form-control-sm course-input" name="courseGrading[]"></td>
       <td><input type="text" class="form-control form-control-sm course-input" name="courseRemarks[]"></td>
     `;
-    }
+  }
 
-    function addUnitRow() {
-      const tbody = document.querySelector('#unitsTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addUnitRow() {
+    const tbody = document.querySelector('#unitsTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm unit-input" name="unit[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="unitFrom[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="unitTo[]"></td>
       <td><input type="text" class="form-control form-control-sm unit-input" name="unitDuty[]"></td>
     `;
-    }
+  }
 
-    function addLoanRow() {
-      const tbody = document.querySelector('#loansTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addLoanRow() {
+    const tbody = document.querySelector('#loansTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm loan-input" name="loanType[]"></td>
       <td><input type="text" class="form-control form-control-sm loan-input" name="loanAmount[]"></td>
@@ -3297,39 +3306,39 @@
       <td><input type="text" class="form-control form-control-sm loan-input" name="loanPending[]"></td>
       <td><input type="text" class="form-control form-control-sm loan-input" name="loanRemarks[]"></td>
     `;
-    }
+  }
 
-    function addPunishmentRow() {
-      const tbody = document.querySelector('#punishmentTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addPunishmentRow() {
+    const tbody = document.querySelector('#punishmentTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="date" class="form-control form-control-sm" name="punishmentDate[]"></td>
       <td><input type="text" class="form-control form-control-sm punishment-input" name="punishment[]"></td>
       <td><input type="text" class="form-control form-control-sm punishment-input" name="punishmentAASec[]"></td>
       <td><input type="text" class="form-control form-control-sm punishment-input" name="punishmentRemarks[]"></td>
     `;
-    }
+  }
 
-    function addDetailedCourseRow() {
-      const tbody = document.querySelector('#detailedCoursesTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addDetailedCourseRow() {
+    const tbody = document.querySelector('#detailedCoursesTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm detailed-course-input" name="detailedCourseName[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="detailedCourseFrom[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="detailedCourseTo[]"></td>
       <td><input type="text" class="form-control form-control-sm detailed-course-input" name="detailedCourseRemarks[]"></td>
     `;
-    }
+  }
 
-    function addLeaveRow() {
-      const tbody = document.querySelector('#leaveTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addLeaveRow() {
+    const tbody = document.querySelector('#leaveTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm leave-input" name="leaveYear[]"></td>
       <td><input type="number" class="form-control form-control-sm" name="leaveAL[]"></td>
@@ -3338,25 +3347,25 @@
       <td><input type="number" class="form-control form-control-sm" name="leaveTotal[]"></td>
       <td><input type="text" class="form-control form-control-sm leave-input" name="leaveRemarks[]"></td>
     `;
-    }
+  }
 
-    function addFamilyRow() {
-      const tbody = document.querySelector('#familyTable tbody');
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addFamilyRow() {
+    const tbody = document.querySelector('#familyTable tbody');
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td><input type="text" class="form-control form-control-sm family-input" name="familyRelation[]"></td>
       <td><input type="text" class="form-control form-control-sm family-input" name="familyName[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="familyDOB[]"></td>
       <td><input type="text" class="form-control form-control-sm family-input" name="familyUID[]"></td>
       <td><input type="text" class="form-control form-control-sm family-input" name="familyPartII[]"></td>
     `;
-    }
+  }
 
-    function addChildRow() {
-      const tbody = document.querySelector('#childrenTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addChildRow() {
+    const tbody = document.querySelector('#childrenTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm children-input" name="childName[]"></td>
       <td><input type="date" class="form-control form-control-sm" name="childDOB[]"></td>
@@ -3364,283 +3373,289 @@
       <td><input type="text" class="form-control form-control-sm children-input" name="childPartII[]"></td>
       <td><input type="text" class="form-control form-control-sm children-input" name="childUID[]"></td>
     `;
-    }
+  }
 
-    function addMobileRow() {
-      const tbody = document.querySelector('#mobileTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addMobileRow() {
+    const tbody = document.querySelector('#mobileTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileType[]"></td>
       <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileNumber[]"></td>
       <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileProvider[]"></td>
       <td><input type="text" class="form-control form-control-sm mobile-input" name="mobileRemarks[]"></td>
     `;
-    }
+  }
 
-    function addDiscordRow() {
-      const tbody = document.querySelector('#discordTable tbody');
-      const rowCount = tbody.rows.length;
-      const row = tbody.insertRow();
-      row.innerHTML = `
+  function addDiscordRow() {
+    const tbody = document.querySelector('#discordTable tbody');
+    const rowCount = tbody.rows.length;
+    const row = tbody.insertRow();
+    row.innerHTML = `
       <td>${rowCount + 1}</td>
       <td><input type="text" class="form-control form-control-sm discord-input" name="discordCaseNo[]"></td>
       <td><input type="text" class="form-control form-control-sm discord-input" name="discordAmount[]"></td>
       <td><input type="text" class="form-control form-control-sm discord-input" name="discordSanction[]"></td>
     `;
+  }
+
+  // ========== FORM SUBMISSION ==========
+  updateForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      alert('Please correct the errors in the form before updating.');
+      const firstError = document.querySelector('.is-invalid');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
     }
 
-    // ========== FORM SUBMISSION ==========
-    updateForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
+    if (!confirm('Are you sure you want to update this personnel record?')) {
+      return;
+    }
 
-      if (!validateForm()) {
-        alert('Please correct the errors in the form before updating.');
-        const firstError = document.querySelector('.is-invalid');
-        if (firstError) {
-          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
-      }
+    const formData = collectFormData();
+    const armyNumber = document.getElementById('originalArmyNumber').value;
 
-      if (!confirm('Are you sure you want to update this personnel record?')) {
-        return;
-      }
+    const submitBtn = updateForm.querySelector('.btn-submit');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+    submitBtn.disabled = true;
 
-      const formData = collectFormData();
-      const armyNumber = document.getElementById('originalArmyNumber').value;
+    try {
+      const response = await fetch(`/personnel_information/api/personnel/update/${armyNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-      const submitBtn = updateForm.querySelector('.btn-submit');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
-      submitBtn.disabled = true;
+      const result = await response.json();
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
 
-      try {
-        const response = await fetch(`/personnel_information/api/personnel/update/${armyNumber}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-
-        const result = await response.json();
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-
-        if (response.ok && result.success) {
-          alert('Personnel updated successfully!');
-          formContainer.style.display = 'none';
-          searchInput.value = '';
-          updateForm.reset();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          alert(result.message || 'Failed to update personnel');
-        }
-      } catch (error) {
-        console.error('Update error:', error);
-        alert('An error occurred while updating');
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-
-    // Cancel button
-    btnCancel.addEventListener('click', function () {
-      if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+      if (response.ok && result.success) {
+        alert('Personnel updated successfully!');
         formContainer.style.display = 'none';
         searchInput.value = '';
         updateForm.reset();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert(result.message || 'Failed to update personnel');
       }
+    } catch (error) {
+      console.error('Update error:', error);
+      alert('An error occurred while updating');
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    }
+  });
+
+  // Cancel button
+  btnCancel.addEventListener('click', function () {
+    if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+      formContainer.style.display = 'none';
+      searchInput.value = '';
+      updateForm.reset();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
+  // ========== COLLECT FORM DATA ==========
+  function collectFormData() {
+    const data = {
+      name: document.getElementById("name").value,
+      armyNumber: document.getElementById("armyNumber").value,
+      rank: document.getElementById("rank").value,
+      trade: document.getElementById("trade").value,
+      dateOfEnrollment: document.getElementById("dateOfEnrollment").value,
+      dateOfBirth: document.getElementById("dateOfBirth").value,
+      dateOfTOS: document.getElementById("dateOfTOS").value,
+      dateOfTORS: document.getElementById("dateOfTORS").value,
+      bloodGroup: document.getElementById("bloodGroup").value,
+      religion: document.getElementById("religion").value,
+      foodPreference: document.querySelector('input[name="foodPreference"]:checked')?.value || "",
+      drinker: document.querySelector('input[name="drinker"]:checked')?.value || "",
+      company: document.getElementById("company").value,
+      civQualifications: document.getElementById("civQualifications").value,
+      decorationAwards: document.getElementById("decorationAwards").value,
+      lackingQualifications: document.getElementById("lackingQualifications").value,
+      willingPromotions: document.querySelector('input[name="willingPromotions"]:checked')?.value || "",
+      iCardNo: document.getElementById("iCardNo").value,
+      iCardDate: document.getElementById("iCardDate").value,
+      iCardIssuedBy: document.getElementById("iCardIssuedBy").value,
+      bpetGrading: document.getElementById("bpetGrading").value,
+      pptGrading: document.getElementById("pptGrading").value,
+      bpetDate: document.getElementById("bpetDate").value,
+      clothingCard: document.querySelector('input[name="clothingCard"]:checked')?.value || "",
+      panCardNo: document.getElementById("panCardNo").value,
+      panPartII: document.getElementById("panPartII").value,
+      aadharCardNo: document.getElementById("aadharCardNo").value,
+      aadharPartII: document.getElementById("aadharPartII").value,
+      jointAccountNo: document.getElementById("jointAccountNo").value,
+      jointAccountBank: document.getElementById("jointAccountBank").value,
+      jointAccountIFSC: document.getElementById("jointAccountIFSC").value,
+      homeHouseNo: document.getElementById("homeHouseNo").value,
+      homeVillage: document.getElementById("homeVillage").value,
+      homePhone: document.getElementById("homePhone").value,
+      homeTO: document.getElementById("homeTO").value,
+      homePO: document.getElementById("homePO").value,
+      homePS: document.getElementById("homePS").value,
+      homeTeh: document.getElementById("homeTeh").value,
+      homeNRS: document.getElementById("homeNRS").value,
+      homeNMH: document.getElementById("homeNMH").value,
+      homeDistrict: document.getElementById("homeDistrict").value,
+      homeState: document.getElementById("homeState").value,
+      borderArea: document.querySelector('input[name="borderArea"]:checked')?.value || "",
+      distanceFromIB: document.getElementById("distanceFromIB").value,
+      height: document.getElementById("height").value,
+      weight: document.getElementById("weight").value,
+      chest: document.getElementById("chest").value,
+      identificationMarks: document.getElementById("identificationMarks").value,
+      
+      // UPDATED: Physical status fields
+      physicalStatus: document.querySelector('input[name="physicalStatus"]:checked')?.value || "shape",
+      categoryType: document.querySelector('input[name="categoryType"]:checked')?.value || "",
+      physicalRestrictions: document.getElementById("physicalRestrictions")?.value || "",
+      
+      courtCases: document.getElementById("courtCases").value,
+      loan: document.querySelector('input[name="loan"]:checked')?.value || "",
+      totalLeavesEncashed: document.getElementById("totalLeavesEncashed").value,
+      participationActivities: document.getElementById("participationActivities").value,
+      presentFamilyLocation: document.getElementById("presentFamilyLocation").value,
+      priorStation: document.querySelector('input[name="priorStation"]:checked')?.value || "",
+      priorStationDate: document.getElementById("priorStationDate").value,
+      workedIT: document.querySelector('input[name="workedIT"]:checked')?.value || "",
+      workedUnitTenure: document.getElementById("workedUnitTenure").value,
+      detailedCourse: document.querySelector('input[name="detailedCourse"]:checked')?.value || "",
+      medCat: document.querySelector('input[name="medCat"]:checked')?.value || "",
+      lastRecatBDDate: document.getElementById("lastRecatBDDate").value,
+      lastRecatBDAt: document.getElementById("lastRecatBDAt").value,
+      nextRecatDue: document.getElementById("nextRecatDue").value,
+      medicalProblem: document.getElementById("medicalProblem").value,
+      restrictions: document.getElementById("restrictions").value,
+      computerKnowledge: document.getElementById("computerKnowledge").value,
+      itLiterature: document.getElementById("itLiterature").value,
+      kinName: document.getElementById("kinName").value,
+      kinRelation: document.getElementById("kinRelation").value,
+      kinMarriageDate: document.getElementById("kinMarriageDate").value,
+      kinAccountNo: document.getElementById("kinAccountNo").value,
+      kinBank: document.getElementById("kinBank").value,
+      kinIFSC: document.getElementById("kinIFSC").value,
+      kinPartII: document.getElementById("kinPartII").value,
+      vehicleRegNo: document.getElementById("vehicleRegNo").value,
+      vehicleModel: document.getElementById("vehicleModel").value,
+      vehiclePurchaseDate: document.getElementById("vehiclePurchaseDate").value,
+      vehicleAGIF: document.querySelector('input[name="vehicleAGIF"]:checked')?.value || "",
+      drivingLicenseNo: document.getElementById("drivingLicenseNo").value,
+      licenseIssueDate: document.getElementById("licenseIssueDate").value,
+      licenseExpiryDate: document.getElementById("licenseExpiryDate").value,
+      disabilityChild: document.querySelector('input[name="disabilityChild"]:checked')?.value || "",
+      maritalDiscord: document.querySelector('input[name="maritalDiscord"]:checked')?.value || "",
+      counselling: document.getElementById("counselling").value,
+      folderPreparedOn: document.getElementById("folderPreparedOn").value,
+      folderCheckedBy: document.getElementById("folderCheckedBy").value,
+      bringFamily: document.querySelector('input[name="bringFamily"]:checked')?.value || "",
+      domesticIssues: document.getElementById("domesticIssues").value,
+      otherRequests: document.getElementById("otherRequests").value,
+      familyMedicalIssues: document.getElementById("familyMedicalIssues").value,
+      qualityPoints: document.getElementById("qualityPoints").value,
+      strengths: document.getElementById("strengths").value,
+      weaknesses: document.getElementById("weaknesses").value,
+      batch: document.getElementById("batch")?.value || "",
+      section: document.getElementById("section")?.value || "",
+
+      // UPDATED: Sports data
+      sports: collectSportsData(),
+      otherSports: document.getElementById("otherSports").value,
+
+      courses: collectTableData("coursesTable", [
+        "course", "courseFrom", "courseTo", "courseInstitute", "courseGrading", "courseRemarks"
+      ]),
+      units: collectTableData("unitsTable", [
+        "unit", "unitFrom", "unitTo", "unitDuty"
+      ]),
+      loans: collectTableData("loansTable", [
+        "loanType", "loanAmount", "loanBank", "loanEMI", "loanPending", "loanRemarks"
+      ]),
+      punishments: collectTableData("punishmentTable", [
+        "punishmentDate", "punishment", "punishmentAASec", "punishmentRemarks"
+      ]),
+      detailedCourses: collectTableData("detailedCoursesTable", [
+        "detailedCourseName", "detailedCourseFrom", "detailedCourseTo", "detailedCourseRemarks"
+      ]),
+      leaves: collectTableData("leaveTable", [
+        "leaveYear", "leaveAL", "leaveCL", "leaveAAL", "leaveTotal", "leaveRemarks"
+      ]),
+      family: collectTableData("familyTable", [
+        "familyRelation", "familyName", "familyDOB", "familyUID", "familyPartII"
+      ]),
+      children: collectTableData("childrenTable", [
+        "childName", "childDOB", "childClass", "childPartII", "childUID"
+      ]),
+      mobiles: collectTableData("mobileTable", [
+        "mobileType", "mobileNumber", "mobileProvider", "mobileRemarks"
+      ]),
+      discordCases: collectTableData("discordTable", [
+        "discordCaseNo", "discordAmount", "discordSanction"
+      ]),
+    };
+
+    console.log("Collected form data:", data);
+    return data;
+  }
+
+  function collectSportsData() {
+    const sports = [];
+    const checkboxes = document.querySelectorAll('.sports-checkbox:checked');
+
+    checkboxes.forEach(checkbox => {
+      sports.push(checkbox.value);
     });
 
-    // ========== COLLECT FORM DATA ==========
-    function collectFormData() {
-      const data = {
-        name: document.getElementById("name").value,
-        armyNumber: document.getElementById("armyNumber").value,
-        rank: document.getElementById("rank").value,
-        trade: document.getElementById("trade").value,
-        dateOfEnrollment: document.getElementById("dateOfEnrollment").value,
-        dateOfBirth: document.getElementById("dateOfBirth").value,
-        dateOfTOS: document.getElementById("dateOfTOS").value,
-        dateOfTORS: document.getElementById("dateOfTORS").value,
-        bloodGroup: document.getElementById("bloodGroup").value,
-        religion: document.getElementById("religion").value,
-        foodPreference: document.querySelector('input[name="foodPreference"]:checked')?.value || "",
-        drinker: document.querySelector('input[name="drinker"]:checked')?.value || "",
-        company: document.getElementById("company").value,
-        civQualifications: document.getElementById("civQualifications").value,
-        decorationAwards: document.getElementById("decorationAwards").value,
-        lackingQualifications: document.getElementById("lackingQualifications").value,
-        willingPromotions: document.querySelector('input[name="willingPromotions"]:checked')?.value || "",
-        iCardNo: document.getElementById("iCardNo").value,
-        iCardDate: document.getElementById("iCardDate").value,
-        iCardIssuedBy: document.getElementById("iCardIssuedBy").value,
-        bpetGrading: document.getElementById("bpetGrading").value,
-        pptGrading: document.getElementById("pptGrading").value,
-        bpetDate: document.getElementById("bpetDate").value,
-        clothingCard: document.querySelector('input[name="clothingCard"]:checked')?.value || "",
-        panCardNo: document.getElementById("panCardNo").value,
-        panPartII: document.getElementById("panPartII").value,
-        aadharCardNo: document.getElementById("aadharCardNo").value,
-        aadharPartII: document.getElementById("aadharPartII").value,
-        jointAccountNo: document.getElementById("jointAccountNo").value,
-        jointAccountBank: document.getElementById("jointAccountBank").value,
-        jointAccountIFSC: document.getElementById("jointAccountIFSC").value,
-        homeHouseNo: document.getElementById("homeHouseNo").value,
-        homeVillage: document.getElementById("homeVillage").value,
-        homePhone: document.getElementById("homePhone").value,
-        homeTO: document.getElementById("homeTO").value,
-        homePO: document.getElementById("homePO").value,
-        homePS: document.getElementById("homePS").value,
-        homeTeh: document.getElementById("homeTeh").value,
-        homeNRS: document.getElementById("homeNRS").value,
-        homeNMH: document.getElementById("homeNMH").value,
-        homeDistrict: document.getElementById("homeDistrict").value,
-        homeState: document.getElementById("homeState").value,
-        borderArea: document.querySelector('input[name="borderArea"]:checked')?.value || "",
-        distanceFromIB: document.getElementById("distanceFromIB").value,
-        height: document.getElementById("height").value,
-        weight: document.getElementById("weight").value,
-        chest: document.getElementById("chest").value,
-        identificationMarks: document.getElementById("identificationMarks").value,
-        physicalStatus: document.querySelector('input[name="physicalStatus"]:checked')?.value || "",
-        categoryType: document.querySelector('input[name="categoryType"]:checked')?.value || "",
-        physicalRestrictions: document.getElementById("physicalRestrictions").value,
-        courtCases: document.getElementById("courtCases").value,
-        loan: document.querySelector('input[name="loan"]:checked')?.value || "",
-        totalLeavesEncashed: document.getElementById("totalLeavesEncashed").value,
-        participationActivities: document.getElementById("participationActivities").value,
-        presentFamilyLocation: document.getElementById("presentFamilyLocation").value,
-        priorStation: document.querySelector('input[name="priorStation"]:checked')?.value || "",
-        priorStationDate: document.getElementById("priorStationDate").value,
-        workedIT: document.querySelector('input[name="workedIT"]:checked')?.value || "",
-        workedUnitTenure: document.getElementById("workedUnitTenure").value,
-        detailedCourse: document.querySelector('input[name="detailedCourse"]:checked')?.value || "",
-        medCat: document.querySelector('input[name="medCat"]:checked')?.value || "",
-        lastRecatBDDate: document.getElementById("lastRecatBDDate").value,
-        lastRecatBDAt: document.getElementById("lastRecatBDAt").value,
-        nextRecatDue: document.getElementById("nextRecatDue").value,
-        medicalProblem: document.getElementById("medicalProblem").value,
-        restrictions: document.getElementById("restrictions").value,
-        computerKnowledge: document.getElementById("computerKnowledge").value,
-        itLiterature: document.getElementById("itLiterature").value,
-        kinName: document.getElementById("kinName").value,
-        kinRelation: document.getElementById("kinRelation").value,
-        kinMarriageDate: document.getElementById("kinMarriageDate").value,
-        kinAccountNo: document.getElementById("kinAccountNo").value,
-        kinBank: document.getElementById("kinBank").value,
-        kinIFSC: document.getElementById("kinIFSC").value,
-        kinPartII: document.getElementById("kinPartII").value,
-        vehicleRegNo: document.getElementById("vehicleRegNo").value,
-        vehicleModel: document.getElementById("vehicleModel").value,
-        vehiclePurchaseDate: document.getElementById("vehiclePurchaseDate").value,
-        vehicleAGIF: document.querySelector('input[name="vehicleAGIF"]:checked')?.value || "",
-        drivingLicenseNo: document.getElementById("drivingLicenseNo").value,
-        licenseIssueDate: document.getElementById("licenseIssueDate").value,
-        licenseExpiryDate: document.getElementById("licenseExpiryDate").value,
-        disabilityChild: document.querySelector('input[name="disabilityChild"]:checked')?.value || "",
-        maritalDiscord: document.querySelector('input[name="maritalDiscord"]:checked')?.value || "",
-        counselling: document.getElementById("counselling").value,
-        folderPreparedOn: document.getElementById("folderPreparedOn").value,
-        folderCheckedBy: document.getElementById("folderCheckedBy").value,
-        bringFamily: document.querySelector('input[name="bringFamily"]:checked')?.value || "",
-        domesticIssues: document.getElementById("domesticIssues").value,
-        otherRequests: document.getElementById("otherRequests").value,
-        familyMedicalIssues: document.getElementById("familyMedicalIssues").value,
-        qualityPoints: document.getElementById("qualityPoints").value,
-        strengths: document.getElementById("strengths").value,
-        weaknesses: document.getElementById("weaknesses").value,
+    return sports;
+  }
 
-        // ADDED: Sports data
-        sports: collectSportsData(),
-        otherSports: document.getElementById("otherSports").value,
+  function collectTableData(tableId, fieldNames) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll("tbody tr");
+    const data = [];
 
-        courses: collectTableData("coursesTable", [
-          "course", "courseFrom", "courseTo", "courseInstitute", "courseGrading", "courseRemarks"
-        ]),
-        units: collectTableData("unitsTable", [
-          "unit", "unitFrom", "unitTo", "unitDuty"
-        ]),
-        loans: collectTableData("loansTable", [
-          "loanType", "loanAmount", "loanBank", "loanEMI", "loanPending", "loanRemarks"
-        ]),
-        punishments: collectTableData("punishmentTable", [
-          "punishmentDate", "punishment", "punishmentAASec", "punishmentRemarks"
-        ]),
-        detailedCourses: collectTableData("detailedCoursesTable", [
-          "detailedCourseName", "detailedCourseFrom", "detailedCourseTo", "detailedCourseRemarks"
-        ]),
-        leaves: collectTableData("leaveTable", [
-          "leaveYear", "leaveAL", "leaveCL", "leaveAAL", "leaveTotal", "leaveRemarks"
-        ]),
-        family: collectTableData("familyTable", [
-          "familyRelation", "familyName", "familyDOB", "familyUID", "familyPartII"
-        ]),
-        children: collectTableData("childrenTable", [
-          "childName", "childDOB", "childClass", "childPartII", "childUID"
-        ]),
-        mobiles: collectTableData("mobileTable", [
-          "mobileType", "mobileNumber", "mobileProvider", "mobileRemarks"
-        ]),
-        discordCases: collectTableData("discordTable", [
-          "discordCaseNo", "discordAmount", "discordSanction"
-        ]),
-      };
+    rows.forEach((row) => {
+      const rowData = {};
+      const inputs = row.querySelectorAll("input, select, textarea");
 
-      return data;
-    }
-
-    function collectSportsData() {
-      const sports = [];
-      const checkboxes = document.querySelectorAll('.sports-checkbox:checked');
-
-      checkboxes.forEach(checkbox => {
-        sports.push(checkbox.value);
-      });
-
-      return sports;
-    }
-
-    function collectTableData(tableId, fieldNames) {
-      const table = document.getElementById(tableId);
-      const rows = table.querySelectorAll("tbody tr");
-      const data = [];
-
-      rows.forEach((row) => {
-        const rowData = {};
-        const inputs = row.querySelectorAll("input, select, textarea");
-
-        inputs.forEach((input, index) => {
-          if (fieldNames[index]) {
-            rowData[fieldNames[index]] = input.value;
-          }
-        });
-
-        if (Object.values(rowData).some((val) => val !== "")) {
-          data.push(rowData);
+      inputs.forEach((input, index) => {
+        if (fieldNames[index]) {
+          rowData[fieldNames[index]] = input.value;
         }
       });
 
-      return data;
-    }
+      if (Object.values(rowData).some((val) => val !== "")) {
+        data.push(rowData);
+      }
+    });
 
-    // ========== EVENT LISTENERS FOR ADD ROW BUTTONS ==========
-    document.getElementById("addCourseRow").addEventListener("click", addCourseRow);
-    document.getElementById("addUnitRow").addEventListener("click", addUnitRow);
-    document.getElementById("addLoanRow").addEventListener("click", addLoanRow);
-    document.getElementById("addPunishmentRow").addEventListener("click", addPunishmentRow);
-    document.getElementById("addDetailedCourseRow").addEventListener("click", addDetailedCourseRow);
-    document.getElementById("addLeaveRow").addEventListener("click", addLeaveRow);
-    document.getElementById("addFamilyRow").addEventListener("click", addFamilyRow);
-    document.getElementById("addChildRow").addEventListener("click", addChildRow);
-    document.getElementById("addMobileRow").addEventListener("click", addMobileRow);
-    document.getElementById("addDiscordRow").addEventListener("click", addDiscordRow);
+    return data;
+  }
 
-    // Initialize validation system
-    setupRealTimeValidation();
-    setupDynamicTableValidation();
-  });
+  // ========== EVENT LISTENERS FOR ADD ROW BUTTONS ==========
+  document.getElementById("addCourseRow").addEventListener("click", addCourseRow);
+  document.getElementById("addUnitRow").addEventListener("click", addUnitRow);
+  document.getElementById("addLoanRow").addEventListener("click", addLoanRow);
+  document.getElementById("addPunishmentRow").addEventListener("click", addPunishmentRow);
+  document.getElementById("addDetailedCourseRow").addEventListener("click", addDetailedCourseRow);
+  document.getElementById("addLeaveRow").addEventListener("click", addLeaveRow);
+  document.getElementById("addFamilyRow").addEventListener("click", addFamilyRow);
+  document.getElementById("addChildRow").addEventListener("click", addChildRow);
+  document.getElementById("addMobileRow").addEventListener("click", addMobileRow);
+  document.getElementById("addDiscordRow").addEventListener("click", addDiscordRow);
+
+  // Initialize validation system
+  setupRealTimeValidation();
+  setupDynamicTableValidation();
+});
 </script>
 {% endblock %}

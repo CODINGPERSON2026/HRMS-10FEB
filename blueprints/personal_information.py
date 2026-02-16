@@ -68,6 +68,171 @@ def insert_sports_data(cursor, personnel_id, army_number, data):
                 sport
             ))
 
+def insert_dynamic_data(cursor, personnel_id, army_number, data):
+    """Insert dynamic data into related tables"""
+    
+    # Insert courses
+    for idx, course in enumerate(data.get('courses', []), 1):
+        if any(course.values()):
+            cursor.execute("""
+                INSERT INTO courses (personnel_id, army_number, sr_no, course, from_date, to_date, institute, grading, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                course.get('course', ''),
+                course.get('courseFrom', None),
+                course.get('courseTo', None),
+                course.get('courseInstitute', ''),
+                course.get('courseGrading', ''),
+                course.get('courseRemarks', '')
+            ))
+    
+    # Insert units
+    for idx, unit in enumerate(data.get('units', []), 1):
+        if any(unit.values()):
+            cursor.execute("""
+                INSERT INTO units_served (personnel_id, army_number, sr_no, unit, from_date, to_date, duty_performed)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                unit.get('unit', ''),
+                unit.get('unitFrom', None),
+                unit.get('unitTo', None),
+                unit.get('unitDuty', '')
+            ))
+    
+    # Insert loans
+    for idx, loan in enumerate(data.get('loans', []), 1):
+        if any(loan.values()):
+            cursor.execute("""
+                INSERT INTO loans (personnel_id, army_number, sr_no, loan_type, total_amount, bank_details, emi_per_month, pending, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                loan.get('loanType', ''),
+                float(loan.get('loanAmount', 0)) if loan.get('loanAmount') else None,
+                loan.get('loanBank', ''),
+                float(loan.get('loanEMI', 0)) if loan.get('loanEMI') else None,
+                float(loan.get('loanPending', 0)) if loan.get('loanPending') else None,
+                loan.get('loanRemarks', '')
+            ))
+    
+    # Insert punishments
+    for idx, punishment in enumerate(data.get('punishments', []), 1):
+        if any(punishment.values()):
+            cursor.execute("""
+                INSERT INTO punishments (personnel_id, army_number, sr_no, punishment_date, punishment, aa_sec, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                punishment.get('punishmentDate', None),
+                punishment.get('punishment', ''),
+                punishment.get('punishmentAASec', ''),
+                punishment.get('punishmentRemarks', '')
+            ))
+    
+    # Insert detailed courses
+    for idx, detailed in enumerate(data.get('detailedCourses', []), 1):
+        if any(detailed.values()):
+            cursor.execute("""
+                INSERT INTO detailed_courses (personnel_id, army_number, sr_no, course_name, from_date, to_date, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                detailed.get('detailedCourseName', ''),
+                detailed.get('detailedCourseFrom', None),
+                detailed.get('detailedCourseTo', None),
+                detailed.get('detailedCourseRemarks', '')
+            ))
+    
+    # Insert leaves
+    for idx, leave in enumerate(data.get('leaves', []), 1):
+        if any(leave.values()):
+            cursor.execute("""
+                INSERT INTO leave_details (personnel_id, army_number, sr_no, year, al_days, cl_days, aal_days, total_days, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                leave.get('leaveYear', ''),
+                int(leave.get('leaveAL', 0)) if leave.get('leaveAL') else None,
+                int(leave.get('leaveCL', 0)) if leave.get('leaveCL') else None,
+                int(leave.get('leaveAAL', 0)) if leave.get('leaveAAL') else None,
+                int(leave.get('leaveTotal', 0)) if leave.get('leaveTotal') else None,
+                leave.get('leaveRemarks', '')
+            ))
+    
+    # Insert family members
+    for idx, family in enumerate(data.get('family', []), 1):
+        if any(family.values()):
+            cursor.execute("""
+                INSERT INTO family_members (personnel_id, army_number, relation, name, date_of_birth, uid_no, part_ii_order)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number,
+                family.get('familyRelation', ''),
+                family.get('familyName', ''),
+                family.get('familyDOB', None),
+                family.get('familyUID', ''),
+                family.get('familyPartII', '')
+            ))
+    
+    # Insert children
+    for idx, child in enumerate(data.get('children', []), 1):
+        if any(child.values()):
+            cursor.execute("""
+                INSERT INTO children (personnel_id, army_number, sr_no, name, date_of_birth, class, part_ii_order, uid_no)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                child.get('childName', ''),
+                child.get('childDOB', None),
+                child.get('childClass', ''),
+                child.get('childPartII', ''),
+                child.get('childUID', '')
+            ))
+    
+    # Insert mobiles
+    for idx, mobile in enumerate(data.get('mobiles', []), 1):
+        if any(mobile.values()):
+            cursor.execute("""
+                INSERT INTO mobile_phones (personnel_id, army_number, sr_no, type, number, service_provider, remarks)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                mobile.get('mobileType', ''),
+                mobile.get('mobileNumber', ''),
+                mobile.get('mobileProvider', ''),
+                mobile.get('mobileRemarks', '')
+            ))
+    
+    # Insert discord cases
+    for idx, discord in enumerate(data.get('discordCases', []), 1):
+        if any(discord.values()):
+            cursor.execute("""
+                INSERT INTO marital_discord_cases (personnel_id, army_number, sr_no, case_no, amount_to_pay, sanction_letter_no)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                personnel_id, army_number, idx,
+                discord.get('discordCaseNo', ''),
+                float(discord.get('discordAmount', 0)) if discord.get('discordAmount') else None,
+                discord.get('discordSanction', '')
+            ))
+    
+    # Insert sports data
+    insert_sports_data(cursor, personnel_id, army_number, data)
+
+def delete_related_records(cursor, personnel_id, army_number):
+    """Delete all related records for a personnel before updating/deleting"""
+    tables = [
+        'courses', 'units_served', 'loans', 'punishments',
+        'detailed_courses', 'leave_details', 'family_members',
+        'children', 'mobile_phones', 'marital_discord_cases',
+        'personnel_sports'
+    ]
+    for table in tables:
+        cursor.execute(f"DELETE FROM {table} WHERE personnel_id = %s", (personnel_id,))
+    cursor.execute("DELETE FROM weight_info WHERE army_number = %s", (army_number,))
+
 @personnel_info.route('/get_total_personnel_count_and_courses')
 def total_army_personnel__and_courses():
     connection = get_db_connection()
@@ -509,7 +674,7 @@ def create_personnel():
 
             status_type = get_value('physicalStatus', 'shape')  # 'shape' or 'category'
             category_type = get_value('categoryType') if status_type == 'category' else None  # 'permanent' or 'temporary' if category
-            restrictions = get_value('restrictions')  # Always save
+            restrictions = get_value('physicalRestrictions')  # Always save
 
             weight_query = """
             INSERT INTO weight_info (name, army_number, age, `rank`, height, actual_weight, company, status_type, category_type, restrictions)
@@ -546,136 +711,6 @@ def create_personnel():
     finally:
         cursor.close()
         connection.close()
-
-def insert_dynamic_data(cursor, personnel_id, army_number, data):
-    for idx, course in enumerate(data.get('courses', []), 1):
-        if any(course.values()):
-            cursor.execute("""
-                INSERT INTO courses (personnel_id, army_number, sr_no, course, from_date, to_date, institute, grading, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                course.get('course', ''),
-                course.get('courseFrom', None),
-                course.get('courseTo', None),
-                course.get('courseInstitute', ''),
-                course.get('courseGrading', ''),
-                course.get('courseRemarks', '')
-            ))
-    for idx, unit in enumerate(data.get('units', []), 1):
-        if any(unit.values()):
-            cursor.execute("""
-                INSERT INTO units_served (personnel_id, army_number, sr_no, unit, from_date, to_date, duty_performed)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                unit.get('unit', ''),
-                unit.get('unitFrom', None),
-                unit.get('unitTo', None),
-                unit.get('unitDuty', '')
-            ))
-    for idx, loan in enumerate(data.get('loans', []), 1):
-        if any(loan.values()):
-            cursor.execute("""
-                INSERT INTO loans (personnel_id, army_number, sr_no, loan_type, total_amount, bank_details, emi_per_month, pending, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                loan.get('loanType', ''),
-                float(loan.get('loanAmount', 0)) if loan.get('loanAmount') else None,
-                loan.get('loanBank', ''),
-                float(loan.get('loanEMI', 0)) if loan.get('loanEMI') else None,
-                float(loan.get('loanPending', 0)) if loan.get('loanPending') else None,
-                loan.get('loanRemarks', '')
-            ))
-    for idx, punishment in enumerate(data.get('punishments', []), 1):
-        if any(punishment.values()):
-            cursor.execute("""
-                INSERT INTO punishments (personnel_id, army_number, sr_no, punishment_date, punishment, aa_sec, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                punishment.get('punishmentDate', None),
-                punishment.get('punishment', ''),
-                punishment.get('punishmentAASec', ''),
-                punishment.get('punishmentRemarks', '')
-            ))
-    for idx, detailed in enumerate(data.get('detailedCourses', []), 1):
-        if any(detailed.values()):
-            cursor.execute("""
-                INSERT INTO detailed_courses (personnel_id, army_number, sr_no, course_name, from_date, to_date, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                detailed.get('detailedCourseName', ''),
-                detailed.get('detailedCourseFrom', None),
-                detailed.get('detailedCourseTo', None),
-                detailed.get('detailedCourseRemarks', '')
-            ))
-    for idx, leave in enumerate(data.get('leaves', []), 1):
-        if any(leave.values()):
-            cursor.execute("""
-                INSERT INTO leave_details (personnel_id, army_number, sr_no, year, al_days, cl_days, aal_days, total_days, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                leave.get('leaveYear', ''),
-                int(leave.get('leaveAL', 0)) if leave.get('leaveAL') else None,
-                int(leave.get('leaveCL', 0)) if leave.get('leaveCL') else None,
-                int(leave.get('leaveAAL', 0)) if leave.get('leaveAAL') else None,
-                int(leave.get('leaveTotal', 0)) if leave.get('leaveTotal') else None,
-                leave.get('leaveRemarks', '')
-            ))
-    for idx, family in enumerate(data.get('family', []), 1):
-        if any(family.values()):
-            cursor.execute("""
-                INSERT INTO family_members (personnel_id, army_number, relation, name, date_of_birth, uid_no, part_ii_order)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number,
-                family.get('familyRelation', ''),
-                family.get('familyName', ''),
-                family.get('familyDOB', None),
-                family.get('familyUID', ''),
-                family.get('familyPartII', '')
-            ))
-    for idx, child in enumerate(data.get('children', []), 1):
-        if any(child.values()):
-            cursor.execute("""
-                INSERT INTO children (personnel_id, army_number, sr_no, name, date_of_birth, class, part_ii_order, uid_no)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                child.get('childName', ''),
-                child.get('childDOB', None),
-                child.get('childClass', ''),
-                child.get('childPartII', ''),
-                child.get('childUID', '')
-            ))
-    for idx, mobile in enumerate(data.get('mobiles', []), 1):
-        if any(mobile.values()):
-            cursor.execute("""
-                INSERT INTO mobile_phones (personnel_id, army_number, sr_no, type, number, service_provider, remarks)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                mobile.get('mobileType', ''),
-                mobile.get('mobileNumber', ''),
-                mobile.get('mobileProvider', ''),
-                mobile.get('mobileRemarks', '')
-            ))
-    for idx, discord in enumerate(data.get('discordCases', []), 1):
-        if any(discord.values()):
-            cursor.execute("""
-                INSERT INTO marital_discord_cases (personnel_id, army_number, sr_no, case_no, amount_to_pay, sanction_letter_no)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (
-                personnel_id, army_number, idx,
-                discord.get('discordCaseNo', ''),
-                float(discord.get('discordAmount', 0)) if discord.get('discordAmount') else None,
-                discord.get('discordSanction', '')
-            ))
-    insert_sports_data(cursor, personnel_id, army_number, data)
    
 @personnel_info.route('/sports_distribution_chart')
 def sports_distribution_chart():
@@ -1028,10 +1063,25 @@ def search_personnel(army_number):
             SELECT * FROM marital_discord_cases WHERE personnel_id = %s ORDER BY sr_no
         """, (personnel_id,))
         discord_cases = cursor.fetchall()
+        
+        # Get sports data - return as list of sport names
         cursor.execute("""
-            SELECT * FROM personnel_sports WHERE personnel_id = %s ORDER BY sport_type, sport_name
-                """, (personnel_id,))
+            SELECT sport_name FROM personnel_sports WHERE personnel_id = %s
+        """, (personnel_id,))
         sports_data = cursor.fetchall()
+        sports = [sport['sport_name'] for sport in sports_data]
+        
+        # Get weight_info data for status fields
+        cursor.execute("""
+            SELECT status_type, category_type, restrictions FROM weight_info WHERE army_number = %s LIMIT 1
+        """, (army_number,))
+        weight_info = cursor.fetchone()
+        
+        # Add weight_info fields to personnel object
+        if weight_info:
+            personnel['physical_status'] = weight_info.get('status_type')
+            personnel['category_type'] = weight_info.get('category_type')
+            personnel['physical_restrictions'] = weight_info.get('restrictions')
        
         return jsonify({
             'success': True,
@@ -1047,7 +1097,7 @@ def search_personnel(army_number):
                 'children': children,
                 'mobiles': mobiles,
                 'discord_cases': discord_cases,
-                'sports': sports_data
+                'sports': sports  # Now returns ['Football', 'Basketball', 'Cricket']
             }
         }), 200
    
@@ -1101,7 +1151,7 @@ def update_personnel(army_number):
             except (ValueError, TypeError):
                 return None
 
-        # Update personnel main table (unchanged)
+        # Update personnel main table - INCLUDING batch and section
         personnel_query = """
         UPDATE personnel SET
             name = %s, `rank` = %s, trade = %s, date_of_enrollment = %s, date_of_birth = %s,
@@ -1127,7 +1177,8 @@ def update_personnel(army_number):
             disability_child = %s, marital_discord = %s, counselling = %s,
             folder_prepared_on = %s, folder_checked_by = %s, bring_family = %s,
             domestic_issues = %s, other_requests = %s, family_medical_issues = %s,
-            quality_points = %s, strengths = %s, weaknesses = %s, detailed_course = %s
+            quality_points = %s, strengths = %s, weaknesses = %s, detailed_course = %s,
+            batch = %s, section = %s
         WHERE army_number = %s
         """
        
@@ -1223,17 +1274,26 @@ def update_personnel(army_number):
             get_value('strengths'),
             get_value('weaknesses'),
             get_value('detailedCourse'),
+            get_value('batch'),
+            get_value('section'),
             army_number
         )
+        
+        print("Executing personnel update query...")
         cursor.execute(personnel_query, personnel_values)
+        print(f"Personnel table updated. Rows affected: {cursor.rowcount}")
 
+        # Delete old related records
+        print("Deleting old related records...")
         delete_related_records(cursor, personnel_id, army_number)
 
-        # NEW/UPDATED: Re-insert into weight_info (after deleting old) with section status (shape/category), permanent/temporary (if category), and restrictions
-        # Skip if core fields missing
-        if not army_number or not get_value('name'):
-            print("Skipping weight_info insert: Missing core fields")
-        else:
+        # CRITICAL: Re-insert all dynamic data
+        print("Inserting dynamic data...")
+        insert_dynamic_data(cursor, personnel_id, army_number, data)
+
+        # Re-insert into weight_info
+        if army_number and get_value('name'):
+            print("Updating weight_info...")
             date_of_birth_str = get_date('dateOfBirth')
             age = None
             if date_of_birth_str:
@@ -1241,9 +1301,9 @@ def update_personnel(army_number):
                 today = datetime.date.today()
                 age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
-            status_type = get_value('physicalStatus', 'shape')  # 'shape' or 'category'
-            category_type = get_value('categoryType') if status_type == 'category' else None  # 'permanent' or 'temporary' if category
-            restrictions = get_value('restrictions')  # Always save
+            status_type = get_value('physicalStatus', 'shape')
+            category_type = get_value('categoryType') if status_type == 'category' else None
+            restrictions = get_value('physicalRestrictions')  # Changed from 'restrictions'
 
             weight_query = """
             INSERT INTO weight_info (name, army_number, age, `rank`, height, actual_weight, company, status_type, category_type, restrictions)
@@ -1262,9 +1322,12 @@ def update_personnel(army_number):
                 restrictions
             )
             cursor.execute(weight_query, weight_values)
+            print(f"Weight info updated. Rows affected: {cursor.rowcount}")
 
         connection.commit()
+        print("Transaction committed successfully!")
         return jsonify({'success': True, 'personnel_id': personnel_id, 'message': 'Personnel updated successfully'}), 200
+        
     except Error as e:
         connection.rollback()
         print(f"Database error: {e}")
@@ -1322,15 +1385,3 @@ def delete_personnel(army_number):
     finally:
         cursor.close()
         connection.close()
-
-def delete_related_records(cursor, personnel_id, army_number):
-    """Delete all related records for a personnel before updating/deleting"""
-    tables = [
-        'courses', 'units_served', 'loans', 'punishments',
-        'detailed_courses', 'leave_details', 'family_members',
-        'children', 'mobile_phones', 'marital_discord_cases',
-        'personnel_sports'
-    ]
-    for table in tables:
-        cursor.execute(f"DELETE FROM {table} WHERE personnel_id = %s", (personnel_id,))
-    cursor.execute("DELETE FROM weight_info WHERE army_number = %s", (army_number,))

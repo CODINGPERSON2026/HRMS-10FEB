@@ -172,15 +172,7 @@
     );
   }
 
-  .action-section-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+
 
   .action-buttons {
     margin: 4px 10px;
@@ -208,6 +200,7 @@
 
   .action-buttons .btn:hover {
     transform: translateY(-2px);
+     background-color: #084298;   /* deeper primary */
     box-shadow: 0 6px 20px var(--shadow);
   }
 
@@ -467,6 +460,8 @@
     align-items: center;
     justify-content: center;
   }
+  
+  
 </style>
 
 <!-- Dashboard -->
@@ -554,6 +549,18 @@
           0
         </span>
       </div>
+      <!-- AI Assistant Button -->
+      <button
+      style="margin-left:45%;"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#AIMODAL"
+    >
+    CHAT WITH AI ✨
+    </button>
+    
+    
+
     </div>
 
     <div id="stats-card-grid" class="stats-grid show">
@@ -814,8 +821,8 @@
     'modals/alarm/agniveer_test_alarms.html' %} {% include
     'modals/agniveer/modal.html' %}
      {% include 'modals/messenger/modal.html' %}
-
-    <!-- Parade State Modal -->
+        {%include 'modals/ollama/ollama.html' %}
+    
     <div
       class="modal fade modal-fullscreen"
       id="paradeStateModal"

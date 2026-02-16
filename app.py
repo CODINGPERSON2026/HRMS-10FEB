@@ -33,12 +33,9 @@ app.register_blueprint(add_user_bp)
 app.register_blueprint(oncourses_bp)
 app.register_blueprint(agniveer_bp)
 app.register_blueprint(chat_bp)
-app.register_blueprint(chatbot_bp)
+app.register_blueprint(ollama_bot_bp)
 
 
-@app.route('/chat_bot')
-def chat_bot():
-    return render_template('/chat_ai.html')
 
 @app.route("/admin_login", methods=["POST",'GET'])
 def admin_login():

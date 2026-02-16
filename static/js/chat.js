@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     badgeInterval = setInterval(() => {
       updateUnreadBadge();
-    }, 5000);
+    }, 50000);
 
   } catch (err) {
     console.error("Failed to fetch current user", err);

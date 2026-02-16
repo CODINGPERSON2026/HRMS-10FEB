@@ -1,0 +1,188 @@
+<style>
+  .message {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    max-width: 70%;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  .user-msg {
+    background: linear-gradient(135deg, #0d6efd, #2d8cff);
+    color: white;
+    margin-left: auto;
+    text-align: right;
+  }
+  
+  .bot-msg {
+    background: white;
+    border: 1px solid #e0e0e0;
+    margin-right: auto;
+  }
+  
+  #chatArea {
+    scroll-behavior: smooth;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
+  
+  
+  <!-- AI MODAL -->
+  <div class="modal fade" id="AIMODAL" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+  
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">HRMS AI Assistant</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body p-0">
+  
+          <!-- CHAT AREA -->
+          <div id="chatArea" style="height:400px; overflow-y:auto; padding:15px; background:#f8f9fa;"></div>
+  
+          <div class="d-flex p-2 border-top">
+            <input type="text" id="chatInput" class="form-control me-2" placeholder="Ask anything..." />
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <script>
+  async function sendMessage() {
+  
+    const input = document.getElementById("chatInput");
+    const chatArea = document.getElementById("chatArea");
+  
+    const question = input.value.trim();
+    if (!question) return;
+  
+    // USER MESSAGE
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user-msg";
+    userDiv.innerText = question;
+    chatArea.appendChild(userDiv);
+  
+    input.value = "";
+    chatArea.scrollTop = chatArea.scrollHeight;
+  
+    // TYPING MESSAGE
+    const typingDiv = document.createElement("div");
+    typingDiv.className = "message bot-msg";
+    typingDiv.innerText = "Typing...";
+    chatArea.appendChild(typingDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  
+    try {
+  
+      const response = await fetch("/bot/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: question })
+      });
+  
+      const data = await response.json();
+      chatArea.removeChild(typingDiv);
+  
+      const botDiv = document.createElement("div");
+      botDiv.className = "message bot-msg";
+      chatArea.appendChild(botDiv);
+  
+      // STRING RESPONSE
+      if (typeof data.answer === "string") {
+        typeMessage(botDiv, data.answer);
+      }
+  
+      // TABLE RESPONSE
+      else if (Array.isArray(data.answer) && data.answer.length > 0) {
+  
+        let table = "<table class='table table-sm table-bordered'><thead><tr>";
+  
+        Object.keys(data.answer[0]).forEach(key => {
+          table += `<th>${key}</th>`;
+        });
+  
+        table += "</tr></thead><tbody>";
+  
+        data.answer.forEach(row => {
+          table += "<tr>";
+          Object.values(row).forEach(val => {
+            table += `<td>${val}</td>`;
+          });
+          table += "</tr>";
+        });
+  
+        table += "</tbody></table>";
+  
+        botDiv.innerHTML = table;
+      }
+  
+      else if (data.error) {
+        botDiv.innerText = "Error: " + data.error;
+      }
+  
+      chatArea.scrollTop = chatArea.scrollHeight;
+  
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  
+  // TYPEWRITER EFFECT
+  function typeMessage(element, text, speed = 15) {
+    let i = 0;
+    element.innerHTML = "";
+    function typing() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typing, speed);
+      }
+    }
+    typing();
+  }
+  
+  
+  // ENTER KEY SUPPORT
+  document.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  });
+  let hasGreeted = false;
+
+const aiModal = document.getElementById('AIMODAL');
+
+aiModal.addEventListener('shown.bs.modal', function () {
+
+  if (hasGreeted) return;
+
+  const chatArea = document.getElementById("chatArea");
+
+  const botDiv = document.createElement("div");
+  botDiv.className = "message bot-msg";
+
+  chatArea.appendChild(botDiv);
+
+  typeMessage(botDiv, "👋 Welcome! I’m here to help you with HRMS queries.");
+
+  chatArea.scrollTop = chatArea.scrollHeight;
+
+  hasGreeted = true;
+});
+
+  </script>
+  

@@ -46,13 +46,29 @@ def update_task():
         return jsonify({"status": "error", "message": str(e)})
 
 
-
 @task_bp.route("/view_task")
 def view_task():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id,task_name, assigned_to, task_status FROM tasks ORDER BY id DESC")
+
+    cursor.execute("""
+        SELECT 
+            t.id,
+            t.task_name,
+            t.task_status,
+            t.assigned_to,
+            p.name AS assigned_name
+        FROM tasks t
+        LEFT JOIN personnel p 
+            ON t.assigned_to = p.army_number
+        ORDER BY t.id DESC
+    """)
+
     tasks = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
     return jsonify(tasks)
 
 

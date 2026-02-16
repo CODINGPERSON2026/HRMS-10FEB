@@ -399,7 +399,8 @@
     color: #6c757d;
   }
 
-
+  
+  }
 </style>
 <div class="wrapper">
   {% set header = "Personnel Management" %}
@@ -492,6 +493,11 @@
                   </div>
                 </div>
 
+                <!-- Photo Upload Section -->
+
+
+
+
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="rank" class="form-label required">Rank</label>
@@ -539,6 +545,7 @@
                     </select>
                   </div>
                 </div>
+
 
 
 
@@ -648,23 +655,21 @@
                     const companySelect = document.getElementById('company');
                     const sectionSelect = document.getElementById('section');
 
-                    if (companySelect && sectionSelect) {
-                      companySelect.addEventListener('change', function () {
-                        const selectedCompany = this.value;
+                    companySelect.addEventListener('change', function () {
+                      const selectedCompany = this.value;
 
-                        // Clear previous options
-                        sectionSelect.innerHTML = '<option value="">Select</option>';
+                      // Clear previous options
+                      sectionSelect.innerHTML = '<option value="">Select</option>';
 
-                        if (selectedCompany && companySections[selectedCompany]) {
-                          companySections[selectedCompany].forEach(section => {
-                            const option = document.createElement('option');
-                            option.value = section;
-                            option.textContent = section;
-                            sectionSelect.appendChild(option);
-                          });
-                        }
-                      });
-                    }
+                      if (selectedCompany && companySections[selectedCompany]) {
+                        companySections[selectedCompany].forEach(section => {
+                          const option = document.createElement('option');
+                          option.value = section;
+                          option.textContent = section;
+                          sectionSelect.appendChild(option);
+                        });
+                      }
+                    });
                   </script>
 
 
@@ -1120,7 +1125,37 @@
                           <input type="date" class="form-control form-control-sm" name="unitTo[]" />
                         </td>
                         <td>
-                          <input type="text" class="form-control form-control-sm unit-input" name="unitDuty[]" />
+                          <select class="form-select form-select-sm unit-input" name="unitDuty[]">
+                            <option value="">-- SELECT DOMAIN --</option>
+                            <option value="TM">TM</option>
+                            <option value="MULTI MEDIA">MULTI MEDIA</option>
+                            <option value="CODING">CODING</option>
+                            <option value="ACCOUNT">ACCOUNT</option>
+                            <option value="PROJECTS">PROJECTS</option>
+                            <option value="SYSTEM">SYSTEM</option>
+                            <option value="IT">IT</option>
+                            <option value="EXCHANGE">EXCHANGE</option>
+                            <option value="NFS">NFS</option>
+                            <option value="RR">RR</option>
+                            <option value="ICN AND BTS">ICN AND BTS</option>
+                            <option value="PA">PA</option>
+                            <option value="RP">RP</option>
+                            <option value="RUNNER">RUNNER</option>
+                            <option value="BUDDY">BUDDY</option>
+                            <option value="CLK">CLK</option>
+                            <option value="ONCO">ONCO</option>
+                            <option value="DUTY EFS">DUTY EFS</option>
+                            <option value="LINE MAN ">LINE MAN CQ</option>
+                            <option value="RT JCO">RT JCO</option>
+                            <option value="ORH">ORH</option>
+                            <option value="MESS CDR">MESS CDR</option>
+                            <option value="TRG CLK">TRG CLK</option>
+                            <option value="CHM">CHM</option>
+                            <option value="RHM">RHM</option>
+                            <option value="STOREMAN">STOREMAN</option>
+                            <option value="NODE">NODE</option>
+                            <option value="DUTY DVR MTNCO">DUTY DVR MTNCO</option>
+                          </select>
                         </td>
                       </tr>
                     </tbody>
@@ -2906,12 +2941,14 @@
       const rows = tbody.querySelectorAll("tr");
       const newRow = rows[0].cloneNode(true);
 
-      // Clear input values
-      newRow.querySelectorAll("input").forEach((input, index) => {
+      // Clear input, select, and textarea values
+      newRow.querySelectorAll("input, select, textarea").forEach((input, index) => {
         input.value = "";
         input.className = input.className.replace(/is-invalid|is-valid/g, "");
-        const fieldName = input.name.replace("[]", "");
-        input.id = `${fieldName}-${rows.length + 1}-${index}`;
+        if (input.name) {
+          const fieldName = input.name.replace("[]", "");
+          input.id = `${fieldName}-${rows.length + 1}-${index}`;
+        }
       });
 
       // Update serial number only if not familyTable
@@ -2928,8 +2965,8 @@
       });
 
       if (inputClass) {
-        newRow.querySelectorAll("input").forEach((input) => {
-          if (input.type !== "date" && input.type !== "number") {
+        newRow.querySelectorAll("input, select, textarea").forEach((input) => {
+          if (input.tagName === "SELECT" || input.tagName === "TEXTAREA" || (input.type !== "date" && input.type !== "number")) {
             input.classList.add(inputClass);
           }
         });
@@ -2945,44 +2982,34 @@
     }
 
     // Add event listeners for dynamic tables
-    const addCourseRowBtn = document.getElementById("addCourseRow");
-    if (addCourseRowBtn) addCourseRowBtn.addEventListener("click", function () {
+    document.getElementById("addCourseRow").addEventListener("click", function () {
       addTableRow("coursesTable", "addCourseRow", "course-input");
     });
-    const addUnitRowBtn = document.getElementById("addUnitRow");
-    if (addUnitRowBtn) addUnitRowBtn.addEventListener("click", function () {
+    document.getElementById("addUnitRow").addEventListener("click", function () {
       addTableRow("unitsTable", "addUnitRow", "unit-input");
     });
-    const addFamilyRowBtn = document.getElementById("addFamilyRow");
-    if (addFamilyRowBtn) addFamilyRowBtn.addEventListener("click", function () {
+    document.getElementById("addFamilyRow").addEventListener("click", function () {
       addTableRow("familyTable", "addFamilyRow", "family-input");
     });
-    const addChildRowBtn = document.getElementById("addChildRow");
-    if (addChildRowBtn) addChildRowBtn.addEventListener("click", function () {
+    document.getElementById("addChildRow").addEventListener("click", function () {
       addTableRow("childrenTable", "addChildRow", "children-input");
     });
-    const addLoanRowBtn = document.getElementById("addLoanRow");
-    if (addLoanRowBtn) addLoanRowBtn.addEventListener("click", function () {
+    document.getElementById("addLoanRow").addEventListener("click", function () {
       addTableRow("loansTable", "addLoanRow", "loan-input");
     });
-    const addPunishmentRowBtn = document.getElementById("addPunishmentRow");
-    if (addPunishmentRowBtn) addPunishmentRowBtn.addEventListener("click", function () {
+    document.getElementById("addPunishmentRow").addEventListener("click", function () {
       addTableRow("punishmentTable", "addPunishmentRow", "punishment-input");
     });
-    const addDetailedCourseRowBtn = document.getElementById("addDetailedCourseRow");
-    if (addDetailedCourseRowBtn) addDetailedCourseRowBtn.addEventListener("click", function () {
+    document.getElementById("addDetailedCourseRow").addEventListener("click", function () {
       addTableRow("detailedCoursesTable", "addDetailedCourseRow", "detailed-course-input");
     });
-    const addLeaveRowBtn = document.getElementById("addLeaveRow");
-    if (addLeaveRowBtn) addLeaveRowBtn.addEventListener("click", function () {
+    document.getElementById("addLeaveRow").addEventListener("click", function () {
       addTableRow("leaveTable", "addLeaveRow");
     });
-    const addMobileRowBtn = document.getElementById("addMobileRow");
-    if (addMobileRowBtn) addMobileRowBtn.addEventListener("click", function () {
+    document.getElementById("addMobileRow").addEventListener("click", function () {
       addTableRow("mobileTable", "addMobileRow", "mobile-input");
     });
-    const addDiscordRowBtn = document.getElementById("addDiscordRow");
-    if (addDiscordRowBtn) addDiscordRowBtn.addEventListener("click", function () {
+    document.getElementById("addDiscordRow").addEventListener("click", function () {
       addTableRow("discordTable", "addDiscordRow", "discord-input");
     });
 
@@ -3186,7 +3213,7 @@
         if (response.ok && result.success) {
           alert(`Form submitted successfully! Personnel ID: ${result.personnel_id}`);
           document.querySelector("form").reset();
-          showTab(0);
+          showTab(0); // Return to first tab
         } else {
           alert(result.message || "Failed to submit form");
         }
@@ -3197,70 +3224,29 @@
         submitBtn.disabled = false;
       }
     }
-    document.getElementById('photoInput').addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      const preview = document.getElementById('photoPreview');
-      const placeholder = document.getElementById('photoPlaceholder');
-      const removeBtn = document.getElementById('removePhotoBtn');
 
-      if (file) {
-        if (!file.type.startsWith('image/')) {
-          alert('Please select a valid image file (JPG, PNG, GIF).');
-          event.target.value = '';
-          return;
-        }
-        if (file.size > 2 * 1024 * 1024) {
-          alert('File size must be less than 2MB.');
-          event.target.value = '';
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-          placeholder.style.display = 'none';
-          removeBtn.style.display = 'inline-block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    function removePhoto() {
-      const preview = document.getElementById('photoPreview');
-      const placeholder = document.getElementById('photoPlaceholder');
-      const removeBtn = document.getElementById('removePhotoBtn');
-      const photoInput = document.getElementById('photoInput');
-
-      preview.src = '';
-      preview.style.display = 'none';
-      placeholder.style.display = 'block';
-      removeBtn.style.display = 'none';
-      photoInput.value = '';
-    }
+    
 
     // Initialize validation system
     setupRealTimeValidation();
     setupDynamicTableValidation();
     setupFormSubmission();
+  });
 
-    const rankSelect = document.getElementById('rank');
-    const batchContainer = document.getElementById('batch-container');
 
-    if (rankSelect) {
-      rankSelect.addEventListener('change', function () {
-        if (this.value === 'Agniveer') {
-          batchContainer.style.display = 'block';
-          const batchElement = document.getElementById('batch');
-          if (batchElement) batchElement.required = true;
-        } else {
-          batchContainer.style.display = 'none';
-          const batchElement = document.getElementById('batch');
-          if (batchElement) batchElement.required = false;
-        }
-      });
+  const rankSelect = document.getElementById('rank');
+  const batchContainer = document.getElementById('batch-container');
+
+  rankSelect.addEventListener('change', function () {
+    if (this.value === 'Agniveer') {
+      batchContainer.style.display = 'block';
+      document.getElementById('batch').required = true;
+    } else {
+      batchContainer.style.display = 'none';
+      document.getElementById('batch').required = false;
     }
   });
 
- </script>
+
+</script>
 {% endblock %}

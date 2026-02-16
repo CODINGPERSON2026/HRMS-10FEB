@@ -12,12 +12,10 @@
   body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f4f8;
     overflow-x: hidden;
     min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Dashboard Wrapper */
@@ -46,6 +44,7 @@
     0% {
       background-position: -200% 0;
     }
+
     100% {
       background-position: 200% 0;
     }
@@ -113,33 +112,20 @@
 
   /* Main Content */
   .main-content {
-    padding: 20px;
+    padding: 1px;
     min-height: 100vh;
-    animation: fadeIn 0.5s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   /* Action Section */
   .action-section {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    padding: 35px;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-    margin-bottom: 40px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 35px;
     border: 1px solid #e2e8f0;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
   }
 
   .action-section::before {
@@ -148,9 +134,8 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 6px;
+    height: 5px;
     background: linear-gradient(90deg, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .action-section-title {
@@ -166,57 +151,37 @@
   .action-buttons {
     margin: 4px 10px;
     display: flex;
-    gap: 15px;
+    gap: 20px;
     flex-wrap: wrap;
-  }
-
-  .action-buttons .btn {
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: none;
-  }
-
-  .action-buttons .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  .action-buttons .btn-primary {
-    background: linear-gradient(135deg, var(--light-blue) 0%, var(--dark-blue) 100%);
   }
 
   /* Stats Grid */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 15px;
-    transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.5s ease,
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 10px;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease,
       padding 0.3s ease, margin 0.3s ease;
     overflow: hidden;
   }
 
   .card {
     border: none;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     overflow: hidden;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     border: 1px solid #e2e8f0;
     text-align: center;
-    padding: 24px 20px;
+    padding: 16px;
     position: relative;
-    min-height: 160px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
   }
 
   .card::before {
@@ -225,57 +190,29 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(
-      90deg,
-      var(--light-blue) 0%,
-      var(--dark-blue) 100%
-    );
+    height: 3px;
+    background: linear-gradient(90deg,
+        var(--light-blue) 0%,
+        var(--dark-blue) 100%);
     opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
+    transition: opacity 0.3s ease;
   }
 
   .card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   }
 
   .card:hover::before {
     opacity: 1;
   }
 
-  .card:hover::after {
-    opacity: 1;
-  }
-
   .card h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin: 10px 0 5px 0;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--text-dark);
     line-height: 1.2;
-    background: linear-gradient(135deg, var(--light-blue) 0%, var(--dark-blue) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: all 0.3s ease;
-  }
-
-  .card:hover h3 {
-    transform: scale(1.05);
   }
 
   .card .text-muted {
@@ -320,28 +257,17 @@
     background: linear-gradient(135deg, var(--light-blue) 0%, var(--dark-blue) 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     margin-top: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    transition: all 0.3s ease;
   }
 
   .view-details:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--light-blue) 100%);
-  }
-
-  .view-details:active {
-    transform: translateY(0);
   }
 
   @media (max-width: 768px) {
@@ -448,6 +374,41 @@
     opacity: 1;
     transition: max-height 0.4s ease, opacity 0.3s ease;
   }
+  .sidebar-messenger {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #0084ff, #006aff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-messenger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
+}
+
+.sidebar-messenger {
+  cursor: pointer;
+}
+.sidebar-messenger {
+  position: relative;
+  cursor: pointer;
+}
+
+#unreadBadge {
+  font-size: 0.7rem;
+  padding: 0.25em 0.5em;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 
 <!-- Dashboard -->
@@ -475,12 +436,12 @@
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <div style="margin-bottom: 10px;">
-      {% if role == 'JCO' %}
+      {% if role in ['JCO','S/JCO'] %}
       {% include 'modals/alarm/no_jco_kunba.html' %}
-  {% endif %}
-  
-    
-      
+      {% endif %}
+
+
+
     </div>
 
     <div class="action-buttons">
@@ -488,7 +449,8 @@
         <i class="fas fa-chevron-down"></i>
       </button>
       {% if role in ['NCO PWR','SEC JCO','Subedar Major','NCO CHQ','NCO IT','NCO OP','NCO PWR','NCO MW','NCO
-      MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO RP/NA','NCO QM','O CENTRAL NCO']
+      MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO
+      RP/NA','NCO QM','O CENTRAL NCO']
       %}
 
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#personnelModal">
@@ -500,7 +462,7 @@
         INTERVIEW PENDING
       </button>
       {%endif%}
-      
+
       {% if role in ['NCO PWR','SEC JCO','Subedar Major','NCO CHQ','NCO IT','NCO OP','NCO PWR','NCO MW','NCO
       MCCS','NCO
       CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO RP/NA','NCO
@@ -521,7 +483,7 @@
         </span>
       </button>
       {% endif %}
-      
+
       {% if role in ['', 'O CENTRE NCO'] %}
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tradeModal">
         <i class="fas fa-plus-circle me-1"></i>
@@ -572,6 +534,12 @@
         {% endif %}
       </button>
       {% endif %}
+      <div class="sidebar-messenger position-relative" title="Chat with us" id="chatBtn">
+  <i class="fab fa-facebook-messenger"></i>
+  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="unreadBadge" style="display: none;">
+    0
+  </span>
+</div>
     </div>
 
     <div id="stats-card-grid" class="stats-grid show">
@@ -589,7 +557,7 @@
       </div>
       {% endif %}
 
-      {% if role in ['CO', '2IC', 'ADJUTANT'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC'] %}
       <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#attachmentModal">
         <div class="icon-circle mb-2">
           <i class="fas fa-cloud-upload-alt"></i>
@@ -601,7 +569,20 @@
       </div>
       {% endif %}
 
-      {% if role in ['CO', '2IC', 'ADJUTANT'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC'] %}
+      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#dutySearchModal"
+        id="card-duty-search">
+        <div class="icon-circle mb-2">
+          <i class="fas fa-user-tag"></i>
+        </div>
+        <small class="text-muted">DOMAIN SPECIALIZATION</small>
+        <h3 id="duty-search-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
+      </div>
+      {% endif %}
+
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC'] %}
       <div class="card p-3 text-center" style="cursor:pointer" id="openCourses">
         <div class="icon-circle mb-2">
           <i class="fas fa-graduation-cap"></i>
@@ -613,14 +594,18 @@
       </div>
       {% endif %}
 
-      {% if role in ['CO', '2IC', 'ADJUTANT'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC'] %}
       <div class="card p-3 text-center" style="cursor:pointer" id="interview-card">
         <div class="icon-circle mb-2">
           <i class="fa fa-male" aria-hidden="true"></i>
         </div>
         <small class="text-muted">KUNBA INTERVIEW</small>
         <h3>
-          <span id="interview-Count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>/<span id="total-count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>
+          <span id="interview-Count">
+            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
+          </span>/<span id="total-count">
+            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
+          </span>
         </h3>
         <span id="interview%" class="text-danger">
           <div class="shimmer-line" style="width: 50px; height: 14px; display: inline-block;"></div>
@@ -636,7 +621,11 @@
         </div>
         <small class="text-muted">KUNBA INTERVIEW</small>
         <h3>
-          <span id="interview-Count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>/<span id="total-count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>
+          <span id="interview-Count">
+            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
+          </span>/<span id="total-count">
+            <div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div>
+          </span>
         </h3>
         <span id="interview%" class="text-danger">
           <div class="shimmer-line" style="width: 50px; height: 14px; display: inline-block;"></div>
@@ -658,7 +647,7 @@
       </div>
       {% endif %}
 
-      {% if role in ['CO', '2IC', 'ADJUTANT'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC'] %}
       <div class="card p-3 text-center" style="cursor:pointer" id="viewDetailsBtn">
         <div class="mb-2">
           <i class="fas fa-user-plus fa-2x text-primary"></i>
@@ -794,6 +783,8 @@
     </div>
 
     {% include 'modals/detachmentModal/detachment.html' %}
+    {% include 'modals/personnelModal/duty_search_modal.html' %}
+
     {% include 'modals/personnelModal/personal_modal.html' %}
     {% include 'modals/salesmodal/salesModal.html' %}
     {% include 'modals/leaverequest/leave_request.html' %}
@@ -809,7 +800,7 @@
     {% include 'task_manager/update_task_by_jco.html' %}
     {% include 'modals/adduser/user.html' %}
     {% include 'modals/oncourses/modal.html' %}
-
+{% include 'modals/messenger/modal.html' %}
     {% if role in ['O CENTRE NCO'] %}
     <div class="modal fade" id="tradeModal" tabindex="-1">
       <div class="modal-dialog modal-fullscreen">
@@ -832,7 +823,7 @@
     {% if role =='CO'%}
     {% include 'modals/leaverequest/co-rejected-view.html' %}
     {% endif %}
-    
+
     {% if role in ['CO', '2IC', 'ADJUTANT','OC']%}
     {% include 'modals/alarm/agniveer_test_alarms.html' %}
     {% endif %}
@@ -856,7 +847,7 @@
         </div>
       </div>
     </div>
-
+    {% include 'images_section/section.html' %}
     <script>
       document.addEventListener('hidden.bs.modal', function () {
         document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
@@ -1103,7 +1094,8 @@
           { id: 'active-loan-count', endpoint: '/api/dashboard/loans', key: 'count' },
           { id: 'totalCoursesDone', endpoint: '/api/dashboard/courses', key: 'count' },
           { id: 'center-roll-points', endpoint: '/api/dashboard/rollcall', key: 'points' },
-          { id: 'board-count', endpoint: '/api/dashboard/boards', key: 'count' }
+          { id: 'board-count', endpoint: '/api/dashboard/boards', key: 'count' },
+          { id: 'duty-search-count', endpoint: '/api/dashboard/duty_count', key: 'count' }
         ];
 
         // Add simple card fetches
@@ -1292,4 +1284,5 @@
     </script>
   </div>
 </div>
+<script src="static/js/chat.js"></script>
 {% endblock %}

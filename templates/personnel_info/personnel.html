@@ -266,7 +266,7 @@
 
   /* Header */
   .modal-header {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    /* background: linear-gradient(135deg, var(--primary), var(--secondary)); */
     color: white;
     padding: 1rem 1.5rem;
     display: flex;
@@ -570,7 +570,6 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
       <div class="header-right">
 
         <a href="/personnel_information" class="header-link">Dashboard</a>
-
         <a href="/personnel_information/add-personnel" class="header-link">Add Personnel</a>
         <a href="/personnel_information/update-personnel" class="header-link">Update Personnel</a>
         <a href="/personnel_information/delete-personnel" class="header-link">Delete Personnel</a>
@@ -663,9 +662,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
               <table class="table table-hover personnel-table" id="modalPersonnelTable">
                 <thead>
                   <tr>
-                    <th>Name</th>
                     <th>Army Number</th>
                     <th>Rank</th>
+                    <th>Name</th>
                     <th>Trade</th>
                     <th>Company</th>
                     <th>Enrollment Date</th>
@@ -821,22 +820,23 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
   });
 
   // Load all personnel data for modal
-  async function loadAllPersonnelData() {
+async function loadAllPersonnelData() {
     try {
-      const response = await fetch('/personnel_information/api/all-personnel');
-      const data = await response.json();
+        const response = await fetch('/personnel_information/api/medical-personnel');
+        const data = await response.json();
 
-      if (data.success) {
-        window.allPersonnelData = data.personnel;
-        renderModalTable(data.personnel);
-        updateModalResultsCount(data.personnel.length);
-      } else {
-        showErrorInModal('Failed to load personnel data: ' + data.message);
-      }
+        if (data.success) {
+            window.allPersonnelData = data.medical_personnel;  // ← important
+            renderModalTable(data.medical_personnel);
+            updateModalResultsCount(data.medical_personnel.length);
+        } else {
+            showErrorInModal('Failed to load personnel data: ' + data.message);
+        }
     } catch (error) {
-      showErrorInModal('Network error: Could not load personnel data');
+        showErrorInModal('Network error: Could not load personnel data');
     }
-  }
+}
+
 
   function showErrorInModal(message) {
     const tableBody = document.getElementById('modalTableBody');
@@ -870,9 +870,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
     }
 
     tableBody.innerHTML = personnel.map(person => {
-      const name = person.name || 'N/A';
       const armyNumber = person.army_number || 'N/A';
       const rank = person.rank || 'N/A';
+      const name = person.name || 'N/A';
       const trade = person.trade || 'N/A';
       const company = person.company || 'Unknown';
       const enrollmentDate = person.date_of_enrollment
@@ -885,9 +885,9 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
 
       return `
         <tr data-company="${company}" data-medical="${person.med_cat || 'No'}">
-          <td class="fw-semibold">${name}</td>
           <td class="text-mono fw-bold">${armyNumber}</td>
           <td class="fw-bold text-uppercase">${rank}</td>
+          <td class="fw-semibold">${name}</td>
           <td>${trade}</td>
           <td>${companyBadge}</td>
           <td>${enrollmentDate}</td>

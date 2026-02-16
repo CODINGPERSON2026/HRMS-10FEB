@@ -225,7 +225,7 @@ def assigned_attachment_alarm():
                 army_number,
                 remarks,
                 td_date
-            FROM td_table WHERE td_date <= NOW() - INTERVAL 5 SECOND
+            FROM td_table WHERE td_date <= NOW() - INTERVAL 90 DAY 
         """)
 
         rows = cursor.fetchall()

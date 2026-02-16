@@ -35,6 +35,15 @@
           <label class="form-label">Select Location</label>
           <select id="locationDropdown" class="form-select"></select>
         </div>
+<<<<<<< HEAD
+=======
+        <!-- Posting Input Field -->
+<div class="mb-3" id="postingInputBox" style="display:none;">
+    <label class="form-label">Enter Posting Location</label>
+    <input type="text" id="postingInput" class="form-control" placeholder="Enter Posting Location">
+  </div>
+  
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
         <!-- TD / Any Other -->
         <div class="mb-3" id="remarksBox" style="display:none;">
@@ -62,9 +71,15 @@
             <thead class="table-light">
               <tr>
                 <th>Select</th>
+<<<<<<< HEAD
                 <th>Name</th>
                 <th>Army Number</th>
                 <th>Rank</th>
+=======
+                <th>Army Number</th>
+                <th>Rank</th>
+                <th>Name</th>
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
                 <th>Trade</th>
                 <th>Coy</th>
               </tr>
@@ -97,6 +112,7 @@ const warningMessage = document.getElementById('warningMessage');
 const searchInput = document.getElementById('searchInput');
 const personnelTableBody = document.getElementById('personnelTableBody');
 const assignBtn = document.getElementById('assignBtn');
+<<<<<<< HEAD
 
 // ACTION CHANGE
 actionSelect.addEventListener("change", async function () {
@@ -104,11 +120,26 @@ actionSelect.addEventListener("change", async function () {
 
     dropdown.innerHTML = "";
     locationBox.style.display = "block";
+=======
+const postingInputBox = document.getElementById('postingInputBox');
+const postingInput = document.getElementById('postingInput');
+
+// ACTION CHANGE
+// ACTION CHANGE
+actionSelect.addEventListener("change", async function () {
+    const action = this.value;
+
+    // Reset all
+    dropdown.innerHTML = "";
+    locationBox.style.display = "none";
+    postingInputBox.style.display = "none";
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     remarksBox.style.display = "none";
     tdFields.style.display = "none";
     otherFields.style.display = "none";
 
     if (action === "posting") {
+<<<<<<< HEAD
         dropdown.innerHTML = ["P1","P2","P3","P4"]
             .map(p => `<option value="${p}">${p}</option>`).join('');
 
@@ -116,40 +147,78 @@ actionSelect.addEventListener("change", async function () {
         try {
             const res = await fetch('/get_locations');
             
+=======
+
+        // ✅ Show input field instead of dropdown
+        postingInputBox.style.display = "block";
+
+    } else if (action === "det") {
+
+        locationBox.style.display = "block";
+
+        try {
+            const res = await fetch('/get_locations');
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
             if (res.status === 401) {
                 warningMessage.innerText = "Please login again";
                 warningMessage.style.color = "red";
                 dropdown.innerHTML = '<option value="">Error loading locations</option>';
                 return;
             }
+<<<<<<< HEAD
             
             const locations = await res.json();
             
+=======
+
+            const locations = await res.json();
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
             if (locations.error) {
                 warningMessage.innerText = locations.error;
                 warningMessage.style.color = "red";
                 dropdown.innerHTML = '<option value="">Error loading locations</option>';
             } else {
                 dropdown.innerHTML = locations
+<<<<<<< HEAD
                     .map(l => `<option value="${l.det_id}">${l.det_name}</option>`).join('');
             }
+=======
+                    .map(l => `<option value="${l.det_id}">${l.det_name}</option>`)
+                    .join('');
+            }
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         } catch (error) {
             console.error('Error loading locations:', error);
             dropdown.innerHTML = '<option value="">Error loading locations</option>';
         }
 
     } else if (action === "TD") {
+<<<<<<< HEAD
         locationBox.style.display = "none";
+=======
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         remarksBox.style.display = "block";
         tdFields.style.display = "block";
 
     } else if (action === "any_other") {
+<<<<<<< HEAD
         locationBox.style.display = "none";
+=======
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         remarksBox.style.display = "block";
         otherFields.style.display = "block";
     }
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 // LOAD DETACHMENTS ON MODAL OPEN
 document.getElementById('personnelModal').addEventListener('shown.bs.modal', async () => {
     try {
@@ -258,9 +327,15 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
         personnelTableBody.innerHTML += `
           <tr>
             <td><input type="checkbox" class="personnel-checkbox" data-id="${p.army_number}" ${selectedPersonnel.has(p.army_number)?"checked":""}></td>
+<<<<<<< HEAD
             <td>${p.name}</td>
             <td>${p.army_number}</td>
             <td>${p.rank}</td>
+=======
+            <td>${p.army_number}</td>
+            <td>${p.rank}</td>
+            <td>${p.name}</td>
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
             <td>${p.trade}</td>
             <td>${p.company}</td>
           </tr>`;
@@ -332,7 +407,24 @@ assignBtn.addEventListener('click', async () => {
             return;
         }
 
+<<<<<<< HEAD
     } else {
+=======
+    }
+    else if (action === "posting") {
+
+        remarks = postingInput.value.trim();
+    
+        if (!remarks) {
+            showStatusModal("Please enter Posting Location", "Red", 2500);
+            return;
+        }
+    
+    } 
+
+
+     else {
+>>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         remarks = dropdown.value;
         if (!remarks) {
             showStatusModal("Please select a Location", "Red", 2500);

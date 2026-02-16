@@ -1,0 +1,1207 @@
+{% extends "baseView.html" %}
+{% block content %}
+    <style>
+       
+   
+    
+      .prj-header-wrapper h5 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+    
+ 
+      .prj-stat-box {
+        text-align: center;
+      }
+    
+      .prj-stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+    
+      .prj-stat-label {
+        font-size: 0.75rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+      }
+    
+      .prj-filters-bar {
+        display: flex;
+        gap: 12px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.02);
+        flex-wrap: wrap;
+        align-items: center;
+      }
+    html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.chat-container {
+    height: 100vh;
+}
+
+      .prj-filter-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    
+      .prj-filter-dropdown {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+    
+      .prj-filter-dropdown:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+    
+      .prj-search-wrapper {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+    
+      .prj-search-field {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+    
+      .prj-search-field:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      }
+    
+      .prj-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+      }
+    
+      .prj-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+          padding: 20px;
+          max-height: 60vh;
+          overflow-y: auto;
+        }
+        
+    
+      .prj-single-card {
+        background: var(--card-background);
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+    
+      .prj-single-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+    
+      .prj-single-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        border-color: var(--primary-color);
+      }
+    
+      .prj-single-card:hover::before {
+        transform: scaleX(1);
+      }
+    
+      .prj-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+    
+      .prj-card-heading {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1.3;
+        max-width: 75%;
+      }
+    
+      .prj-card-badge {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+    
+      .prj-card-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 60px;
+      }
+    
+      .prj-card-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+    
+      .prj-info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+    
+      .prj-info-item i {
+        color: var(--primary-color);
+        font-size: 1rem;
+      }
+    
+      .prj-info-cost {
+        font-weight: 600;
+        color: #388e3c;
+      }
+    
+      .prj-stage-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 12px;
+      }
+    
+      /* Stage Colors */
+      .prj-stage-ppp {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+    
+      .prj-stage-aon {
+        background: #f3e5f5;
+        color: #7b1fa2;
+      }
+    
+      .prj-stage-fbu {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+    
+      .prj-stage-tob_tec,
+      .prj-stage-tob-tec {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+    
+      .prj-stage-b_bd,
+      .prj-stage-b-bd {
+        background: #fce4ec;
+        color: #c2185b;
+      }
+    
+      .prj-stage-ocb_ra,
+      .prj-stage-ocb-ra {
+        background: #e0f2f1;
+        color: #00796b;
+      }
+    
+      .prj-stage-placement_of_so,
+      .prj-stage-placement-of-so {
+        background: #fff9c4;
+        color: #f57f17;
+      }
+    
+      .prj-stage-store_items_delivery,
+      .prj-stage-store-items-delivery,
+      .prj-stage-store-delivery {
+        background: #ede7f6;
+        color: #5e35b1;
+      }
+    
+      .prj-stage-atp {
+        background: #e1f5fe;
+        color: #0277bd;
+      }
+    
+      .prj-stage-prac_crac,
+      .prj-stage-prac-crac {
+        background: #f1f8e9;
+        color: #558b2f;
+      }
+    
+      .prj-stage-payment {
+        background: #fff8e1;
+        color: #ff6f00;
+      }
+    
+      .prj-stage-completed {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+    
+      .prj-card-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+      }
+    
+      .prj-owner-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+    
+      .prj-owner-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+    
+      .prj-items-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: rgba(25, 118, 210, 0.1);
+        color: #1976d2;
+        font-weight: 600;
+      }
+    
+      /* Empty State */
+      .prj-empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+        grid-column: 1 / -1;
+      }
+    
+      .prj-empty-state i {
+        font-size: 4rem;
+        color: var(--border-color);
+        margin-bottom: 20px;
+      }
+    
+      .prj-empty-state h4 {
+        color: var(--text-primary);
+        margin-bottom: 10px;
+      }
+    
+      /* Loading Skeleton */
+      .prj-skeleton-card {
+        background: var(--card-background);
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid var(--border-color);
+      }
+    
+      .prj-skeleton-line {
+        background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+        margin-bottom: 12px;
+      }
+    
+      /* ==================== PROJECT DETAILS MODAL ==================== */
+      .prj-detail-modal .modal-dialog {
+        max-width: 900px;
+      }
+    
+      .prj-detail-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 30px;
+        border-radius: 16px 16px 0 0;
+        margin: -1rem -1rem 0 -1rem;
+      }
+    
+      .prj-detail-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+    
+      .prj-detail-meta-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+        opacity: 0.95;
+      }
+    
+      .prj-meta-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+      }
+    
+      .prj-detail-body-content {
+        padding: 30px;
+      }
+    
+      .prj-detail-section {
+        margin-bottom: 30px;
+      }
+    
+      .prj-section-heading {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    
+      .prj-section-heading i {
+        color: var(--primary-color);
+      }
+    
+      .prj-section-text {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+        border-left: 3px solid var(--primary-color);
+      }
+    
+      .prj-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+    
+      .prj-grid-item {
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+      }
+    
+      .prj-grid-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+    
+      .prj-grid-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+    
+      /* Stage Update Form */
+      .prj-update-form {
+        background: var(--card-background);
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px dashed var(--border-color);
+      }
+    
+      .prj-select-box {
+        position: relative;
+        margin-bottom: 16px;
+      }
+    
+      .prj-stage-dropdown {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+    
+      .prj-stage-dropdown:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      }
+    
+      .prj-notes-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        resize: vertical;
+        min-height: 100px;
+        transition: all 0.3s ease;
+      }
+    
+      .prj-notes-textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      }
+    
+      .prj-update-button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 16px;
+      }
+    
+      .prj-update-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+    
+      .prj-update-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    
+      /* Responsive */
+      @media (max-width: 768px) {
+        .prj-cards-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+          padding: 12px;
+        }
+    
+        .prj-filters-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+    
+        .prj-search-wrapper {
+          width: 100%;
+        }
+    
+        .prj-single-card {
+          padding: 20px;
+        }
+    
+        .prj-card-heading {
+          font-size: 1.1rem;
+          max-width: 65%;
+        }
+    
+        .prj-detail-header {
+          padding: 20px;
+        }
+    
+        .prj-detail-title {
+          font-size: 1.4rem;
+        }
+    
+        .prj-detail-meta-row {
+          gap: 12px;
+        }
+    
+        .prj-detail-body-content {
+          padding: 20px;
+        }
+    
+        .prj-detail-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-header .avatar {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .chat-header .info h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header .info p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .message.bot .avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.user .avatar {
+            background: #28a745;
+            color: white;
+        }
+
+        .message .content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .message.bot .content {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .message.user .content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .suggestions {
+            padding: 10px 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .suggestion-chip {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px;
+            background: white;
+            border-radius: 18px;
+            width: 60px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .help-button {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .help-button:hover {
+            background: #f0f0f0;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Help Modal Styles */
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-modal.active {
+            display: flex;
+        }
+
+        .help-modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .help-modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .help-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .help-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .help-modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .help-category {
+            margin-bottom: 25px;
+        }
+
+        .help-category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-questions-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .help-question-item {
+            padding: 10px 14px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .help-question-item:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .message .content {
+                max-width: 85%;
+            }
+
+            .help-modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+        }
+    </style>
+ 
+ 
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="avatar">🎖️</div>
+            <div class="info">
+                <h2>HEY SIRI </h2>
+                <p>  सुनिये कहिये कहिये ,,मैं आपकी क्या सहायता कर सकती हूं</p>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages scrollbar-thin" id="chatMessages">
+            <!-- Welcome message -->
+            <div class="message bot">
+                <div class="avatar">🤖</div>
+                <div class="content">
+                  नमस्ते! एक पर्सनल सहायक (Personal Assistant) के रूप में, मैं आपके दैनिक कार्यों, शेड्यूलिंग, अनुस्मारक (reminders), और जानकारी खोजने में सहायता करने के लिए यहाँ हूँ। मैं आपका काम आसान और व्यवस्थित बनाने के लिए तैयार हूँ। :
+                    
+                    • Personnel strength & distribution
+                    • Leave requests & status
+                    • Interview tracking
+                    • Loan information
+                    • Medical categories
+                    • Training & courses
+                    • Deployment status
+                    
+                    Ask me anything or click the suggestions below!
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="suggestions scrollbar-thin" id="suggestions">
+            <div class="suggestion-chip" onclick="sendMessage('How many total personnel?')">Total Personnel</div>
+            <div class="suggestion-chip" onclick="sendMessage('Pending leave requests?')">Pending Leaves</div>
+            <div class="suggestion-chip" onclick="sendMessage('Interview completion percentage?')">Interview Status</div>
+            <div class="suggestion-chip" onclick="sendMessage('Active loans?')">Active Loans</div>
+            <div class="suggestion-chip" onclick="sendMessage('Who is on leave today?')">On Leave Today</div>
+            <button class="help-button" onclick="showHelp()">📚 All Questions</button>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="Ask me a question..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="send-button" onclick="handleSend()">
+                ➤
+            </button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3>📚 Available Questions</h3>
+                <button class="help-modal-close" onclick="closeHelpModal()">×</button>
+            </div>
+            <div class="help-modal-body scrollbar-thin" id="helpModalBody">
+                <!-- Questions will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        // Load suggestions on page load
+        loadSuggestions();
+
+        function loadSuggestions() {
+            fetch('chatbot/chat/suggestions')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.suggestions) {
+                        updateSuggestions(data.suggestions);
+                    }
+                })
+                .catch(error => console.error('Error loading suggestions:', error));
+        }
+
+        function updateSuggestions(suggestions) {
+            const container = document.getElementById('suggestions');
+            container.innerHTML = '';
+            
+            suggestions.slice(0, 5).forEach(suggestion => {
+                const chip = document.createElement('div');
+                chip.className = 'suggestion-chip';
+                chip.textContent = suggestion;
+                chip.onclick = () => sendMessage(suggestion);
+                container.appendChild(chip);
+            });
+
+            const helpBtn = document.createElement('button');
+            helpBtn.className = 'help-button';
+            helpBtn.textContent = '📚 All Questions';
+            helpBtn.onclick = showHelp;
+            container.appendChild(helpBtn);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                handleSend();
+            }
+        }
+
+        function handleSend() {
+            const message = chatInput.value.trim();
+            if (message) {
+                sendMessage(message);
+                chatInput.value = '';
+            }
+        }
+
+        function sendMessage(message) {
+            // Add user message
+            addMessage(message, 'user');
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Send to backend
+            fetch('chatbot/chat/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                
+                if (data.success) {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                }
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                console.error('Error:', error);
+                addMessage('Sorry, I couldn\'t process your request. Please try again.', 'bot');
+            });
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = sender === 'user' ? '👤' : '🤖';
+            
+            const content = document.createElement('div');
+            content.className = 'content';
+            content.textContent = text;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        let typingIndicator = null;
+
+        function showTypingIndicator() {
+            typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message bot';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = '🤖';
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator active';
+            indicator.innerHTML = '<span></span><span></span><span></span>';
+            
+            typingIndicator.appendChild(avatar);
+            typingIndicator.appendChild(indicator);
+            
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                typingIndicator.remove();
+                typingIndicator = null;
+            }
+        }
+
+        function showHelp() {
+            fetch('chatbot/chat/help')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.help) {
+                        displayHelpModal(data.help);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading help:', error);
+                    addMessage('Sorry, couldn\'t load help. Please try again.', 'bot');
+                });
+        }
+
+        function displayHelpModal(helpData) {
+            const modalBody = document.getElementById('helpModalBody');
+            modalBody.innerHTML = '';
+
+            helpData.categories.forEach(category => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'help-category';
+
+                const categoryTitle = document.createElement('div');
+                categoryTitle.className = 'help-category-title';
+                categoryTitle.textContent = category.name;
+                categoryDiv.appendChild(categoryTitle);
+
+                const questionsGrid = document.createElement('div');
+                questionsGrid.className = 'help-questions-grid';
+
+                category.questions.forEach(question => {
+                    const questionItem = document.createElement('div');
+                    questionItem.className = 'help-question-item';
+                    questionItem.textContent = question;
+                    questionItem.onclick = () => {
+                        closeHelpModal();
+                        sendMessage(question);
+                    };
+                    questionsGrid.appendChild(questionItem);
+                });
+
+                categoryDiv.appendChild(questionsGrid);
+                modalBody.appendChild(categoryDiv);
+            });
+
+            document.getElementById('helpModal').classList.add('active');
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('helpModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHelpModal();
+            }
+        });
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            chatInput.focus();
+        });
+
+        
+    </script>
+ {% endblock %}
+```

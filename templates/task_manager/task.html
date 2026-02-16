@@ -321,7 +321,15 @@
       row.innerHTML = `
         <td>${task.id}</td>
         <td>${task.task_name}</td>
-        <td>${task.assigned_to}</td>
+        <!-- <td>${task.assigned_to}</td> -->
+        <td>
+        ${task.assigned_name || 'Unknown'}
+        <br>
+        <small class="text-muted">${task.assigned_to}</small>
+        </td>
+
+
+
         <td><span class="badge ${badge}">${task.task_status || "Unknown"}</span></td>
         <td>
        <button class="btn btn-sm btn-info me-1 edit-btn" title="Edit" onClick="openEditModal(${task.id})">

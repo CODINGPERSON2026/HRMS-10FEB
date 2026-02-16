@@ -34,9 +34,9 @@ def compute_authorization(company=None):
     cursor = connection.cursor(dictionary=True)
 
     if company and company != "All":
-        cursor.execute("SELECT army_number, name,`rank`,company, age, height, actual_weight,status_type FROM weight_info WHERE company = %s", (company,))
+        cursor.execute("SELECT army_number,`rank`, name, company, age, height, actual_weight,status_type FROM weight_info WHERE company = %s", (company,))
     else:
-        cursor.execute("SELECT army_number, name,`rank`, company, age, height, actual_weight,status_type FROM weight_info")
+        cursor.execute("SELECT army_number,`rank`, name, company, age, height, actual_weight,status_type FROM weight_info")
     
     soldiers = cursor.fetchall()
     
@@ -779,108 +779,5 @@ def auto_save_monthly_unfit():
             INSERT INTO monthly_medical_status (year, month, unit, unfit_count)
             VALUES (%s, %s, %s, %s)
         """, (year, month, company, unFit))
-
-def _to_json_serializable(val):
-    """Convert DB values (e.g. Decimal) to JSON-serializable Python types."""
-    if val is None:
-        return None
-    if hasattr(val, '__float__') and not isinstance(val, bool):
-        try:
-            return float(val)
-        except (TypeError, ValueError):
-            pass
-    if hasattr(val, '__int__') and not isinstance(val, bool):
-        try:
-            return int(val)
-        except (TypeError, ValueError):
-            pass
-    if isinstance(val, (str, bool)):
-        return val
-    return str(val)
-
-
-@weight_ms.route('/api/person-details/<army_number>')
-def api_person_details(army_number):
-    """Get detailed information about a specific person for View button / API."""
-    request.args.get('status_class', '')
-    
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    
-    try:
-        cursor.execute("""
-            SELECT 
-                army_number, name, company, `rank`, age, height as height_cm, 
-                actual_weight, status_type, category_type, restrictions
-            FROM weight_info 
-            WHERE army_number = %s
-        """, (army_number,))
-        
-        user = cursor.fetchone()
-        
-        if not user:
-            return jsonify({'error': 'Person not found'}), 404
-        
-        age = _to_json_serializable(user['age']) or 0
-        height_raw = user['height_cm']
-        height_cm = round_to_nearest_even(height_raw) if height_raw is not None else None
-        actual_weight = _to_json_serializable(user['actual_weight'])
-        if actual_weight is not None:
-            actual_weight = float(actual_weight)
-        
-        ideal_weight = get_ideal_weight(age, height_cm, cursor) if height_cm else None
-        if ideal_weight is not None:
-            ideal_weight = float(ideal_weight)
-        
-        if ideal_weight is None:
-            status = "No ideal weight found"
-            lower = upper = None
-            weight_deviation_percent = None
-            weight_deviation_kg = None
-        else:
-            lower = round(ideal_weight * 0.9, 2)
-            upper = round(ideal_weight * 1.1, 2)
-            if lower <= actual_weight <= upper:
-                status = "Fit"
-                weight_deviation_kg = 0
-                weight_deviation_percent = 0
-            else:
-                status = "UnFit"
-                if actual_weight < lower:
-                    deviation = lower - actual_weight
-                    weight_deviation_kg = round(deviation, 1)
-                    weight_deviation_percent = round((deviation / lower) * 100, 1)
-                else:
-                    deviation = actual_weight - upper
-                    weight_deviation_kg = round(deviation, 1)
-                    weight_deviation_percent = round((deviation / upper) * 100, 1)
-        
-        result = {
-            'army_number': str(user['army_number']) if user['army_number'] is not None else '',
-            'name': str(user['name']) if user['name'] is not None else '',
-            'company': str(user['company']) if user['company'] is not None else '',
-            'rank': str(user['rank']) if user['rank'] is not None else '',
-            'age': _to_json_serializable(user['age']),
-            'height_cm': _to_json_serializable(user['height_cm']),
-            'actual_weight': actual_weight,
-            'status_type': str(user['status_type']) if user['status_type'] is not None else '',
-            'category_type': str(user['category_type']) if user['category_type'] is not None else None,
-            'restrictions': str(user['restrictions']) if user['restrictions'] is not None else None,
-            'ideal_weight': ideal_weight,
-            'lower_limit': lower,
-            'upper_limit': upper,
-            'status': status,
-            'weight_deviation_percent': weight_deviation_percent,
-            'weight_deviation_kg': weight_deviation_kg
-        }
-        
-        return jsonify(result)
-        
-    except mysql.connector.Error as err:
-        print(f"Database error: {err}")
-        return jsonify({'error': 'Database error occurred'}), 500
-    finally:
-        cursor.close()
-        connection.close()
 
     

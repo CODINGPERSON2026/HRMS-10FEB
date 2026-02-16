@@ -1,0 +1,149 @@
+
+
+  <style>
+   
+
+    /* ===== Gallery Section ===== */
+    .gallery-section {
+      padding: 20px 5vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .gallery-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery-title {
+      font-size: clamp(3.8rem, 9vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: -3px;
+      margin-bottom: 1.2rem;
+      
+      
+      
+      text-shadow: 0 4px 30px rgba(185, 28, 28, 0.25);
+    }
+
+    .gallery-subtitle {
+      font-size: 1.6rem;
+      color: #446491;
+      margin-bottom: 4rem;
+      max-width: 600px;
+      font-weight: bolder;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== Grid ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.6rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #111827;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .gallery-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.04) translateY(-8px);
+      box-shadow: 0 20px 50px rgba(185, 28, 28, 0.3);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.12);
+    }
+  </style>
+
+
+<body>
+
+<section class="gallery-section" id="gallerySection">
+  <h1 class="gallery-title" id="galleryTitle">Gallery</h1>
+  <p class="gallery-subtitle" id="gallerySubtitle"></p>
+
+  <div class="gallery-grid" id="galleryGrid">
+    
+  </div>
+</section>
+
+<script>
+  const gallerySection = document.getElementById('gallerySection');
+  const galleryGrid = document.getElementById('galleryGrid');
+
+  /* Intersection Observer */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        const items = entry.target.querySelectorAll('.gallery-item');
+        items.forEach((item, index) => {
+          setTimeout(() => item.classList.add('visible'), 150 * (index + 1));
+        });
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  /* Fetch gallery data */
+  fetch('/api/gallery')
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.length) return;
+
+      // Title & subtitle from first record
+      document.getElementById('galleryTitle').innerText =
+        data[0].title || 'Gallery';
+
+      document.getElementById('gallerySubtitle').innerText =
+        data[0].subtitle || '';
+
+      // Images
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+
+        div.innerHTML = `
+          <img src="/static/uploads/gallery/${item.image}" alt="Gallery Image">
+        `;
+
+        galleryGrid.appendChild(div);
+      });
+
+      observer.observe(gallerySection);
+    })
+    .catch(err => {
+      console.error('Gallery load failed:', err);
+    });
+</script>
+
+</body>
+

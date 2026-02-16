@@ -24,11 +24,11 @@
           style.innerHTML = '.sidebar { margin-left: -230px !important; }';
           document.head.appendChild(style);
         }
-        
+
         // Load theme state - CRITICAL: Must happen before render
         const savedTheme = localStorage.getItem('dashboardTheme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
-      } catch (e) {}
+      } catch (e) { }
     })();
   </script>
 
@@ -206,6 +206,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -295,185 +296,13 @@
       transition: color 0.3s ease;
     }
 
-    /* ==================== MODERN REACT-LIKE DESIGN SYSTEM ==================== */
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
-    }
-
     .card {
-      border-radius: 16px;
-      border: 1px solid var(--border-color);
-      background: var(--card-background);
-      color: var(--text-primary);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .card:hover {
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
-    }
-
-    /* Modern Button Styles */
-    .btn, button {
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.875rem;
-      padding: 10px 20px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 18px;
       border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn:hover, button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn:active, button:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
-    }
-
-    /* Modern Input Styles */
-    input[type="text"],
-    input[type="number"],
-    input[type="email"],
-    input[type="password"],
-    input[type="date"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--border-color);
-      border-radius: 8px;
       background: var(--card-background);
       color: var(--text-primary);
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    /* Modern Table Styles */
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: var(--card-background);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-    }
-
-    thead {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      color: white;
-    }
-
-    th {
-      padding: 16px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    td {
-      padding: 16px;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-
-    tbody tr {
-      transition: background-color 0.2s ease;
-    }
-
-    tbody tr:hover {
-      background-color: rgba(59, 130, 246, 0.05);
-    }
-.hrms-chatbot-widget {
-  position: fixed !important;
-  bottom: 100px !important;
-  right: 10px !important;
-  z-index: 1050 !important;
-}
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    /* Modern Badge Styles */
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Smooth Animations */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .slide-in-right {
-      animation: slideInRight 0.3s ease-out;
+      box-shadow: 0 4px 15px var(--shadow);
+      transition: all 0.3s ease;
     }
 
     /* Logout Modal Styling */
@@ -500,11 +329,11 @@
     .btn-close {
       width: 40px !important;
       height: 40px !important;
-      background-color: #dc3545 !important;
+      background-color: #f9f9f9 !important;
       border-radius: 10px !important;
       color: white !important;
       filter: none !important;
-      border: 1px solid #c82333 !important;
+      /* border: 1px solid #c82333 !important; */
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
       transition: all 0.3s ease;
       display: flex !important;
@@ -681,9 +510,10 @@
         right: 10px;
       }
     }
+
+
   </style>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot/chatbot.css') }}">
   {% block extra_css %}{% endblock %}
 </head>
 
@@ -735,53 +565,42 @@
       {% if role in ['CO', '2IC', 'ADJUTANT','JCO'] %}
       <a class="nav-link" href="/task_manager/">Task Management</a>
       {% endif %}
-      {% if role in ['CO', '2IC', 'ADJUTANT','OC','NCO LINE','JCO','O CENTRE NCO','ONCO','NCO CHQ','NCO IT','NCO OP','NCO PWR','NCO MW','NCO MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC','NCO LINE','JCO','O CENTRE NCO','ONCO','NCO CHQ','NCO IT','NCO
+      OP','NCO PWR','NCO MW','NCO MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ'] %}
       <a class="nav-link" href="/weight_system">Weight Management</a>
       {% endif %}
-      {% if role in ['CO', '2IC', 'ADJUTANT','OC','NCO LINE','JCO','O CENTRE NCO','ONCO','NCO CHQ','NCO IT','NCO OP','NCO PWR','NCO MW','NCO MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ','JCO TM'] %}
+      {% if role in ['CO', '2IC', 'ADJUTANT','OC','NCO LINE','JCO','O CENTRE NCO','ONCO','NCO CHQ','NCO IT','NCO
+      OP','NCO PWR','NCO MW','NCO MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','NCO CHQ','JCO CHQ','JCO TM'] %}
       <a class="nav-link" href="/personnel_information">Personnel Management</a>
       {% endif %}
-      {% if role in ['CO', '2IC', 'ADJUTANT'] %}
-      <a class="nav-link" href="{{ url_for('mt') }}">MT Management</a>
-      {% endif %}
-      {% if role in ['CO', '2IC', 'ADJUTANT','PROJECT OFFICER'] %}
-      <a class="nav-link" href="{{ url_for('get_projects') }}">Project Management</a>
+      <!-- {% if role in ['CO', '2IC', 'ADJUTANT'] %} -->
+      <!-- <a class="nav-link" href="{{ url_for('mt') }}">MT Management</a> -->
+      <!-- {% endif %} -->
+      {% if role in ['CO', '2IC', 'ADJUTANT','PROJECT OFFICER','PROJECT JCO'] %}
+      <a class="nav-link" href="{{ url_for('projects_dashboard') }}">Project Management</a>
       {% endif %}
       {% if role in ['CO', '2IC', 'ADJUTANT','JCO','ACCOUNT OFFICER','ACCOUNT JCO'] %}
       <a class="nav-link" href="/account">Account Management</a>
       {% endif %}
-      {% if role in ['NCO PWR','SEC JCO','Subedar Major','NCO CHQ','NCO IT','NCO LINE','NCO OP','NCO PWR','NCO MW','NCO MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO RP/NA','NCO QM'] %}
+
+
+      {% if role in ['NCO PWR','SEC JCO','Subedar Major','NCO CHQ','NCO IT','NCO LINE','NCO OP','NCO PWR','NCO MW','NCO
+      MCCS','NCO CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO TM','NCO MT','NCO
+      RP/NA','NCO QM'] %}
       <a class="nav-link" href="/apply_leave/">Leave Management</a>
       {% endif %}
       <a class="nav-link" href="/logout" id="logoutLink">Logout</a>
+      <a href="/chat_bot" class="ai-assistant-btn">
+        <i class="fa-solid fa-robot"></i>
+    </a>
+    
+    
     </nav>
   </div>
 
   <!-- Main Content -->
   <div id="pageWrapper" class="page-wrapper">
     {% block content %}{% endblock %}
-  </div>
-
-  <!-- HRMS Chatbot Widget -->
-  <div id="hrms-chatbot-widget" class="hrms-chatbot-widget">
-    <button type="button" id="hrms-chatbot-toggle" class="hrms-chatbot-toggle" aria-label="Open HRMS assistant" aria-expanded="false">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7zm0 4h7v2H7z"/></svg>
-    </button>
-    <div id="hrms-chatbot-panel" class="hrms-chatbot-panel" role="dialog" aria-label="HRMS assistant chat">
-      <div id="hrms-chatbot-header" class="hrms-chatbot-header">
-        <h3><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7zm0 4h7v2H7z"/></svg> HRMS Assistant</h3>
-        <button type="button" class="hrms-chatbot-close" aria-label="Close chat">&times;</button>
-      </div>
-      <div id="hrms-chatbot-messages" class="hrms-chatbot-messages"></div>
-      <div id="hrms-chatbot-input-area" class="hrms-chatbot-input-area">
-        <form id="hrms-chatbot-form" class="hrms-chatbot-form">
-          <textarea id="hrms-chatbot-input" class="hrms-chatbot-input" placeholder="Ask about HRMS, database, leave, personnel..." rows="1"></textarea>
-          <button type="submit" id="hrms-chatbot-send" class="hrms-chatbot-send" aria-label="Send">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          </button>
-        </form>
-      </div>
-    </div>
   </div>
 
   <!-- Logout Modal -->
@@ -919,8 +738,10 @@
     });
   </script>
 
-  <script src="{{ url_for('static', filename='chatbot/chatbot.js') }}"></script>
   {% block extra_js %}{% endblock %}
 
+  
+
 </body>
+
 </html>

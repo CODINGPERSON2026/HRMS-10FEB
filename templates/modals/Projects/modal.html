@@ -1,0 +1,1164 @@
+
+<style>
+    /* ==================== UNIQUE PROJECT CARDS STYLES ==================== */
+    .prj-dashboard-container {
+      padding: 0;
+    }
+  
+    .prj-header-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      margin: -1rem -1rem 0 -1rem;
+      border-radius: 8px 8px 0 0;
+    }
+  
+    .prj-header-wrapper h5 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+  
+    .prj-stats-display {
+      display: flex;
+      gap: 20px;
+    }
+  
+    .prj-stat-box {
+      text-align: center;
+    }
+  
+    .prj-stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+  
+    .prj-stat-label {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+  
+    .prj-filters-bar {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.02);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  
+    .prj-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  
+    .prj-filter-dropdown {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+  
+    .prj-filter-dropdown:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+  
+    .prj-search-wrapper {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+  
+    .prj-search-field {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+  
+    .prj-search-field:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    }
+  
+    .prj-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+  
+    .prj-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        padding: 20px;
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+      
+  
+    .prj-single-card {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+  
+    .prj-single-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+  
+    .prj-single-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      border-color: var(--primary-color);
+    }
+  
+    .prj-single-card:hover::before {
+      transform: scaleX(1);
+    }
+  
+    .prj-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+  
+    .prj-card-heading {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.3;
+      max-width: 75%;
+    }
+  
+    .prj-card-badge {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  
+    .prj-card-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 60px;
+    }
+  
+    .prj-card-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+  
+    .prj-info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+  
+    .prj-info-item i {
+      color: var(--primary-color);
+      font-size: 1rem;
+    }
+  
+    .prj-info-cost {
+      font-weight: 600;
+      color: #388e3c;
+    }
+  
+    .prj-stage-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 12px;
+    }
+  
+    /* Stage Colors */
+    .prj-stage-ppp {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+  
+    .prj-stage-aon {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+  
+    .prj-stage-fbu {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+  
+    .prj-stage-tob_tec,
+    .prj-stage-tob-tec {
+      background: #e8f5e9;
+      color: #388e3c;
+    }
+  
+    .prj-stage-b_bd,
+    .prj-stage-b-bd {
+      background: #fce4ec;
+      color: #c2185b;
+    }
+  
+    .prj-stage-ocb_ra,
+    .prj-stage-ocb-ra {
+      background: #e0f2f1;
+      color: #00796b;
+    }
+  
+    .prj-stage-placement_of_so,
+    .prj-stage-placement-of-so {
+      background: #fff9c4;
+      color: #f57f17;
+    }
+  
+    .prj-stage-store_items_delivery,
+    .prj-stage-store-items-delivery,
+    .prj-stage-store-delivery {
+      background: #ede7f6;
+      color: #5e35b1;
+    }
+  
+    .prj-stage-atp {
+      background: #e1f5fe;
+      color: #0277bd;
+    }
+  
+    .prj-stage-prac_crac,
+    .prj-stage-prac-crac {
+      background: #f1f8e9;
+      color: #558b2f;
+    }
+  
+    .prj-stage-payment {
+      background: #fff8e1;
+      color: #ff6f00;
+    }
+  
+    .prj-stage-completed {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+  
+    .prj-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+  
+    .prj-owner-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+  
+    .prj-owner-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+  
+    .prj-items-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(25, 118, 210, 0.1);
+      color: #1976d2;
+      font-weight: 600;
+    }
+  
+    /* Empty State */
+    .prj-empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      grid-column: 1 / -1;
+    }
+  
+    .prj-empty-state i {
+      font-size: 4rem;
+      color: var(--border-color);
+      margin-bottom: 20px;
+    }
+  
+    .prj-empty-state h4 {
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+  
+    /* Loading Skeleton */
+    .prj-skeleton-card {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+  
+    .prj-skeleton-line {
+      background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+  
+    /* ==================== PROJECT DETAILS MODAL ==================== */
+    .prj-detail-modal .modal-dialog {
+      max-width: 900px;
+    }
+  
+    .prj-detail-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 30px;
+      border-radius: 16px 16px 0 0;
+      margin: -1rem -1rem 0 -1rem;
+    }
+  
+    .prj-detail-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+  
+    .prj-detail-meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      opacity: 0.95;
+    }
+  
+    .prj-meta-detail {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+  
+    .prj-detail-body-content {
+      padding: 30px;
+    }
+  
+    .prj-detail-section {
+      margin-bottom: 30px;
+    }
+  
+    .prj-section-heading {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  
+    .prj-section-heading i {
+      color: var(--primary-color);
+    }
+  
+    .prj-section-text {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+      border-left: 3px solid var(--primary-color);
+    }
+  
+    .prj-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+  
+    .prj-grid-item {
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+    }
+  
+    .prj-grid-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+  
+    .prj-grid-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  
+    /* Stage Update Form */
+    .prj-update-form {
+      background: var(--card-background);
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px dashed var(--border-color);
+    }
+  
+    .prj-select-box {
+      position: relative;
+      margin-bottom: 16px;
+    }
+  
+    .prj-stage-dropdown {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+  
+    .prj-stage-dropdown:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    }
+  
+    .prj-notes-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 100px;
+      transition: all 0.3s ease;
+    }
+  
+    .prj-notes-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    }
+  
+    .prj-update-button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 16px;
+    }
+  
+    .prj-update-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+  
+    .prj-update-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  
+    /* Responsive */
+    @media (max-width: 768px) {
+      .prj-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 12px;
+      }
+  
+      .prj-filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+  
+      .prj-search-wrapper {
+        width: 100%;
+      }
+  
+      .prj-single-card {
+        padding: 20px;
+      }
+  
+      .prj-card-heading {
+        font-size: 1.1rem;
+        max-width: 65%;
+      }
+  
+      .prj-detail-header {
+        padding: 20px;
+      }
+  
+      .prj-detail-title {
+        font-size: 1.4rem;
+      }
+  
+      .prj-detail-meta-row {
+        gap: 12px;
+      }
+  
+      .prj-detail-body-content {
+        padding: 20px;
+      }
+  
+      .prj-detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  
+  <!-- Projects Dashboard Modal -->
+  <div class="modal fade" id="projDash_modal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="prj-header-wrapper">
+            <div class="d-flex align-items-center gap-3">
+                <h5 class="mb-0">
+                  <i class="fas fa-rocket me-2"></i>Projects Dashboard
+                </h5>
+              
+                <button class="btn btn-light btn-sm fw-semibold"
+                        onclick="openCreateProjectModal()">
+                  <i class="fas fa-plus me-1"></i> New Project
+                </button>
+                <!-- Inside .prj-header-wrapper, after the New Project button -->
+<button class="btn btn-light btn-sm fw-semibold ms-2"
+onclick="openStatisticsModal()">
+<i class="fas fa-chart-bar me-1"></i> View Statistics
+</button>
+              </div>
+              
+          <div class="prj-stats-display">
+            <div class="prj-stat-box">
+              <div class="prj-stat-number" id="prjTotalCount">0</div>
+              <div class="prj-stat-label">Total</div>
+            </div>
+            <div class="prj-stat-box">
+              <div class="prj-stat-number" id="prjActiveCount">0</div>
+              <div class="prj-stat-label">Active</div>
+            </div>
+            <div class="prj-stat-box">
+              <div class="prj-stat-number" id="prjCompletedCount">0</div>
+              <div class="prj-stat-label">Completed</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <!-- Filters -->
+        <div class="prj-filters-bar">
+          <div class="prj-filter-group">
+            <label style="font-size: 0.9rem; font-weight: 600;">Stage:</label>
+            <select class="prj-filter-dropdown" id="prjStageFilter" onchange="filterProjectsData()">
+              <option value="">All Stages</option>
+              <option value="PPP">PPP</option>
+              <option value="AON">AON</option>
+              <option value="FBU">FBU</option>
+              <option value="TOB & TEC">TOB & TEC</option>
+              <option value="B BD">B BD</option>
+              <option value="OCB RA">OCB RA</option>
+              <option value="Placement Of SO">Placement Of SO</option>
+              <option value="Store/Items Delivery">Store / Items Delivery</option>
+              <option value="ATP">ATP</option>
+              <option value="PRAC & CRAC">PRAC & CRAC</option>
+              <option value="Payment">Payment</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+  
+          <div class="prj-filter-group">
+            <label style="font-size: 0.9rem; font-weight: 600;">Head:</label>
+            <select class="prj-filter-dropdown" id="prjHeadFilter" onchange="filterProjectsData()">
+              <option value="">All Heads</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          
+          <div class="prj-search-wrapper">
+            <i class="fas fa-search prj-search-icon"></i>
+            <input 
+              type="text" 
+              class="prj-search-field" 
+              id="prjSearchInput" 
+              placeholder="Search projects..." 
+              onkeyup="filterProjectsData()"
+            />
+          </div>
+        </div>
+  
+        <div class="modal-body prj-dashboard-container" id="prjModalBody">
+          <!-- Projects Grid -->
+          <div class="prj-cards-grid" id="prjCardsGrid">
+            <!-- Loading skeletons -->
+            <div class="prj-skeleton-card">
+              <div class="prj-skeleton-line" style="height: 24px; width: 70%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 100%; margin-top: 12px;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 90%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 80%;"></div>
+            </div>
+            <div class="prj-skeleton-card">
+              <div class="prj-skeleton-line" style="height: 24px; width: 70%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 100%; margin-top: 12px;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 90%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 80%;"></div>
+            </div>
+            <div class="prj-skeleton-card">
+              <div class="prj-skeleton-line" style="height: 24px; width: 70%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 100%; margin-top: 12px;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 90%;"></div>
+              <div class="prj-skeleton-line" style="height: 16px; width: 80%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Project Details Modal -->
+  <div class="modal fade prj-detail-modal" id="prjDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 p-0">
+          <div class="prj-detail-header w-100">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h3 class="prj-detail-title" id="prjDetailTitle">Project Title</h3>
+                <span class="badge bg-white text-dark" id="prjDetailBadge">PRJ-001</span>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="prj-detail-meta-row" id="prjDetailMeta"></div>
+          </div>
+        </div>
+        
+        <div class="modal-body prj-detail-body-content">
+          <!-- Description Section -->
+          <div class="prj-detail-section">
+            <h5 class="prj-section-heading">
+              <i class="fas fa-align-left"></i>
+              Project Description
+            </h5>
+            <div class="prj-section-text" id="prjDetailDescription">
+              Project description will appear here...
+            </div>
+          </div>
+  
+          <!-- Project Details Grid -->
+          <div class="prj-detail-section">
+            <h5 class="prj-section-heading">
+              <i class="fas fa-info-circle"></i>
+              Project Details
+            </h5>
+            <div class="prj-detail-grid">
+              <div class="prj-grid-item">
+                <div class="prj-grid-label">Cost</div>
+                <div class="prj-grid-value" id="prjDetailCost">₹ 0</div>
+              </div>
+              <div class="prj-grid-item">
+                <div class="prj-grid-label">Items</div>
+                <div class="prj-grid-value" id="prjDetailItems">-</div>
+              </div>
+              <div class="prj-grid-item">
+                <div class="prj-grid-label">Quantity</div>
+                <div class="prj-grid-value" id="prjDetailQuantity">0</div>
+              </div>
+             
+            </div>
+          </div>
+  
+          <!-- Current Stage -->
+          <div class="prj-detail-section">
+            <h5 class="prj-section-heading">
+              <i class="fas fa-tasks"></i>
+              Current Status
+            </h5>
+            <div id="prjDetailCurrentStage"></div>
+          </div>
+  
+          <!-- Update Stage Section -->
+          <div class="prj-detail-section">
+            <h5 class="prj-section-heading">
+              <i class="fas fa-edit"></i>
+              Update Project Stage
+            </h5>
+            <div class="prj-update-form">
+              <div class="prj-select-box">
+                <label class="form-label fw-semibold">New Stage</label>
+                <select class="prj-stage-dropdown" id="prjNewStageSelect">
+                  <option value="">Select Stage...</option>
+                  <option value="PPP">📋 PPP</option>
+                  <option value="AON">📄 AON</option>
+                  <option value="FBU">🔧 FBU</option>
+                  <option value="TOB & TEC">📊 TOB & TEC</option>
+                  <option value="B BD">🏗️ B BD</option>
+                  <option value="OCB RA">✅ OCB RA</option>
+                  <option value="Placement Of SO">👤 Placement Of SO</option>
+                  <option value="Store/Items Delivery">📦 Store / Items Delivery</option>
+                  <option value="ATP">🧪 ATP</option>
+                  <option value="PRAC & CRAC">📋 PRAC & CRAC</option>
+                  <option value="Payment">💰 Payment</option>
+                  <option value="Completed">✅ Completed</option>
+                </select>
+              </div>
+              <div class="mt-3">
+                <label class="form-label fw-semibold">Update Notes (Optional)</label>
+                <textarea 
+                  class="prj-notes-textarea" 
+                  id="prjStageNotes" 
+                  placeholder="Add notes about this stage update..."
+                ></textarea>
+              </div>
+              <button class="prj-update-button" onclick="updateProjectStageData()">
+                <i class="fas fa-save me-2"></i>Update Stage
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- this is stats modal -->
+
+
+
+  {%include 'modals/add_new_project/modal.html'%}
+  {%include 'modals/projects/view_cost_graph_modal.html'%}
+  <script>
+    // ==================== PROJECTS MANAGEMENT ====================
+    
+    let allProjectsData = [];
+    let filteredProjectsData = [];
+    let selectedProjectData = null;
+  
+    // Load projects when modal opens
+    document.getElementById('projDash_modal').addEventListener('show.bs.modal', function() {
+      loadAllProjectsData();
+      loadProjectHeadsData();
+    });
+  
+    // Load project heads from API
+    async function loadProjectHeadsData() {
+      try {
+        const response = await fetch('/get_project_heads');
+        const heads = await response.json();
+        
+        const headFilter = document.getElementById('prjHeadFilter');
+        
+        // Clear existing options except "All Heads"
+        headFilter.innerHTML = '<option value="">All Heads</option>';
+        
+        // Add head options
+        heads.forEach(head => {
+          const option = document.createElement('option');
+          option.value = head.head_name;
+          option.textContent = head.head_name;
+          headFilter.appendChild(option);
+        });
+        
+      } catch (error) {
+        console.error('Error loading project heads:', error);
+      }
+    }
+  
+    // Load all projects from API
+    async function loadAllProjectsData() {
+      const grid = document.getElementById('prjCardsGrid');
+      
+      try {
+        const response = await fetch('/projects/all_projects');
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+          allProjectsData = data.projects || [];
+          filteredProjectsData = [...allProjectsData];
+          
+          // Update stats
+          updateProjectStatsData();
+          
+          if (allProjectsData.length === 0) {
+            grid.innerHTML = `
+              <div class="prj-empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h4>No Projects Found</h4>
+                <p>Start by creating your first project!</p>
+              </div>
+            `;
+            return;
+          }
+          
+          // Render project cards
+          renderProjectsData(filteredProjectsData);
+        } else {
+          throw new Error(data.message || 'Failed to load projects');
+        }
+        
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        grid.innerHTML = `
+          <div class="prj-empty-state">
+            <i class="fas fa-exclamation-triangle text-danger"></i>
+            <h4>Error Loading Projects</h4>
+            <p>${error.message || 'Please try again later'}</p>
+          </div>
+        `;
+      }
+    }
+  
+    // Render projects to grid
+    function renderProjectsData(projects) {
+      const grid = document.getElementById('prjCardsGrid');
+      
+      if (projects.length === 0) {
+        grid.innerHTML = `
+          <div class="prj-empty-state">
+            <i class="fas fa-search"></i>
+            <h4>No Projects Found</h4>
+            <p>Try adjusting your filters</p>
+          </div>
+        `;
+        return;
+      }
+      
+      grid.innerHTML = projects.map(project => createProjectCardHTML(project)).join('');
+    }
+  
+    // Create individual project card
+    function createProjectCardHTML(project) {
+        return `
+          <div class="prj-single-card" onclick="openProjectDetailsView(${project.id})">
+            
+            <h3 class="prj-card-heading mb-3">
+              ${escapeHtmlText(project.title || 'Untitled Project')}
+            </h3>
+      
+            <div class="d-flex justify-content-between align-items-center">
+      
+              <!-- Project Head -->
+              <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary);">
+                <i class="fas fa-user me-1"></i>
+                ${escapeHtmlText(project.owner || 'Unassigned')}
+              </div>
+      
+              <!-- Project Cost -->
+              <div style="font-size: 1.15rem; font-weight: 700; color: #2e7d32;">
+                ${formatProjectCurrency(project.cost)}
+              </div>
+      
+            </div>
+      
+          </div>
+        `;
+      }
+      
+  
+    // Open project details modal
+    function openProjectDetailsView(projectId) {
+      selectedProjectData = allProjectsData.find(p => p.id === projectId);
+      
+      if (!selectedProjectData) {
+        console.error('Project not found');
+        alert('Project not found!');
+        return;
+      }
+      
+      // Populate basic info
+      document.getElementById('prjDetailTitle').textContent = selectedProjectData.title || 'Untitled Project';
+      document.getElementById('prjDetailBadge').textContent = `PRJ-${String(selectedProjectData.id).padStart(3, '0')}`;
+      document.getElementById('prjDetailDescription').textContent = selectedProjectData.description || 'No description available';
+      
+      // Meta information
+      const metaHtml = `
+        <div class="prj-meta-detail">
+          <i class="fas fa-user"></i>
+          <span>${escapeHtmlText(selectedProjectData.owner || 'Unassigned')}</span>
+        </div>
+         ${selectedProjectData.start_date ? `
+        <div class="prj-meta-detail">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Started: ${formatProjectDate(selectedProjectData.start_date)}</span>
+        </div>
+        ` : ''}
+      `;
+      document.getElementById('prjDetailMeta').innerHTML = metaHtml;
+      
+      // Project details
+      document.getElementById('prjDetailCost').textContent = formatProjectCurrency(selectedProjectData.cost);
+      document.getElementById('prjDetailItems').textContent = selectedProjectData.items || '-';
+      document.getElementById('prjDetailQuantity').textContent = selectedProjectData.quantity || '0';
+      
+      
+      // Current stage
+      const stageClass = getProjectStageClass(selectedProjectData.stage);
+      document.getElementById('prjDetailCurrentStage').innerHTML = `
+        <span class="prj-stage-badge ${stageClass}" style="font-size: 1rem; padding: 10px 20px;">
+          ${selectedProjectData.stage || 'Planning'}
+        </span>
+      `;
+      
+      // Reset form
+      document.getElementById('prjNewStageSelect').value = '';
+      document.getElementById('prjStageNotes').value = '';
+      
+      // Show modal
+      // Close dashboard modal first
+const dashboardModal = bootstrap.Modal.getInstance(document.getElementById('projDash_modal'));
+if (dashboardModal) {
+  dashboardModal.hide();
+}
+
+// Open details modal
+const detailsModal = new bootstrap.Modal(document.getElementById('prjDetailsModal'));
+detailsModal.show();
+
+    }
+  
+    // Update project stage
+    async function updateProjectStageData() {
+      if (!selectedProjectData) return;
+      
+      const newStage = document.getElementById('prjNewStageSelect').value;
+      const notes = document.getElementById('prjStageNotes').value;
+      
+      if (!newStage) {
+        alert('Please select a stage');
+        return;
+      }
+      
+      if (newStage === selectedProjectData.stage) {
+        alert('Please select a different stage to update');
+        return;
+      }
+      
+      const updateBtn = event.target;
+      const originalText = updateBtn.innerHTML;
+      updateBtn.disabled = true;
+      updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
+      
+      try {
+        const response = await fetch('/projects/update-stage', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            project_id: selectedProjectData.id,
+            new_stage: newStage,
+            notes: notes
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          // Update local data
+          selectedProjectData.stage = newStage;
+          const projectIndex = allProjectsData.findIndex(p => p.id === selectedProjectData.id);
+          if (projectIndex !== -1) {
+            allProjectsData[projectIndex].stage = newStage;
+          }
+          
+          // Show success
+          alert('✅ Project stage updated successfully!');
+          
+          // Close modal
+          bootstrap.Modal.getInstance(document.getElementById('prjDetailsModal')).hide();
+          
+          // Reload projects
+          filterProjectsData();
+          
+        } else {
+          alert('❌ Failed to update: ' + (result.message || 'Unknown error'));
+        }
+        
+      } catch (error) {
+        console.error('Error updating project:', error);
+        alert('❌ An error occurred while updating the project');
+      } finally {
+        updateBtn.disabled = false;
+        updateBtn.innerHTML = originalText;
+      }
+    }
+  
+    // Filter projects
+    function filterProjectsData() {
+      const stageFilter = document.getElementById('prjStageFilter').value.toLowerCase();
+      const headFilter = document.getElementById('prjHeadFilter').value.toLowerCase();
+      const searchTerm = document.getElementById('prjSearchInput').value.toLowerCase();
+      
+      filteredProjectsData = allProjectsData.filter(project => {
+        const matchesStage = !stageFilter || (project.stage || '').toLowerCase() === stageFilter;
+        const matchesHead = !headFilter || (project.owner || '').toLowerCase() === headFilter;
+        const matchesSearch = !searchTerm || 
+          (project.title || '').toLowerCase().includes(searchTerm) ||
+          (project.description || '').toLowerCase().includes(searchTerm) ||
+          (project.owner || '').toLowerCase().includes(searchTerm);
+        
+        return matchesStage && matchesHead && matchesSearch;
+      });
+      
+      renderProjectsData(filteredProjectsData);
+      updateProjectStatsData();
+    }
+  
+    // Update statistics
+    function updateProjectStatsData() {
+      const total = allProjectsData.length;
+      const completed = allProjectsData.filter(p => (p.stage || '').toLowerCase() === 'completed').length;
+      const active = total - completed;
+      
+      document.getElementById('prjTotalCount').textContent = total;
+      document.getElementById('prjActiveCount').textContent = active;
+      document.getElementById('prjCompletedCount').textContent = completed;
+    }
+  
+    // Helper functions
+    function getProjectStageClass(stage) {
+      if (!stage) return 'prj-stage-ppp';
+      
+      // Normalize stage name: lowercase, replace spaces and special chars with underscore/hyphen
+      const stageNormalized = stage.toLowerCase()
+        .replace(/\s+/g, '_')
+        .replace(/\//g, '_')
+        .replace(/&/g, '')
+        .replace(/__+/g, '_')
+        .trim();
+      
+      const stageMap = {
+        'ppp': 'prj-stage-ppp',
+        'aon': 'prj-stage-aon',
+        'fbu': 'prj-stage-fbu',
+        'tob_tec': 'prj-stage-tob-tec',
+        'tob__tec': 'prj-stage-tob-tec',
+        'b_bd': 'prj-stage-b-bd',
+        'ocb_ra': 'prj-stage-ocb-ra',
+        'placement_of_so': 'prj-stage-placement-of-so',
+        'store_items_delivery': 'prj-stage-store-delivery',
+        'store__items_delivery': 'prj-stage-store-delivery',
+        'atp': 'prj-stage-atp',
+        'prac_crac': 'prj-stage-prac-crac',
+        'prac__crac': 'prj-stage-prac-crac',
+        'payment': 'prj-stage-payment',
+        'completed': 'prj-stage-completed'
+      };
+      
+      return stageMap[stageNormalized] || 'prj-stage-ppp';
+    }
+  
+    function getOwnerInitials(name) {
+      return name
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+    }
+  
+    function formatProjectDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return date.toLocaleDateString('en-IN', options);
+    }
+  
+    function formatProjectCurrency(amount) {
+      if (!amount) return '₹ 0';
+      const num = parseFloat(amount);
+      if (isNaN(num)) return '₹ 0';
+      return '₹ ' + num.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+    }
+  
+    function escapeHtmlText(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    // Reopen dashboard when details modal closes
+document.getElementById('prjDetailsModal')
+.addEventListener('hidden.bs.modal', function () {
+
+  const dashboardModal = new bootstrap.Modal(document.getElementById('projDash_modal'));
+  dashboardModal.show();
+
+});
+
+</script>
+
+
+
+
+
+
+  
+
+
+  

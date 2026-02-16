@@ -12,7 +12,7 @@ let displayedData = [];
 let currentStatusClass = "";
 let currentPage = 1;
 let isLoading = false;
-let hasMoreData = true;
+let hasMoreData = true; 
 const rowsPerPage = 10;
 
 // Validation popup functions
@@ -490,9 +490,9 @@ function renderTableRows(rows, statusClass, append = false) {
       
       const tr = document.createElement("tr");
       tr.innerHTML = `
-          <td>${r.army_number}</td>
-          <td>${r.name}</td>
-          <td>${r.rank}</td>
+      <td>${r.army_number}</td>
+      <td>${r.rank}</td>
+      <td>${r.name}</td>
           <td>${r.company}</td>
           <td>${r.age}</td>
           <td>${r.height_cm}</td>

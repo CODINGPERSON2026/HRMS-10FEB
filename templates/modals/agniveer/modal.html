@@ -105,8 +105,6 @@
     background-color: #eef4ff;
   }
 
-<<<<<<< HEAD
-=======
   /* Remarks styling - horizontal layout */
   .remarks-container {
     display: flex;
@@ -194,7 +192,6 @@
     background-color: #fafafa !important;
   }
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   /* PRINT STYLES */
   @media print {
 
@@ -273,8 +270,6 @@
       color: #000 !important;
       background: none !important;
     }
-<<<<<<< HEAD
-=======
 
     /* Keep remark box colors in print */
     .remark-box {
@@ -291,7 +286,6 @@
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   }
 </style>
 <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -354,11 +348,7 @@
       return;
     }
 
-<<<<<<< HEAD
-    data.forEach(p => {
-=======
     data.forEach((p, index) => {
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
       function formatMonthYear(dateStr) {
         if (!dateStr) return '<span class="text-muted">—</span>';
@@ -384,10 +374,6 @@
         )}</strong>`;
       }
 
-<<<<<<< HEAD
-      tbody.innerHTML += `
-        <tr>
-=======
       // Split remarks by pipe and create colored boxes
       function formatRemarks(remarksStr) {
         if (!remarksStr) return '<span class="text-muted">—</span>';
@@ -408,7 +394,6 @@
 
       tbody.innerHTML += `
         <tr class="${colorClass}">
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           <td><span class="badge bg-primary fs-6">${p.batch}</span></td>
           <td>${formatMonthYear(p.DOE)}</td>
           <td>${formatMonthYear(p.TOE)}</td>
@@ -431,18 +416,8 @@
            ${p.screening_board || '<span class="text-muted">—</span>'}
           </td>
 
-<<<<<<< HEAD
-
-
-
-
-
-          <td class="text-start">
-            ${p.remarks || '<span class="text-muted">—</span>'}
-=======
           <td class="text-start">
             ${formatRemarks(p.remarks)}
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           </td>
         </tr>`;
     });

@@ -14,11 +14,6 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 app.secret_key = os.urandom(24)
 
-
-
-
-
-
 app.register_blueprint(personnel_info)
 app.register_blueprint(weight_ms)
 app.register_blueprint(leave_bp)
@@ -112,12 +107,6 @@ def inject_user():
         'company':None
     }
 
-
-
-
-
-
-
 @app.route('/')
 def dashboard():
     user = require_login()
@@ -139,8 +128,6 @@ def dashboard():
 
 @app.route('/api/dashboard_heading')
 def dashboard_heading():
-    # Determine heading dynamically
-    # You can base this on user role, current tab, or any condition
     user = require_login()
     if user['role'] == 'CO':
         company = 'CO 15CESR'
@@ -152,15 +139,6 @@ def dashboard_heading():
     
     
     return jsonify({"heading": company})
-
-
-
-
-
-
-
-
-
 
 @app.route('/mt', methods=['GET', 'POST'])
 def mt():
@@ -3789,11 +3767,13 @@ def get_projects_count():
         return jsonify({"status": "error", "message": "Unauthorized"}), 401
     
     company = user['company']
+    role = user.get('role') or ''
     
     try:
         query = "SELECT COUNT(*) AS count FROM projects WHERE 1=1"
         params = []
-        if company != "Admin":
+        # PROJECT JCO and PROJECT OFFICER see all projects (no company filter)
+        if company != "Admin" and role not in ('PROJECT JCO', 'PROJECT OFFICER'):
             query += " AND company = %s"
             params.append(company)
         
@@ -6321,6 +6301,7 @@ def get_projects():
     cursor = conn.cursor(dictionary=True)
     user = require_login()
     company = user['company']
+    role = user.get('role') or ''
 
     try:
         # 1️⃣ Fetch projects
@@ -6330,8 +6311,8 @@ def get_projects():
         """
         params = []
 
-        # Apply company filter if not Admin
-        if company != "Admin":
+        # Apply company filter if not Admin; PROJECT JCO and PROJECT OFFICER see all projects
+        if company != "Admin" and role not in ('PROJECT JCO', 'PROJECT OFFICER'):
             project_query += " WHERE company = %s"
             params.append(company)
 
@@ -8645,11 +8626,13 @@ def get_projects_count():
         return jsonify({"status": "error", "message": "Unauthorized"}), 401
     
     company = user['company']
+    role = user.get('role') or ''
     
     try:
         query = "SELECT COUNT(*) AS count FROM projects WHERE 1=1"
         params = []
-        if company != "Admin":
+        # PROJECT JCO and PROJECT OFFICER see all projects (no company filter)
+        if company != "Admin" and role not in ('PROJECT JCO', 'PROJECT OFFICER'):
             query += " AND company = %s"
             params.append(company)
         

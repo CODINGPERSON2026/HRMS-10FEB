@@ -1,17 +1,8 @@
-<<<<<<< HEAD
-{% extends "baseView.html" %} 
-{% block content %}
-
-<style>
-  /* Dashboard-specific styles (theme variables inherited from baseView.html) */
-  
-=======
 {% extends "baseView.html" %} {% block content %}
 
 <style>
   /* Dashboard-specific styles (theme variables inherited from baseView.html) */
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   /* Shimmer Effect */
   .shimmer-wrapper {
     position: relative;
@@ -23,25 +14,17 @@
   .shimmer {
     position: relative;
     overflow: hidden;
-<<<<<<< HEAD
-    background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
-=======
     background: linear-gradient(
       90deg,
       var(--border-color) 25%,
       var(--text-secondary) 50%,
       var(--border-color) 75%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
 
   @keyframes shimmer {
-<<<<<<< HEAD
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-=======
     0% {
       background-position: -200% 0;
     }
@@ -49,7 +32,6 @@
     100% {
       background-position: 200% 0;
     }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   }
 
   .shimmer-card {
@@ -69,16 +51,12 @@
   .shimmer-line,
   .shimmer-title,
   .shimmer-number {
-<<<<<<< HEAD
-    background: linear-gradient(90deg, var(--border-color) 25%, var(--text-secondary) 50%, var(--border-color) 75%);
-=======
     background: linear-gradient(
       90deg,
       var(--border-color) 25%,
       var(--text-secondary) 50%,
       var(--border-color) 75%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 5px;
@@ -94,11 +72,6 @@
     height: 10px;
   }
 
-<<<<<<< HEAD
-  .shimmer-line.short { width: 60%; }
-  .shimmer-line.medium { width: 80%; }
-  .shimmer-line.long { width: 100%; }
-=======
   .shimmer-line.short {
     width: 60%;
   }
@@ -110,7 +83,6 @@
   .shimmer-line.long {
     width: 100%;
   }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
   .shimmer-title {
     height: 18px;
@@ -142,16 +114,12 @@
 
   .action-btn-progress-loader .loader-progress-bar {
     height: 100%;
-<<<<<<< HEAD
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%);
-=======
     background: linear-gradient(
       90deg,
       var(--primary-color) 0%,
       var(--secondary-color) 50%,
       var(--primary-color) 100%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     background-size: 200% 100%;
     width: 0%;
     transition: width 0.5s ease-out;
@@ -160,10 +128,6 @@
   }
 
   @keyframes loader-shimmer-progress {
-<<<<<<< HEAD
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-=======
     0% {
       background-position: -200% 0;
     }
@@ -171,7 +135,6 @@
     100% {
       background-position: 200% 0;
     }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   }
 
   /* Main Content */
@@ -199,9 +162,6 @@
     left: 0;
     right: 0;
     height: 5px;
-<<<<<<< HEAD
-    background: linear-gradient(90deg, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
-=======
     background: linear-gradient(
       90deg,
       #ff9933 0%,
@@ -210,7 +170,6 @@
       #ffffff 66%,
       #138808 66%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   }
 
   .action-section-title {
@@ -237,15 +196,11 @@
   }
 
   .action-buttons .btn {
-<<<<<<< HEAD
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-=======
     background: linear-gradient(
       135deg,
       var(--primary-color) 0%,
       var(--secondary-color) 100%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     color: white;
     border: none;
     transition: all 0.3s ease;
@@ -262,12 +217,8 @@
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
     margin-bottom: 10px;
-<<<<<<< HEAD
-    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease, padding 0.3s ease, margin 0.3s ease;
-=======
     transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease,
       padding 0.3s ease, margin 0.3s ease;
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     overflow: hidden;
   }
 
@@ -296,15 +247,11 @@
     left: 0;
     right: 0;
     height: 3px;
-<<<<<<< HEAD
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-=======
     background: linear-gradient(
       90deg,
       var(--primary-color) 0%,
       var(--secondary-color) 100%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -366,15 +313,11 @@
   }
 
   .view-details {
-<<<<<<< HEAD
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-=======
     background: linear-gradient(
       135deg,
       var(--primary-color) 0%,
       var(--secondary-color) 100%
     );
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     color: white;
     border: none;
     padding: 8px 16px;
@@ -486,8 +429,6 @@
       font-size: 1.3rem;
     }
   }
-<<<<<<< HEAD
-=======
 
   /* ==================== MAIN CONTENT MESSENGER ==================== */
   .sidebar-messenger {
@@ -526,7 +467,6 @@
     align-items: center;
     justify-content: center;
   }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 </style>
 
 <!-- Dashboard -->
@@ -536,15 +476,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">📅 Today's Events</h5>
-<<<<<<< HEAD
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-=======
           <button
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
           ></button>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         </div>
         <div class="modal-body">
           <ul id="eventList" class="list-group"></ul>
@@ -553,32 +489,18 @@
     </div>
   </div>
 
-<<<<<<< HEAD
-  {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %} 
-  {% set subscript = 'Welcome ' ~ role ~ ' ' ~ current_user_name %} 
-  {% include 'navbar/navbar.html' %}
-=======
   {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %} {% set subscript =
   'Welcome ' ~ role ~ ' ' ~ current_user_name %} {% include 'navbar/navbar.html'
   %}
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <div style="margin-bottom: 10px">
-<<<<<<< HEAD
-      {% include 'modals/alarm/alarm.html' %}
-      {% include 'modals/alarm/attachment_alarm.html' %} 
-      {% include 'modals/alarm/leave_alarm.html' %} 
-      {% include 'modals/alarm/agniveer_test_alarms.html' %}
-      {% include 'modals/alarm/event_alarm.html' %}
-=======
       {% include 'modals/alarm/alarm.html' %} {% include
       'modals/alarm/attachment_alarm.html' %} {% include
       'modals/alarm/leave_alarm.html' %} {% include
       'modals/alarm/agniveer_test_alarms.html' %} {% include
       'modals/alarm/event_alarm.html' %}
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     </div>
 
     <!-- Action Buttons Loader -->
@@ -592,12 +514,6 @@
         <i class="fas fa-chevron-down"></i>
       </button>
 
-<<<<<<< HEAD
-      <button class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#coRejectedModal" id="coRejectedBtn">
-        REJECTED LEAVES
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="coRejectedCount">
-          <span class="shimmer-line" style="width: 20px; height: 8px; display: inline-block;"></span>
-=======
       <button
         class="btn btn-primary position-relative"
         data-bs-toggle="modal"
@@ -613,16 +529,10 @@
             class="shimmer-line"
             style="width: 20px; height: 8px; display: inline-block"
           ></span>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           <span class="visually-hidden">unread messages</span>
         </span>
       </button>
 
-<<<<<<< HEAD
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
-        ADD EVENT
-      </button>
-=======
       <button
         class="btn btn-primary"
         data-bs-toggle="modal"
@@ -644,14 +554,10 @@
           0
         </span>
       </div>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     </div>
 
     <div id="stats-card-grid" class="stats-grid show">
       <!-- Dashboard Cards -->
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-target="#paradeStateModal" data-bs-toggle="modal" id="card-parade">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -659,7 +565,6 @@
         data-bs-toggle="modal"
         id="card-parade"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle">
           <i class="fas fa-book-open"></i>
         </div>
@@ -669,9 +574,6 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#attachmentModal" id="card-attachment">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -679,7 +581,6 @@
         data-bs-target="#attachmentModal"
         id="card-attachment"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle mb-2">
           <i class="fas fa-cloud-upload-alt"></i>
         </div>
@@ -689,9 +590,6 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" id="openCourses">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -713,7 +611,6 @@
         style="cursor: pointer"
         id="openCourses"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle mb-2">
           <i class="fas fa-graduation-cap"></i>
         </div>
@@ -723,30 +620,16 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" id="interview-card">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
         id="interview-card"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle mb-2">
           <i class="fa fa-male" aria-hidden="true"></i>
         </div>
         <small class="text-muted">KUNBA INTERVIEW</small>
         <h3>
-<<<<<<< HEAD
-          <span id="interview-Count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>/<span id="total-count"><div class="shimmer-line" style="width: 30px; height: 24px; display: inline-block;"></div></span>
-        </h3>
-        <span id="interview%" class="text-danger">
-          <div class="shimmer-line" style="width: 50px; height: 14px; display: inline-block;"></div>
-        </span>
-      </div>
-
-      <div class="card p-3 text-center" style="cursor: pointer" id="viewDetailsBtn">
-=======
           <span id="interview-Count">
             <div
               class="shimmer-line"
@@ -772,7 +655,6 @@
         style="cursor: pointer"
         id="viewDetailsBtn"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="mb-2">
           <i class="fas fa-user-plus fa-2x text-primary"></i>
         </div>
@@ -782,15 +664,11 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" id="openSensitive">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
         id="openSensitive"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle mb-2">
           <i class="fas fa-exclamation-circle"></i>
         </div>
@@ -799,11 +677,7 @@
           <div class="shimmer-number mx-auto"></div>
         </h3>
       </div>
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       <div class="card p-3 text-center" id="openBoardDetails">
         <div class="icon-circle mb-2">
           <i class="fas fa-user-tie me-1"></i>
@@ -814,9 +688,6 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" id="loanDetailGraph" data-bs-toggle="modal" data-bs-target="#loanModal">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -824,7 +695,6 @@
         data-bs-toggle="modal"
         data-bs-target="#loanModal"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="loan-icon">
           <i class="fa-solid fa-hand-holding-dollar"></i>
         </div>
@@ -834,13 +704,6 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer; transition: all 0.3s ease" id="openProjects">
-        <div class="icon-circle mb-2">
-          <i class="fas fa-rocket"></i>
-        </div>
-        <small class="text-muted">TOTAL PROJECTS</small>
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer; transition: all 0.3s ease"
@@ -853,15 +716,11 @@
 
         <small class="text-muted">TOTAL PROJECTS</small>
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <h3 class="mb-0" id="get_projects_count">
           <div class="shimmer-number mx-auto"></div>
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#centerRollCallModal" id="card-rollcall">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -869,7 +728,6 @@
         data-bs-target="#centerRollCallModal"
         id="card-rollcall"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="mb-2">
           <i class="fas fa-clipboard-list fa-2x text-primary"></i>
         </div>
@@ -879,9 +737,6 @@
         </h3>
       </div>
 
-<<<<<<< HEAD
-      <div class="card p-3 text-center" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#agniveersModal" id="card-agniveer">
-=======
       <div
         class="card p-3 text-center"
         style="cursor: pointer"
@@ -889,7 +744,6 @@
         data-bs-target="#agniveersModal"
         id="card-agniveer"
       >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         <div class="icon-circle">
           <i class="fas fa-user-shield"></i>
         </div>
@@ -906,24 +760,15 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Add Today's Event</h5>
-<<<<<<< HEAD
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-=======
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
             ></button>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           </div>
           <div class="modal-body">
             <form id="eventForm">
               <label>Event Date:</label>
-<<<<<<< HEAD
-              <input type="date" class="form-control" name="event_date" value="{{ today }}" required />
-              <label class="mt-2">Event Name:</label>
-              <input type="text" class="form-control" name="event_name" required />
-=======
               <input
                 type="date"
                 class="form-control"
@@ -938,7 +783,6 @@
                 name="event_name"
                 required
               />
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
               <label class="mt-2">Venue:</label>
               <input type="text" class="form-control" name="venue" required />
             </form>
@@ -949,31 +793,6 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-
-    {% include 'modals/detachmentModal/detachment.html' %} 
-    {% include 'modals/personnelModal/personal_modal.html' %}
-    {% include 'modals/salesmodal/salesModal.html' %} 
-    {% include 'modals/leaverequest/leave_request.html' %} 
-    {% include 'modals/interview_pending/modal.html' %} 
-    {% include 'modals/count_parade/modal.html' %}
-    {% include 'modals/attachment-modal/modal.html' %}
-    {% include 'modals/loan/loans.html' %} 
-    {% include 'modals/roll_call/modal.html' %}
-    {% include 'modals/roll_call/view_roll_call.html' %}
-    {% include 'modals/course/courses.html' %} 
-    {% include 'modals/interview_pending/jco-update-modal.html' %} 
-    {% include 'modals/success-modal/modal.html' %}
-    {% include 'task_manager/update_task_by_jco.html' %}
-    {% include 'modals/adduser/user.html' %}
-    {% include 'modals/oncourses/modal.html' %} 
-    {% include 'modals/leaverequest/co-rejected-view.html' %}
-    {% include 'modals/alarm/agniveer_test_alarms.html' %}
-    {% include 'modals/agniveer/modal.html' %}
-
-    <!-- Parade State Modal -->
-    <div class="modal fade modal-fullscreen" id="paradeStateModal" tabindex="-1">
-=======
     {%include 'modals/Projects/modal.html'%}
      {% include
     'modals/detachmentModal/detachment.html' %} {% include
@@ -1002,20 +821,15 @@
       id="paradeStateModal"
       tabindex="-1"
     >
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Parade State</h5>
-<<<<<<< HEAD
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-=======
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
             ></button>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           </div>
           <div class="modal-body">
             {% include 'modals/parade_state/index.html' %}
@@ -1023,17 +837,11 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-  </div>
-</div>
-
-=======
     {% include 'images_section/section.html' %}
   </div>
 </div>
 
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 <script>
   document.addEventListener("hidden.bs.modal", function () {
     document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
@@ -1061,30 +869,18 @@
 
   // ========== START LOADER ==========
   function startActionButtonsLoader() {
-<<<<<<< HEAD
-    const loader = document.getElementById('actionBtnProgressLoader');
-    if (loader) {
-      setTimeout(() => {
-        loader.classList.add('loader-active');
-=======
     const loader = document.getElementById("actionBtnProgressLoader");
     if (loader) {
       setTimeout(() => {
         loader.classList.add("loader-active");
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       }, 200);
     }
   }
 
   // ========== UPDATE LOADER PROGRESS ==========
   function updateLoaderProgress(percentage) {
-<<<<<<< HEAD
-    const loader = document.getElementById('actionBtnProgressLoader');
-    const progressBar = loader?.querySelector('.loader-progress-bar');
-=======
     const loader = document.getElementById("actionBtnProgressLoader");
     const progressBar = loader?.querySelector(".loader-progress-bar");
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     if (progressBar) {
       progressBar.style.width = `${percentage}%`;
     }
@@ -1092,19 +888,6 @@
 
   // ========== SHOW ACTION BUTTONS AFTER LOADING ==========
   function showActionButtons() {
-<<<<<<< HEAD
-    const loader = document.getElementById('actionBtnProgressLoader');
-    const buttonsContainer = document.getElementById('actionButtonsContainer');
-    
-    if (loader && buttonsContainer) {
-      setTimeout(() => {
-        loader.style.opacity = '0';
-        loader.style.transition = 'opacity 0.3s ease';
-        
-        setTimeout(() => {
-          loader.style.display = 'none';
-          buttonsContainer.classList.add('show');
-=======
     const loader = document.getElementById("actionBtnProgressLoader");
     const buttonsContainer = document.getElementById("actionButtonsContainer");
 
@@ -1116,7 +899,6 @@
         setTimeout(() => {
           loader.style.display = "none";
           buttonsContainer.classList.add("show");
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         }, 300);
       }, 500);
     }
@@ -1138,16 +920,6 @@
       });
     }
 
-<<<<<<< HEAD
-    const openProjects = safeQuerySelector("#openProjects");
-    if (openProjects) {
-      openProjects.addEventListener("click", function () {
-        window.location.href = "/projects";
-      });
-    }
-
-=======
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     const showBtn = safeQuerySelector("#show-btn");
     const statsGrid = safeQuerySelector("#stats-card-grid");
     if (showBtn && statsGrid) {
@@ -1206,12 +978,8 @@
             initFillUpTestForm();
           })
           .catch(() => {
-<<<<<<< HEAD
-            modalBody.innerHTML = "<p class='text-danger'>Failed to load form</p>";
-=======
             modalBody.innerHTML =
               "<p class='text-danger'>Failed to load form</p>";
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
           });
       });
 
@@ -1231,12 +999,6 @@
           const payload = {
             army_number: form.army_number.value,
             tests: [
-<<<<<<< HEAD
-              { test: "1st", status: form.test1.value, date: form.test1_date.value },
-              { test: "2nd", status: form.test2.value, date: form.test2_date.value },
-              { test: "3rd", status: form.test3.value, date: form.test3_date.value },
-              { test: "4th", status: form.test4.value, date: form.test4_date.value },
-=======
               {
                 test: "1st",
                 status: form.test1.value,
@@ -1257,7 +1019,6 @@
                 status: form.test4.value,
                 date: form.test4_date.value,
               },
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
             ],
           };
 
@@ -1287,11 +1048,7 @@
 
       const list = safeQuerySelector("#eventList");
       if (!list) return;
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       list.innerHTML = "";
 
       if (!data.rows || data.rows.length === 0) {
@@ -1326,21 +1083,12 @@
   async function loadDashboardDataSingleAPI() {
     try {
       updateLoaderProgress(10);
-<<<<<<< HEAD
-      
-      const res = await fetch("/api/dashboard_summary");
-      if (!res.ok) throw new Error("Failed to fetch dashboard data");
-  
-      updateLoaderProgress(30);
-      
-=======
 
       const res = await fetch("/api/dashboard_summary");
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
 
       updateLoaderProgress(30);
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       const {
         detachments,
         manpower = {},
@@ -1353,20 +1101,6 @@
         courses_count,
         roll_call_pending_points,
         boards_count,
-<<<<<<< HEAD
-        tasks = {}
-      } = await res.json();
-  
-      updateLoaderProgress(50);
-      
-      const pendingTasks = tasks.pending ?? 0;
-      const totalTasks = tasks.total ?? 0;
-      const taskPercentage = totalTasks > 0 ? ((pendingTasks / totalTasks) * 100).toFixed(1) : "0";
-  
-      const dashboardMap = {
-        locationCount: detachments,
-        mainPower: `${manpower.officerCount ?? 0} - ${manpower.jcoCount ?? 0} - ${manpower.orCount ?? 0}`,
-=======
         tasks = {},
         duty_count,
       } = await res.json();
@@ -1383,7 +1117,6 @@
         mainPower: `${manpower.officerCount ?? 0} - ${
           manpower.jcoCount ?? 0
         } - ${manpower.orCount ?? 0}`,
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         "interview-Count": interview.pending_count ?? 0,
         "total-count": interview.total_count ?? 0,
         "interview%": `Pending ${interview.percentage ?? 0}%`,
@@ -1395,14 +1128,9 @@
         totalCoursesDone: courses_count ?? 0,
         "center-roll-points": roll_call_pending_points ?? 0,
         "board-count": boards_count ?? 0,
-<<<<<<< HEAD
-      };
-  
-=======
         "duty-search-count": duty_count ?? 0,
       };
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       Object.entries(dashboardMap).forEach(([id, value]) =>
         updateIfExists(id, value)
       );
@@ -1413,10 +1141,6 @@
       await loadTodayEvents();
       updateLoaderProgress(100);
       showActionButtons();
-<<<<<<< HEAD
-  
-=======
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     } catch (err) {
       console.error("Error loading dashboard data:", err);
       updateLoaderProgress(100);
@@ -1453,10 +1177,5 @@
     initializeDashboard();
   });
 </script>
-<<<<<<< HEAD
-
-{% endblock %}
-=======
 <script src="static/js/chat.js"></script>
 {% endblock %}
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386

@@ -54,10 +54,7 @@
             <thead>
               <tr>
                 <th>Army No</th>
-<<<<<<< HEAD
-=======
                 <th>Rank</th>
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
                 <th>Name</th>
                 <th>Rejection Status</th>
                 <th>Action</th>
@@ -93,13 +90,10 @@
                 <div class="form-control bg-light" id="co_army_number">-</div>
               </div>
               <div class="col-md-6">
-<<<<<<< HEAD
-=======
                 <label class="fw-bold">Rank</label>
                 <div class="form-control bg-light" id="co_rank">-</div>
               </div>
               <div class="col-md-6">
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
                 <label class="fw-bold">Name</label>
                 <div class="form-control bg-light" id="co_name">-</div>
               </div>
@@ -163,21 +157,14 @@
       const { data } = await res.json();
   
       if (!data || data.length === 0) {
-<<<<<<< HEAD
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No rejected leaves found</td></tr>`;
-=======
         tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No rejected leaves found</td></tr>`;
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       } else {
         tbody.innerHTML = data.map(row => `
           <tr>
             <td>${row.army_number || '-'}</td>
-<<<<<<< HEAD
-=======
             <td>${row.rank|| '-'}</td>
 
             
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
             <td>${row.name || '-'}</td>
             <td>${row.request_status || 'Rejected'}</td>
             <td>
@@ -238,15 +225,12 @@
       const { data } = await res.json();
   
       document.getElementById("co_army_number").innerText = data.army_number || '-';
-<<<<<<< HEAD
-=======
       
 
       document.getElementById("co_rank").innerText =
       data.rank || data.rank_name || data.army_rank || '-';
     
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       document.getElementById("co_name").innerText = data.name || '-';
       document.getElementById("co_leave_type").innerText = data.leave_type || '-';
       document.getElementById("co_leave_days").innerText = data.leave_days || '-';

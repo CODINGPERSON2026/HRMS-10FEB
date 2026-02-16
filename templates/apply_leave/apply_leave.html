@@ -260,13 +260,9 @@
   };
 
   function downloadCertificate(armyNumber) {
-<<<<<<< HEAD
-    window.open(`/apply_leave/leave/download_certificate/${armyNumber}`, '_blank');
-=======
     alert('CLICKED')
     
     window.open(`/apply_leave/download_certificate/${armyNumber}`, '_blank');
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   }
 
   /* FETCH LEAVE DETAILS */
@@ -315,23 +311,6 @@
     }
 
     // Simple calculation - just the days between from and to (inclusive)
-<<<<<<< HEAD
-    const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24)) + 1;
-    days.value = totalDays;
-
-    // Show summary with prefix/suffix dates if provided
-    let summary = `<strong>${totalDays} days ${leaveType.value}</strong><br>`;
-    summary += `Leave Period: ${fromDate.value} to ${toDate.value}<br>`;
-    
-    if (prefixDate.value) {
-      summary += `Prefix Date: ${prefixDate.value}<br>`;
-    }
-    
-    if (suffixDate.value) {
-      summary += `Suffix Date: ${suffixDate.value}<br>`;
-    }
-    
-=======
     const actualDays = Math.floor((to - from) / (1000 * 60 * 60 * 24)) + 1;
     const pDays = prefixDate.value ? 1 : 0;
     const sDays = suffixDate.value ? 1 : 0;
@@ -352,7 +331,6 @@
       summary += `Suffix Date: ${suffixDate.value} (1 day)<br>`;
     }
 
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     leaveSummary.innerHTML = summary;
     leaveSummary.classList.remove("d-none");
   }
@@ -377,13 +355,6 @@
           leave_type: leaveType.value,
           from_date: fromDate.value,
           to_date: toDate.value,
-<<<<<<< HEAD
-          total_days: parseInt(days.value),
-          reason: reason.value,
-          name: personnel_name,
-          prefix_date: prefixDate.value || null,  // This will save to database
-          suffix_date: suffixDate.value || null   // This will save to database
-=======
           actual_leave_days: parseInt(days.value),
           total_days: parseInt(days.value) + (prefixDate.value ? 1 : 0) + (suffixDate.value ? 1 : 0),
           prefix_days: prefixDate.value ? 1 : 0,
@@ -392,7 +363,6 @@
           suffix_date: suffixDate.value || null,
           reason: reason.value,
           name: personnel_name
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
         })
       });
 

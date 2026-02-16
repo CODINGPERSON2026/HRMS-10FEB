@@ -167,11 +167,7 @@
     messagesEl.innerHTML = '';
     addMessage(
       'assistant',
-<<<<<<< HEAD
-      "Hi! I'm your HRMS assistant for **all users** of this system. You can ask me **any** question about the HRMS data or how the system works—for example: personnel details, leave status and balances, company strength, loans, tasks, courses, weight/fitness, parade state, or even the underlying database schema.\n\nYou can also tap one of these common questions:"
-=======
       "Hi! I'm your HRMS assistant. Ask me **any** question about this project or the database—e.g. leave workflow, personnel table, weight system, tasks, loans, or schema.\n\nYou can also tap one of these common CO dashboard questions:"
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
     );
     renderSuggestions();
   }

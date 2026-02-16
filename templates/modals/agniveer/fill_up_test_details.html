@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 {% if role in ["TRGJCO"] %}
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 <!-- Modal for Creating Assistant Test Schedule -->
 <div class="modal fade" id="fillupdetailsmodal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -32,18 +29,6 @@
 
       </form>
 
-<<<<<<< HEAD
-    </div>
-  </div>
-</div>
-
-<!-- Card for Updating Assistant Assessments -->
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-warning fw-bold">
-    <i class="bi bi-pencil-square me-2"></i> Update Assistant Assessments
-  </div>
-
-=======
       
       <!-- Card for Updating Assistant Assessments -->
 <div class="card shadow-sm border-0 mb-4">
@@ -51,7 +36,6 @@
     <i class="bi bi-pencil-square me-2"></i> Update Assistant Assessments
   </div>
   
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
   <div class="card-body">
     <div class="row g-3">
@@ -113,12 +97,6 @@
     </div>
   </div>
 </div>
-<<<<<<< HEAD
-</div>
-
-<script>
-  // Load batches dynamically for both dropdowns
-=======
 
 <!-- Card for Deleting Emergency Tests and Remarks -->
 <div class="card shadow-sm border-0">
@@ -189,32 +167,23 @@
 
 <script>
   // Load batches dynamically for all dropdowns
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
   function loadBatches() {
     fetch('/agni/get_batches')
       .then(res => res.json())
       .then(batches => {
         // Modal Select
         const modalSelect = document.querySelector('select[name="batch"]');
-<<<<<<< HEAD
-        // Card Select
-        const cardSelect = document.getElementById('upd_batch');
-=======
         // Update Card Select
         const cardSelect = document.getElementById('upd_batch');
         // Delete Card Select
         const delSelect = document.getElementById('del_batch');
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 
         const options = `<option value="" disabled selected>Select Batch</option>` +
           batches.map(b => `<option value="${b}">${b}</option>`).join('');
 
         if (modalSelect) modalSelect.innerHTML = options;
         if (cardSelect) cardSelect.innerHTML = options;
-<<<<<<< HEAD
-=======
         if (delSelect) delSelect.innerHTML = options;
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
       })
       .catch(err => console.error("Error loading batches:", err));
   }
@@ -285,8 +254,6 @@
       })
       .catch((err) => alert("Server error: " + err));
   }
-<<<<<<< HEAD
-=======
 
   // Delete Assessment Data Function
   function deleteAssessmentData() {
@@ -321,5 +288,4 @@
       })
       .catch((err) => alert("Server error: " + err));
   }
->>>>>>> ef482ff93d52ef510d0ea255d803835abe503386
 </script>

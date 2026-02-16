@@ -4,6 +4,13 @@ from datetime import datetime
 projects_bp = Blueprint('@projects_bp',__name__,url_prefix='/projects')
 
 
+# ==================== PROJECTS DASHBOARD PAGE (GET /projects) ====================
+@projects_bp.route('/')
+@projects_bp.route('')
+def projects_index():
+    """Serve the projects dashboard page when user opens /projects or /projects/."""
+    return render_template('projects/projects.html')
+
 
 # ==================== PROJECT MANAGEMENT API ROUTES ====================
 # Add these routes to your Flask application
@@ -83,6 +90,42 @@ def api_get_all_projects():
             'message': str(e),
             'projects': []
         }), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# ==================== API ROUTE: GET PROJECTS (list format for projects.html) ====================
+@projects_bp.route('/api/get_projects', methods=['GET'])
+def api_get_projects_list():
+    """
+    Return projects as a flat list (project_id, head, project_name, ...) for projects.html.
+    Same role rules: PROJECT JCO and PROJECT OFFICER see all; others filtered by company.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    user = require_login()
+    role = user.get('role') or ''
+    company = user.get('company') or ''
+
+    try:
+        query = """
+            SELECT project_id, head, project_name, current_stage,
+                   project_cost, project_items, quantity, project_description
+            FROM projects
+        """
+        params = []
+        if company != "Admin" and role not in ('PROJECT JCO', 'PROJECT OFFICER'):
+            query += " WHERE company = %s"
+            params.append(company)
+        query += " ORDER BY project_id DESC"
+
+        cursor.execute(query, params)
+        projects = cursor.fetchall()
+        return jsonify(projects)
+    except Exception as e:
+        print("Error in api_get_projects_list:", str(e))
+        return jsonify([]), 500
     finally:
         cursor.close()
         conn.close()

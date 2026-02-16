@@ -12,7 +12,7 @@ let displayedData = [];
 let currentStatusClass = "";
 let currentPage = 1;
 let isLoading = false;
-let hasMoreData = true; 
+let hasMoreData = true;
 const rowsPerPage = 10;
 
 // Validation popup functions
@@ -30,22 +30,85 @@ function closeValidationPopup() {
 
 async function loadCompanies() {
   try {
-      const res = await fetch("/weight_system/api/companies");
-      if (!res.ok) throw new Error("Failed to fetch companies");
-      const data = await res.json();
+      // Get logged-in user's company and username
+      let userCompany = null;
+      let username = null;
+      try {
+          const userRes = await fetch("/api/user-info");
+          if (userRes.ok) {
+              const userData = await userRes.json();
+              if (userData.success) {
+                  userCompany = userData.company;
+                  username = userData.username;
+              }
+          }
+      } catch (e) {
+          console.warn("Could not fetch user info:", e);
+      }
+      
+      // Fallback: Try to get from template variable if available
+      if (!userCompany && typeof window.userCompanyFromTemplate !== 'undefined' && window.userCompanyFromTemplate) {
+          userCompany = window.userCompanyFromTemplate;
+      }
       
       const companySelect = document.getElementById("company-select");
       while (companySelect.options.length > 1) {
           companySelect.remove(1);
       }
       
-      const companyNumbers = ['1', '2', '3', 'HQ'];
-      companyNumbers.forEach(num => {
+      // Normalize company name for matching
+      const normalizeCompany = (comp) => {
+          if (!comp) return null;
+          const lower = comp.toLowerCase().trim();
+          if (lower.includes('1') && (lower.includes('company') || lower.includes('coy'))) return '1 Company';
+          if (lower.includes('2') && (lower.includes('company') || lower.includes('coy'))) return '2 Company';
+          if (lower.includes('3') && (lower.includes('company') || lower.includes('coy'))) return '3 Company';
+          if (lower.includes('hq') && (lower.includes('company') || lower.includes('coy'))) return 'HQ company';
+          return comp;
+      };
+      
+      // Map username to company if company is not available (oc1, oc2, oc3, ochq)
+      const mapUsernameToCompany = (uname) => {
+          if (!uname) return null;
+          const lower = uname.toLowerCase().trim();
+          if (lower === 'oc1' || lower.includes('oc1')) return '1 Company';
+          if (lower === 'oc2' || lower.includes('oc2')) return '2 Company';
+          if (lower === 'oc3' || lower.includes('oc3')) return '3 Company';
+          if (lower === 'ochq' || lower.includes('ochq') || lower === 'oc hq') return 'HQ company';
+          return null;
+      };
+      
+      let normalizedUserCompany = normalizeCompany(userCompany);
+      
+      // If company not found, try mapping from username
+      if (!normalizedUserCompany && username) {
+          normalizedUserCompany = mapUsernameToCompany(username);
+      }
+      
+      // If user is OC (oc1, oc2, oc3, ochq), show only their company
+      // Otherwise show all companies
+      let companiesToShow = [];
+      if (normalizedUserCompany && (normalizedUserCompany === '1 Company' || normalizedUserCompany === '2 Company' || normalizedUserCompany === '3 Company' || normalizedUserCompany === 'HQ company')) {
+          // Show only the user's company
+          companiesToShow = [normalizedUserCompany];
+      } else {
+          // Show all companies (for Admin, CO, etc.)
+          companiesToShow = ['1 Company', '2 Company', '3 Company', 'HQ company'];
+      }
+      
+      companiesToShow.forEach(companyName => {
           const option = document.createElement("option");
-          option.value = `${num} Company`;
-          option.textContent = `${num} Company`;
+          option.value = companyName;
+          option.textContent = companyName;
           companySelect.appendChild(option);
       });
+      
+      // Set default selection to user's company if available
+      if (normalizedUserCompany && companiesToShow.includes(normalizedUserCompany)) {
+          companySelect.value = normalizedUserCompany;
+          // Trigger change event to load data for this company
+          companySelect.dispatchEvent(new Event('change'));
+      }
   } catch (err) {
       console.error("Error loading companies:", err);
   }
@@ -473,7 +536,7 @@ function renderTableRows(rows, statusClass, append = false) {
   }
 
   if (!rows.length && !append) {
-      tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
       return;
   }
 
@@ -488,11 +551,18 @@ function renderTableRows(rows, statusClass, append = false) {
       const deviationPercentText = formatDeviation(deviationPercent);
       const deviationKgText = formatDeviation(deviationKg);
       
+      // For status rows, use the actual status_type from the row data
+      // For fit/unfit rows, use the statusClass parameter
+      let buttonStatusClass = statusClass;
+      if (statusClass === "status" && r.status_type) {
+          buttonStatusClass = r.status_type; // Use "shape" or "category" instead of "status"
+      }
+      
       const tr = document.createElement("tr");
       tr.innerHTML = `
-      <td>${r.army_number}</td>
-      <td>${r.rank}</td>
-      <td>${r.name}</td>
+          <td>${r.army_number}</td>
+          <td>${r.name}</td>
+          <td>${r.rank}</td>
           <td>${r.company}</td>
           <td>${r.age}</td>
           <td>${r.height_cm}</td>
@@ -502,9 +572,66 @@ function renderTableRows(rows, statusClass, append = false) {
           <td><span class="deviation-badge ${deviationBadgeClass}">${deviationPercentText}%</span></td>
           <td><span class="status-badge ${statusClass}">${r.status.toUpperCase()}</span></td>
           <td><span class="status-type-badge">${r.status_type.toUpperCase()}</span></td>
+          <td><button type="button" class="view-person-btn" data-army-number="${r.army_number}" data-status-class="${buttonStatusClass}" data-status="${r.status || ''}">View</button></td>
       `;
       tbody.appendChild(tr);
+      
+      // Add click handler: use row data we already have (no API needed)
+      const viewBtn = tr.querySelector('.view-person-btn');
+      if (viewBtn) {
+        const rowData = { ...r };
+        const btnStatusClass = buttonStatusClass;
+        viewBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showPersonModalWithData(rowData, btnStatusClass);
+        });
+      }
   });
+}
+
+/**
+ * Show person details modal using data we already have (from table row).
+ * No API call - displays immediately with actual row data.
+ */
+function showPersonModalWithData(data, statusClass) {
+  const modal = document.getElementById('person-details-modal');
+  const body = document.getElementById('person-details-body');
+  if (!modal || !body) {
+    console.error('Modal elements not found');
+    alert('Could not open details. Please refresh the page.');
+    return;
+  }
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  const normalized = normalizePersonData(data);
+  renderPersonDetails(normalized, statusClass);
+}
+window.showPersonModalWithData = showPersonModalWithData;
+
+/**
+ * Ensure person data has proper types for display (numbers where needed).
+ */
+function normalizePersonData(data) {
+  const num = (v) => (v === null || v === undefined) ? null : Number(v);
+  return {
+    army_number: data.army_number,
+    name: data.name,
+    rank: data.rank,
+    company: data.company,
+    age: num(data.age) ?? data.age,
+    height_cm: num(data.height_cm) ?? data.height_cm,
+    actual_weight: num(data.actual_weight) ?? data.actual_weight,
+    status_type: data.status_type,
+    category_type: data.category_type,
+    restrictions: data.restrictions,
+    ideal_weight: num(data.ideal_weight) ?? data.ideal_weight,
+    lower_limit: num(data.lower_limit) ?? data.lower_limit,
+    upper_limit: num(data.upper_limit) ?? data.upper_limit,
+    status: data.status,
+    weight_deviation_percent: num(data.weight_deviation_percent) ?? data.weight_deviation_percent,
+    weight_deviation_kg: num(data.weight_deviation_kg) ?? data.weight_deviation_kg
+  };
 }
 
 async function fetchAndShow(url, statusClass) {
@@ -542,7 +669,7 @@ async function fetchAndShow(url, statusClass) {
       currentStatusClass = statusClass;
 
       if (tableData.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
           hasMoreData = false;
           return;
       }
@@ -558,7 +685,7 @@ async function fetchAndShow(url, statusClass) {
       hasMoreData = tableData.length > rowsPerPage;
   } catch (err) {
       console.error("Error fetching table data:", err);
-      tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: #718096; padding: 2rem;">Error loading data</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #718096; padding: 2rem;">Error loading data</td></tr>';
       hasMoreData = false;
   } finally {
       showLoader("table-spinner", false);
@@ -602,7 +729,7 @@ async function fetchStatusData(statusType) {
       currentStatusClass = "status";
 
       if (tableData.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #718096; padding: 2rem;">No records found</td></tr>';
           hasMoreData = false;
           return;
       }
@@ -614,7 +741,7 @@ async function fetchStatusData(statusType) {
       hasMoreData = tableData.length > rowsPerPage;
   } catch (err) {
       console.error("Error fetching status data:", err);
-      tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: #718096; padding: 2rem;">Error loading data</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #718096; padding: 2rem;">Error loading data</td></tr>';
       hasMoreData = false;
   } finally {
       showLoader("table-spinner", false);
@@ -1197,5 +1324,326 @@ document.getElementById('edit-user-form').addEventListener('submit', handleUpdat
 document.getElementById('update-user-modal').addEventListener('click', function(event) {
   if (event.target === this) {
       closeUpdateUserModal();
+  }
+});
+
+// Person Details Modal Functions - Make globally accessible
+window.viewPersonDetails = async function(armyNumber, statusClass) {
+  console.log('🔍 viewPersonDetails called with:', { armyNumber, statusClass });
+  
+  if (!armyNumber || !statusClass) {
+    console.error('❌ Missing required parameters:', { armyNumber, statusClass });
+    alert('Error: Missing person information. Please try again.');
+    return;
+  }
+  
+  const modal = document.getElementById('person-details-modal');
+  const body = document.getElementById('person-details-body');
+  
+  if (!modal) {
+    console.error('❌ Modal element not found!');
+    alert('Modal element not found. Please refresh the page.');
+    return;
+  }
+  
+  if (!body) {
+    console.error('❌ Modal body element not found!');
+    return;
+  }
+  
+  // Show modal
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Show loading state
+  body.innerHTML = `
+    <div style="text-align: center; padding: 40px;">
+      <div class="spinner" style="margin: 0 auto;"></div>
+      <p style="margin-top: 15px; color: var(--text-secondary); font-size: 1rem;">Loading person details...</p>
+    </div>
+  `;
+  
+  try {
+    const url = `/weight_system/api/person-details/${encodeURIComponent(armyNumber)}?status_class=${encodeURIComponent(statusClass)}`;
+    console.log('🌐 Fetching from URL:', url);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    console.log('📡 Response status:', response.status);
+    
+    if (!response.ok) {
+      let errorText = 'Unknown error';
+      try {
+        const errorData = await response.json();
+        errorText = errorData.error || errorData.message || `HTTP ${response.status}`;
+      } catch (e) {
+        errorText = await response.text() || `HTTP ${response.status}`;
+      }
+      console.error('❌ Response not OK:', response.status, errorText);
+      throw new Error(errorText);
+    }
+    
+    const data = await response.json();
+    console.log('✅ Received data:', data);
+    
+    if (data.error) {
+      body.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: var(--danger-color);">
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+          <p style="font-size: 1.1rem; font-weight: 600;">${data.error}</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Render the details
+    renderPersonDetails(data, statusClass);
+    console.log('✅ Person details rendered successfully');
+    
+  } catch (error) {
+    console.error('❌ Error fetching person details:', error);
+    body.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--danger-color);">
+        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;">Error loading person details</p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">${error.message || 'Please try again later.'}</p>
+        <button onclick="window.closePersonDetailsModal()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+      </div>
+    `;
+  }
+}
+
+// Make sure function is available immediately
+console.log('✅ viewPersonDetails function registered:', typeof window.viewPersonDetails);
+
+function renderPersonDetails(data, statusClass) {
+  const body = document.getElementById('person-details-body');
+  if (!body) return;
+
+  const toNum = (v) => (v !== null && v !== undefined && !isNaN(Number(v))) ? Number(v) : null;
+  const idealWeight = toNum(data.ideal_weight);
+  const lowerLimit = toNum(data.lower_limit);
+  const upperLimit = toNum(data.upper_limit);
+  const actualWeight = toNum(data.actual_weight);
+  const ideal = idealWeight != null ? idealWeight.toFixed(2) : "—";
+  const lower = lowerLimit != null ? lowerLimit.toFixed(2) : "—";
+  const upper = upperLimit != null ? upperLimit.toFixed(2) : "—";
+  const deviationPercent = data.weight_deviation_percent;
+  const deviationKg = data.weight_deviation_kg;
+  const deviationPercentText = formatDeviation(deviationPercent);
+  const deviationKgText = formatDeviation(deviationKg);
+  const age = data.age != null ? data.age : "—";
+  const heightCm = data.height_cm != null ? data.height_cm : "—";
+  const status = data.status || "—";
+  const statusType = (data.status_type || "—").toString();
+  const restrictions = data.restrictions != null && data.restrictions !== "" ? data.restrictions : null;
+  const categoryType = data.category_type;
+  
+  let reasonText = '';
+  let reasonTitle = '';
+  
+  if (statusClass === 'unauth') {
+    reasonTitle = 'Why is this person UNFIT?';
+    if (lowerLimit != null && actualWeight != null && actualWeight < lowerLimit) {
+      const underweight = (lowerLimit - actualWeight).toFixed(2);
+      reasonText = `This person is UNDERWEIGHT by ${underweight} kg (${deviationPercentText}%). Their actual weight (${actualWeight} kg) is below the minimum authorized weight (${lower} kg) for their age (${age} years) and height (${heightCm} cm).`;
+    } else if (upperLimit != null && actualWeight != null && actualWeight > upperLimit) {
+      const overweight = (actualWeight - upperLimit).toFixed(2);
+      reasonText = `This person is OVERWEIGHT by ${overweight} kg (${deviationPercentText}%). Their actual weight (${actualWeight} kg) exceeds the maximum authorized weight (${upper} kg) for their age (${age} years) and height (${heightCm} cm).`;
+    } else {
+      reasonText = `This person is UNFIT. Their weight (${actualWeight} kg) does not fall within the authorized range (${lower} kg - ${upper} kg) for their age (${age} years) and height (${heightCm} cm).`;
+    }
+  } else if (statusClass === 'auth') {
+    reasonTitle = 'Why is this person FIT?';
+    reasonText = `This person's weight (${actualWeight} kg) falls within the authorized range (${lower} kg - ${upper} kg) for their age (${age} years) and height (${heightCm} cm). The ideal weight for this profile is ${ideal} kg.`;
+  } else if (statusClass === 'shape') {
+    reasonTitle = 'Why is this person in SHAPE I?';
+    reasonText = `This person is classified as SHAPE I, which means they are medically fit for all duties. `;
+    if (status === 'Fit') {
+      reasonText += `Their weight (${actualWeight} kg) is within the authorized range (${lower} kg - ${upper} kg), making them FIT for service.`;
+    } else if (status === 'UnFit') {
+      reasonText += `However, they are currently UNFIT based on weight criteria. `;
+      if (lowerLimit != null && actualWeight != null && actualWeight < lowerLimit) {
+        reasonText += `They are UNDERWEIGHT by ${deviationPercentText}% (below ${lower} kg).`;
+      } else if (upperLimit != null && actualWeight != null && actualWeight > upperLimit) {
+        reasonText += `They are OVERWEIGHT by ${deviationPercentText}% (above ${upper} kg).`;
+      }
+    }
+  } else if (statusClass === 'category') {
+    reasonTitle = 'Why is this person in CATEGORY?';
+    const catTypeLabel = categoryType ? String(categoryType).charAt(0).toUpperCase() + String(categoryType).slice(1) : 'Unknown';
+    reasonText = `This person is classified as CATEGORY (${catTypeLabel}), which means they have medical restrictions or limitations. `;
+    if (restrictions) {
+      reasonText += `Restrictions: ${restrictions}. `;
+    }
+    reasonText += `Their current fitness status is: ${status}. `;
+    if (status === 'UnFit') {
+      reasonText += `They are UNFIT based on weight criteria with a deviation of ${deviationPercentText}%. `;
+      if (lowerLimit != null && actualWeight != null && actualWeight < lowerLimit) {
+        reasonText += `Their weight (${actualWeight} kg) is below the minimum authorized weight (${lower} kg).`;
+      } else if (upperLimit != null && actualWeight != null && actualWeight > upperLimit) {
+        reasonText += `Their weight (${actualWeight} kg) exceeds the maximum authorized weight (${upper} kg).`;
+      }
+    } else if (status === 'Fit') {
+      reasonText += `Their weight (${actualWeight} kg) is within the authorized range (${lower} kg - ${upper} kg).`;
+    }
+  }
+
+  const statusBadgeClass = status === 'Fit' ? 'status-fit' : 'status-unfit';
+  const statusTypeBadgeClass = statusType === 'shape' ? 'status-shape' : 'status-category';
+
+  const esc = (s) => (s == null || s === undefined) ? '' : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  body.innerHTML = `
+    <div class="person-details-section">
+      <h4>Personal Information</h4>
+      <div class="detail-row">
+        <div class="detail-label">Army Number:</div>
+        <div class="detail-value">${esc(data.army_number)}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Name:</div>
+        <div class="detail-value">${esc(data.name)}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Rank:</div>
+        <div class="detail-value">${esc(data.rank)}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Company:</div>
+        <div class="detail-value">${esc(data.company)}</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Age:</div>
+        <div class="detail-value">${esc(age)} years</div>
+      </div>
+    </div>
+    
+    <div class="person-details-section">
+      <h4>Physical Measurements</h4>
+      <div class="detail-row">
+        <div class="detail-label">Height:</div>
+        <div class="detail-value">${esc(heightCm)} cm</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Actual Weight:</div>
+        <div class="detail-value"><strong>${esc(actualWeight)} kg</strong></div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Ideal Weight:</div>
+        <div class="detail-value">${ideal} kg</div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Authorized Range:</div>
+        <div class="detail-value">${lower} kg - ${upper} kg</div>
+      </div>
+    </div>
+    
+    <div class="person-details-section">
+      <h4>Fitness Status</h4>
+      <div class="detail-row">
+        <div class="detail-label">Status:</div>
+        <div class="detail-value">
+          <span class="status-badge-large ${statusBadgeClass}">${esc(status)}</span>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-label">Status Type:</div>
+        <div class="detail-value">
+          <span class="status-badge-large ${statusTypeBadgeClass}">${esc(statusType).toUpperCase()}</span>
+        </div>
+      </div>
+      ${categoryType ? `
+      <div class="detail-row">
+        <div class="detail-label">Category Type:</div>
+        <div class="detail-value">${esc(String(categoryType).charAt(0).toUpperCase() + String(categoryType).slice(1))}</div>
+      </div>
+      ` : ''}
+      <div class="detail-row">
+        <div class="detail-label">Weight Deviation:</div>
+        <div class="detail-value">${deviationKgText} kg (${deviationPercentText}%)</div>
+      </div>
+    </div>
+    
+    ${reasonText ? `
+    <div class="person-details-section">
+      <div class="reason-box">
+        <h5>${esc(reasonTitle)}</h5>
+        <p>${esc(reasonText)}</p>
+      </div>
+    </div>
+    ` : ''}
+    
+    ${restrictions ? `
+    <div class="person-details-section">
+      <h4>Restrictions</h4>
+      <div class="reason-box">
+        <p>${esc(restrictions)}</p>
+      </div>
+    </div>
+    ` : ''}
+  `;
+}
+
+function closePersonDetailsModal() {
+  const modal = document.getElementById('person-details-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+window.closePersonDetailsModal = closePersonDetailsModal;
+
+// Direct bindings for modal close - run when DOM is ready so close button always works
+function setupPersonDetailsModalClose() {
+  const modal = document.getElementById('person-details-modal');
+  const closeBtn = document.getElementById('person-details-modal-close');
+  if (!modal) return;
+
+  function hideModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      hideModal();
+    });
+  }
+
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) {
+      hideModal();
+    }
+  });
+}
+
+// Run when DOM is ready (handles module load order)
+document.addEventListener('DOMContentLoaded', setupPersonDetailsModalClose);
+if (document.readyState !== 'loading') {
+  setupPersonDetailsModalClose();
+}
+
+// Event delegation for view buttons
+document.addEventListener('click', function(event) {
+  const viewBtn = event.target.closest('.view-person-btn');
+  if (viewBtn) {
+    event.preventDefault();
+    event.stopPropagation();
+    const armyNumber = viewBtn.getAttribute('data-army-number');
+    const statusClass = viewBtn.getAttribute('data-status-class');
+    if (armyNumber && statusClass && typeof window.showPersonModalWithData === 'function') {
+      const row = tableData.find(function(t) { return t.army_number === armyNumber; });
+      if (row) {
+        window.showPersonModalWithData(row, statusClass);
+      }
+    }
+    return;
   }
 });

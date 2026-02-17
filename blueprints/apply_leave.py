@@ -131,15 +131,6 @@ def get_leave_details():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-
-
-
-
-
-
-
-
-
 @leave_bp.route("/search_personnel")
 def search_personnel():
     query = request.args.get("query", "").strip()

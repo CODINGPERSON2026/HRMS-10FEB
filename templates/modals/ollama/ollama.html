@@ -40,7 +40,7 @@
       <div class="modal-content">
   
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">HRMS AI Assistant</h5>
+          <h5 class="modal-title">UMS AI Assistant</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
   
@@ -81,7 +81,7 @@
     // TYPING MESSAGE
     const typingDiv = document.createElement("div");
     typingDiv.className = "message bot-msg";
-    typingDiv.innerText = "Typing...";
+    typingDiv.innerText = "Please wait!! Loading.....";
     chatArea.appendChild(typingDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
   
@@ -177,7 +177,7 @@ aiModal.addEventListener('shown.bs.modal', function () {
 
   chatArea.appendChild(botDiv);
 
-  typeMessage(botDiv, "👋 Welcome! I’m here to help you with HRMS queries.");
+  typeMessage(botDiv, "👋 Welcome! I’m here to help you with UMS queries.");
 
   chatArea.scrollTop = chatArea.scrollHeight;
 

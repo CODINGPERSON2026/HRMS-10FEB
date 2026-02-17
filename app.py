@@ -33,6 +33,7 @@ app.register_blueprint(add_user_bp)
 app.register_blueprint(oncourses_bp)
 app.register_blueprint(agniveer_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(ollama_bot_bp)
 
 
 

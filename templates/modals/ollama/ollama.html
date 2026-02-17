@@ -27,6 +27,14 @@
     scroll-behavior: smooth;
   }
   
+  /* 🔥 Model Upgrade Notice */
+  .model-upgrade {
+    background: linear-gradient(135deg, #fff3cd, #ffeeba);
+    border: 1px solid #ffc107;
+    font-size: 12px;
+    color: #850404;
+  }
+  
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
@@ -40,7 +48,10 @@
       <div class="modal-content">
   
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">UMS AI Assistant</h5>
+          <h5 class="modal-title">
+            UMS AI Assistant 
+            <span style="font-size:12px; opacity:0.8;">(Llama 1B)</span>
+          </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
   
@@ -78,10 +89,13 @@
     input.value = "";
     chatArea.scrollTop = chatArea.scrollHeight;
   
-    // TYPING MESSAGE
+    // LOADING MESSAGE
     const typingDiv = document.createElement("div");
     typingDiv.className = "message bot-msg";
-    typingDiv.innerText = "Please wait!! Loading.....";
+    typingDiv.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-2"></span>
+      Thinking...
+    `;
     chatArea.appendChild(typingDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
   
@@ -96,41 +110,63 @@
       const data = await response.json();
       chatArea.removeChild(typingDiv);
   
+      // 🔥 MODEL NOTICE
+      const modelNotice = document.createElement("div");
+      modelNotice.className = "message bot-msg model-upgrade";
+      modelNotice.innerHTML = `
+        ⚙️ You are using lower Ollama model.<br>
+        🚀 Upgrade to work faster and smarter.(RAM minimum 16GB)
+      `;
+      chatArea.appendChild(modelNotice);
+  
+      // BOT RESPONSE CONTAINER
       const botDiv = document.createElement("div");
       botDiv.className = "message bot-msg";
       chatArea.appendChild(botDiv);
   
-      // STRING RESPONSE
-      if (typeof data.answer === "string") {
-        typeMessage(botDiv, data.answer);
+      // 1️⃣ STRING RESPONSE
+      if (data.response) {
+        typeMessage(botDiv, data.response);
       }
   
-      // TABLE RESPONSE
-      else if (Array.isArray(data.answer) && data.answer.length > 0) {
+      // 2️⃣ TABLE RESPONSE
+      else if (data.data && Array.isArray(data.data) && data.data.length > 0) {
   
-        let table = "<table class='table table-sm table-bordered'><thead><tr>";
+        let table = "<div style='overflow-x:auto;'>";
+        table += "<table class='table table-sm table-bordered table-striped'>";
+        table += "<thead class='table-light'><tr>";
   
-        Object.keys(data.answer[0]).forEach(key => {
+        Object.keys(data.data[0]).forEach(key => {
           table += `<th>${key}</th>`;
         });
   
         table += "</tr></thead><tbody>";
   
-        data.answer.forEach(row => {
+        data.data.forEach(row => {
           table += "<tr>";
           Object.values(row).forEach(val => {
-            table += `<td>${val}</td>`;
+            table += `<td>${val ?? ""}</td>`;
           });
           table += "</tr>";
         });
   
-        table += "</tbody></table>";
+        table += "</tbody></table></div>";
   
         botDiv.innerHTML = table;
       }
   
+      // 3️⃣ NO RECORDS
+      else if (data.data && data.data.length === 0) {
+        typeMessage(botDiv, "No records found.");
+      }
+  
+      // 4️⃣ ERROR
       else if (data.error) {
-        botDiv.innerText = "Error: " + data.error;
+        botDiv.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
+      }
+  
+      else {
+        typeMessage(botDiv, "Sorry, I couldn't understand that.");
       }
   
       chatArea.scrollTop = chatArea.scrollHeight;
@@ -157,32 +193,34 @@
   
   
   // ENTER KEY SUPPORT
-  document.addEventListener("keypress", function(e) {
+  document.getElementById("chatInput").addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
+      e.preventDefault();
       sendMessage();
     }
   });
+  
+  
+  // AUTO GREETING ON MODAL OPEN
   let hasGreeted = false;
-
-const aiModal = document.getElementById('AIMODAL');
-
-aiModal.addEventListener('shown.bs.modal', function () {
-
-  if (hasGreeted) return;
-
-  const chatArea = document.getElementById("chatArea");
-
-  const botDiv = document.createElement("div");
-  botDiv.className = "message bot-msg";
-
-  chatArea.appendChild(botDiv);
-
-  typeMessage(botDiv, "👋 Welcome! I’m here to help you with UMS queries.");
-
-  chatArea.scrollTop = chatArea.scrollHeight;
-
-  hasGreeted = true;
-});
-
+  const aiModal = document.getElementById('AIMODAL');
+  
+  aiModal.addEventListener('shown.bs.modal', function () {
+  
+    if (hasGreeted) return;
+  
+    const chatArea = document.getElementById("chatArea");
+  
+    const botDiv = document.createElement("div");
+    botDiv.className = "message bot-msg";
+  
+    chatArea.appendChild(botDiv);
+  
+    typeMessage(botDiv, "👋 Welcome! I’m here to help you with UMS queries.");
+  
+    chatArea.scrollTop = chatArea.scrollHeight;
+  
+    hasGreeted = true;
+  });
   </script>
   

@@ -110,12 +110,52 @@ def inject_user():
         'company':None
     }
 
+ # password change
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    data = request.get_json(silent=True)
 
+    if not data:
+        return jsonify({"success": False, "error": "Invalid request body."}), 400
 
+    army_number  = data.get("army_number", "").strip()
+    new_password = data.get("new_password", "").strip()
 
+    if not army_number:
+        return jsonify({"success": False, "error": "Army number is required."}), 400
 
+    if not new_password:
+        return jsonify({"success": False, "error": "New password is required."}), 400
 
+    if len(new_password) < 3:
+        return jsonify({"success": False, "error": "Password must be at least 3 characters."}), 400
 
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"success": False, "error": "Database connection failed."}), 500
+
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("SELECT id FROM users WHERE army_number = %s", (army_number,))
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({"success": False, "error": "No user found with that Army Number."}), 404
+
+        cursor.execute(
+            "UPDATE users SET password = %s WHERE army_number = %s",
+            (new_password, army_number)
+        )
+
+        return jsonify({"success": True}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Database error: {str(e)}"}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
 @app.route('/')
 def dashboard():
     user = require_login()

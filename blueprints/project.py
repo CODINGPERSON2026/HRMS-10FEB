@@ -542,31 +542,6 @@ def api_delete_project(project_id):
         cursor.close()
         conn.close()
 
-
-# ==================== SQL TO CREATE PROJECT_HISTORY TABLE (OPTIONAL) ====================
-"""
-CREATE TABLE IF NOT EXISTS project_history (
-    history_id INT AUTO_INCREMENT PRIMARY KEY,
-    project_id INT NOT NULL,
-    stage VARCHAR(100) NOT NULL,
-    notes TEXT,
-    updated_by VARCHAR(200),
-    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
-);
-"""
-
-# ==================== SQL TO ADD MISSING COLUMNS TO PROJECTS TABLE (IF NEEDED) ====================
-"""
-
-"""
-
-
-
-
-
-
-
 @projects_bp.route('/stats/cost_by_head', methods=['GET'])
 def cost_by_head():
     connection = get_db_connection()

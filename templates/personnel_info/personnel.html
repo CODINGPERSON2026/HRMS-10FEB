@@ -820,22 +820,23 @@ CHQ','SEC JCO','JCO LINE','S/JCO','OC','NCO CHQ','JCO CHQ','ONCO','NCO RHQ','NCO
   });
 
   // Load all personnel data for modal
-  async function loadAllPersonnelData() {
+async function loadAllPersonnelData() {
     try {
-      const response = await fetch('/personnel_information/api/all-personnel');
-      const data = await response.json();
+        const response = await fetch('/personnel_information/api/medical-personnel');
+        const data = await response.json();
 
-      if (data.success) {
-        window.allPersonnelData = data.personnel;
-        renderModalTable(data.personnel);
-        updateModalResultsCount(data.personnel.length);
-      } else {
-        showErrorInModal('Failed to load personnel data: ' + data.message);
-      }
+        if (data.success) {
+            window.allPersonnelData = data.medical_personnel;  // ← important
+            renderModalTable(data.medical_personnel);
+            updateModalResultsCount(data.medical_personnel.length);
+        } else {
+            showErrorInModal('Failed to load personnel data: ' + data.message);
+        }
     } catch (error) {
-      showErrorInModal('Network error: Could not load personnel data');
+        showErrorInModal('Network error: Could not load personnel data');
     }
-  }
+}
+
 
   function showErrorInModal(message) {
     const tableBody = document.getElementById('modalTableBody');

@@ -33,9 +33,12 @@ app.register_blueprint(add_user_bp)
 app.register_blueprint(oncourses_bp)
 app.register_blueprint(agniveer_bp)
 app.register_blueprint(chat_bp)
-app.register_blueprint(ollama_bot_bp)
 
 
+
+@app.route('/chat_bot')
+def chat_bot():
+    return render_template('/chat_ai.html')
 
 @app.route("/admin_login", methods=["POST",'GET'])
 def admin_login():
@@ -1665,6 +1668,44 @@ def line_unfit_graph():
 
 
 
+@app.route('/projects')
+def get_projects():
+    print('in this project route')
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    user = require_login()
+    company = user['company']
+    role = user.get('role') or ''
+
+    try:
+        # 1️⃣ Fetch projects
+        project_query = """
+            SELECT project_id, head, project_name, current_stage, project_cost, project_items, quantity, project_description
+            FROM projects
+        """
+        params = []
+
+        # Apply company filter if not Admin; PROJECT JCO and PROJECT OFFICER see all projects
+        if company != "Admin" and role not in ('PROJECT JCO', 'PROJECT OFFICER'):
+            project_query += " WHERE company = %s"
+            params.append(company)
+
+        cursor.execute(project_query, params)
+        projects = cursor.fetchall()
+
+        # 2️⃣ Fetch all heads from project_heads table
+       
+
+        # 3️⃣ Render template with both projects and heads
+        return render_template("projects/projects.html", projects=projects)
+
+    except Exception as e:
+        print("Error fetching projects or heads:", str(e))
+        return "Server Error", 500
+
+    finally:
+        cursor.close()
+        conn.close()
 
 
 # single route for all dashboard
@@ -3215,7 +3256,40 @@ def export_parade_csv(date_str, company):
             cursor.close()
         if conn:
             conn.close()
-        
+@app.route('/api/get_projects')
+def api_get_projects():
+    print("this is in new route of getting projects")
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    user = require_login()
+    role = user['role']
+    company = user['company']
+
+    try:
+        query = """
+            SELECT project_id, head, project_name, current_stage, 
+                   project_cost, project_items, quantity, project_description
+            FROM projects
+        """
+        params = []
+
+        if company != "Admin" and role != 'PROJECT JCO' and  role != 'PROJECT OFFICER':
+            query += " WHERE company = %s"
+            params.append(company)
+
+        cursor.execute(query, params)
+        projects = cursor.fetchall()
+
+        return jsonify(projects)  
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify([]), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
     
 @app.route('/api/get-all-courses', methods=['GET'])
 def get_courses():

@@ -13,7 +13,6 @@ from flask import (
 
 from datetime import datetime, date, timedelta
 
-
 from xhtml2pdf import pisa
 from io import BytesIO
 from middleware import require_login

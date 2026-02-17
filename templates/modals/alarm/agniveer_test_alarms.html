@@ -13,7 +13,6 @@
         align-items: center;
         gap: 18px;
     }
-
     /* Shine Effect */
     .alert-gradient::after {
         content: "";
@@ -100,7 +99,6 @@
                 alertBadge.classList.add("d-none");
                 alertBadge.classList.remove("alert-pulse");
             }
-
         } catch (err) {
             console.error("Error fetching assigned alarms:", err);
         }
@@ -165,7 +163,6 @@
                     </tr>
                 `;
             });
-
         } catch (err) {
             tbody.innerHTML = `<tr><td colspan="4">Error loading data</td></tr>`;
             console.error(err);

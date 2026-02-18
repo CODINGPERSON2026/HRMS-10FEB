@@ -522,59 +522,8 @@ tbody td {
     border: 1px solid var(--danger);
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-}
 
-.modal-content {
-    background: var(--card-bg);
-    border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 10px 30px var(--shadow);
-    border: 1px solid var(--border);
-}
 
-.modal-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: var(--card-bg);
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 10px 10px 0 0;
-    border-bottom: 1px solid var(--primary-dark);
-}
-
-.modal-header h3 {
-    font-size: 1.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.close-modal {
-    font-size: 1.5rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: transform 0.3s ease;
-    color: var(--card-bg);
-}
-
-.close-modal:hover {
-    transform: rotate(90deg);
-}
 
 form {
     padding: 1.5rem;

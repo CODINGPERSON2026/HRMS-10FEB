@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>SmartHR Admin Dashboard</title>
-  <link rel="icon" type="image/png" href="/static/Logo1.png">
+  <title>HRMS 15CESR</title>
+  <link rel="icon" type="image/png" href="/static/image_for_login_page/rt.jpg">
 </head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,7 +13,7 @@
   <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
   <!-- Font Awesome for Chevron Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-7.1.0-web/css/all.min.css') }}" />
 
   <script>
     (function () {
@@ -591,7 +591,8 @@
       RP/NA','NCO QM'] %}
       <a class="nav-link" href="/apply_leave/">Leave Management</a>
       {% endif %}
-      <a class="nav-link" href="/logout" id="logoutLink">Logout</a>
+      <a class="nav-link" href="#" id="hrmsLogoutLinkUnique">Logout</a>
+
       
     
     
@@ -604,21 +605,33 @@
   </div>
 
   <!-- Logout Modal -->
-  <div class="modal fade" id="logoutModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Confirm Logout</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">Are you sure you want to logout?</div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary" id="confirmLogout">Yes</button>
-        </div>
+ <!-- ================= HRMS UNIQUE LOGOUT MODAL ================= -->
+<div class="modal fade" id="hrmsLogoutModalUnique" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        Are you sure you want to logout?
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+          No
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                id="hrmsLogoutConfirmBtnUnique">
+          Yes
+        </button>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- Theme Switcher Script -->
   <script>
@@ -684,24 +697,36 @@
   </script>
 
   <!-- Logout Modal Script -->
-  <script>
+  <!-- ================= HRMS LOGOUT SCRIPT (ISOLATED & SAFE) ================= -->
+<script>
+  (function HRMSLogoutModule() {
+  
     document.addEventListener('DOMContentLoaded', function () {
-      const logoutLink = document.getElementById('logoutLink');
-      const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
-      const confirmLogoutBtn = document.getElementById('confirmLogout');
-
-      if (logoutLink && confirmLogoutBtn) {
-        logoutLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          logoutModal.show();
-        });
-
-        confirmLogoutBtn.addEventListener('click', function () {
-          window.location.href = '/logout';
-        });
-      }
+  
+      const logoutLink = document.getElementById('hrmsLogoutLinkUnique');
+      const modalElement = document.getElementById('hrmsLogoutModalUnique');
+      const confirmBtn = document.getElementById('hrmsLogoutConfirmBtnUnique');
+  
+      if (!logoutLink || !modalElement || !confirmBtn) return;
+  
+      const logoutModalInstance = new bootstrap.Modal(modalElement);
+  
+      // Open modal safely
+      logoutLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        logoutModalInstance.show();
+      });
+  
+      // Confirm logout safely
+      confirmBtn.addEventListener('click', function () {
+        window.location.href = '/logout';
+      });
+  
     });
+  
+  })();
   </script>
+  
 
   <!-- Sidebar Toggle Script -->
   <script>

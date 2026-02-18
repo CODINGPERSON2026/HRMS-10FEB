@@ -1,178 +1,211 @@
-from imports import *
+from flask import Blueprint, request, jsonify
 import mysql.connector
-import re
+from mysql.connector import Error
 from langchain_ollama import OllamaLLM
+import re
+
+# Import schema
 from schema import COMPLETE_SCHEMA
 
-ollama_bot_bp = Blueprint('ollama_bot', __name__, url_prefix='/bot')
+ollama_bot_bp = Blueprint('bot', __name__, url_prefix='/bot')
 
-print("🔵 HRMS AI Blueprint Loaded")
+# ─────────────────────────────────────────────
+# Global DB Configuration
+# ─────────────────────────────────────────────
+db_config = {
+    "host": "localhost",
+    "user": "root",
+    "password": "qaz123QAZ!@#",
+    "database": "hrms"
+}
 
-# -------------------------
-# LOAD OLLAMA MODEL ONCE
-# -------------------------
-print("🔵 Loading Ollama model...")
-llm = OllamaLLM(model="llama3.2:1b", temperature=0,
-                base_url="http://127.0.0.1:11434")
-print("✅ Ollama model ready.")
+llm = None
 
-# -------------------------
-# DATABASE CONNECTION FUNCTION
-# -------------------------
+
+# ─────────────────────────────────────────────
+# Load LLM (Cold start protection)
+# ─────────────────────────────────────────────
+def get_llm():
+    global llm
+    if llm is None:
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("Loading Ollama model (llama3.2:3b)...")
+        llm = OllamaLLM(model="llama3.2:3b", temperature=0)
+        print("Ollama model loaded successfully.")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    return llm
+
+
+# ─────────────────────────────────────────────
+# Database Connection
+# ─────────────────────────────────────────────
 def get_db_connection():
-    print("🔵 Connecting to database...")
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="qaz123QAZ!@#",
-        database="hrms"
-    )
+    try:
+        conn = mysql.connector.connect(**db_config)
+        return conn
+    except Error as e:
+        print(f"DB connection FAILED: {e}")
+        return None
 
-# -------------------------
-# /ASK API
-# -------------------------
-@ollama_bot_bp.route("/ask", methods=["POST"])
-def ask_hrms():
 
-    print("\n==============================")
-    print("🟢 /bot/ask endpoint called")
-    print("==============================")
-
-    data = request.get_json()
-    print("📩 Incoming Request JSON:", data)
-
-    if not data or "question" not in data:
-        print("❌ Question missing in request")
-        return jsonify({"error": "Question is required"}), 400
-
-    question = data["question"].strip()
-    print("🟢 User Question:", question)
-
-    if not question:
-        print("❌ Empty question received")
-        return jsonify({"error": "Empty question"}), 400
-
-    # -------------------------
-    # GREETING CHECK
-    # -------------------------
+# ─────────────────────────────────────────────
+# Greeting Detection
+# ─────────────────────────────────────────────
+def is_greeting(text):
     greetings = [
         "hi", "hello", "hey",
-        "good morning", "good afternoon", "good evening"
+        "good morning", "good afternoon", "good evening",
+        "how are you", "who are you"
     ]
+    text = text.lower()
+    return any(greet in text for greet in greetings)
 
-    if question.lower() in greetings:
-        print("👋 Greeting detected. Sending greeting response.")
+
+def is_help(text):
+    return "help" in text.lower()
+
+
+# ─────────────────────────────────────────────
+# Main Route
+# ─────────────────────────────────────────────
+@ollama_bot_bp.route('/ask', methods=['POST'])
+def ask():
+    print("\n" + "═" * 60)
+    print("NEW REQUEST RECEIVED → /bot/ask")
+
+    data = request.get_json()
+
+    if not data or 'question' not in data:
+        return jsonify({"error": "Missing question"}), 400
+
+    question = data['question'].strip()
+
+    if not question:
+        return jsonify({"error": "Empty question"}), 400
+
+    print(f"User Question: {question}")
+
+    # ─────────────────────────────────────────
+    # Greeting Handling
+    # ─────────────────────────────────────────
+    if is_greeting(question):
         return jsonify({
-            "response": "Hello 👋 I am your HRMS AI Assistant. How can I help you today?"
+            "answer": "Hello 👋 I am your HRMS assistant. I can help you with personnel and user account data.",
+            "data": []
         })
 
-    # -------------------------
-    # PROMPT GENERATION
-    # -------------------------
-    print("🔵 Generating SQL using LLM...")
+    # ─────────────────────────────────────────
+    # Help Handling
+    # ─────────────────────────────────────────
+    if is_help(question):
+        return jsonify({
+            "answer": (
+                "You can ask things like:\n"
+                "- Show all personnel\n"
+                "- Find soldier by army number\n"
+                "- List all users\n"
+                "- Show personnel from a specific unit\n"
+                "- Rank wise count"
+            ),
+            "data": []
+        })
 
+    # ─────────────────────────────────────────
+    # Prompt Preparation
+    # ─────────────────────────────────────────
     prompt = f"""
-    You are an expert MySQL query generator for HRMS.
+You are an expert MySQL query generator for HRMS.
 
-    STRICT RULES:
-    1. ONLY generate SELECT queries.
-    2. NEVER use DELETE, UPDATE, INSERT, DROP, ALTER, etc.
-    3. NEVER select the password column from users table.
-    4. Use exact column names as shown in the schema.
-    5. If question requires JOIN, use army_number.
-    6. If unrelated, respond: "NOT RELATED"
-    7. If insufficient info, respond: "INSUFFICIENT DATA"
-    8. Return ONLY SQL query.
+STRICT RULES:
+1. ONLY generate SELECT queries.
+2. NEVER use DELETE, UPDATE, INSERT, DROP, ALTER, CREATE, etc.
+3. NEVER select the password column from users table.
+4. Use exact column names from schema.
+5. If unrelated to HRMS → respond "NOT RELATED"
+6. If info not available → respond "INSUFFICIENT DATA"
+7. Return ONLY SQL query.
 
-    Database Information:
-    {COMPLETE_SCHEMA}
+Database Schema:
+{COMPLETE_SCHEMA}
 
-    User Question:
-    {question}
+User Question:
+{question}
 
-    Return ONLY the SQL query:
-    """
+Return ONLY SQL query:
+"""
 
+    # ─────────────────────────────────────────
+    # Generate SQL
+    # ─────────────────────────────────────────
     try:
-        generated_sql = llm.invoke(prompt)
-        print("🟡 Raw LLM Output:")
-        print(generated_sql)
+        model = get_llm()
+        raw_output = model.invoke(prompt)
     except Exception as e:
-        print("❌ LLM Error:", e)
-        return jsonify({"error": f"LLM Error: {str(e)}"}), 500
+        return jsonify({"error": f"LLM error: {str(e)}"}), 500
 
-    # -------------------------
-    # CLEAN SQL
-    # -------------------------
-    generated_sql = re.sub(r"```sql|```", "", generated_sql).strip()
-    generated_sql = re.sub(r"^SQL:\s*", "", generated_sql, flags=re.IGNORECASE)
+    # Clean Output
+    sql = re.sub(r"```sql|```", "", raw_output).strip()
+    sql = re.sub(r"^SQL:\s*", "", sql, flags=re.IGNORECASE).strip()
 
-    print("🟢 Cleaned SQL:")
-    print(generated_sql)
+    print("Generated SQL:", sql)
 
-    sql_lower = generated_sql.lower()
+    # ─────────────────────────────────────────
+    # Safety Checks
+    # ─────────────────────────────────────────
+    sql_lower = sql.lower()
 
-    # -------------------------
-    # SAFETY CHECKS
-    # -------------------------
-    print("🔵 Running safety checks...")
-
-    dangerous_keywords = ['delete', 'update', 'insert', 'drop', 'alter', 'create', 'truncate', 'replace']
-    if any(keyword in sql_lower for keyword in dangerous_keywords):
-        print("❌ Dangerous keyword detected!")
-        return jsonify({"error": "Only SELECT queries allowed"}), 400
-
-    if "password" in sql_lower and "users" in sql_lower:
-        print("❌ Attempt to access password column!")
-        return jsonify({"error": "Access to password column not allowed"}), 403
-
-    if "NOT RELATED" in generated_sql:
-        print("❌ Question not related to HRMS")
-        return jsonify({"error": "Question not related to HRMS"}), 400
-
-    if "INSUFFICIENT DATA" in generated_sql:
-        print("❌ Insufficient schema data")
-        return jsonify({"error": "Insufficient data in schema"}), 400
+    if "NOT RELATED" in sql.upper() or "INSUFFICIENT DATA" in sql.upper():
+        return jsonify({"answer": sql.strip(), "data": []})
 
     if not sql_lower.startswith("select"):
-        print("❌ Query does not start with SELECT")
-        return jsonify({"error": "Query must start with SELECT"}), 400
+        return jsonify({"error": "Only SELECT statements allowed"}), 400
 
-    print("✅ Safety checks passed.")
+    dangerous_keywords = [
+        "delete", "update", "insert", "drop",
+        "alter", "create", "truncate", "replace"
+    ]
 
-    # -------------------------
-    # EXECUTE QUERY
-    # -------------------------
+    if any(keyword in sql_lower for keyword in dangerous_keywords):
+        return jsonify({"error": "Dangerous SQL operation detected"}), 400
+
+    # Extra Password Protection
+    if re.search(r"select.*password.*from", sql_lower):
+        return jsonify({"error": "Access to password column forbidden"}), 400
+
+    # ─────────────────────────────────────────
+    # Execute Query
+    # ─────────────────────────────────────────
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Database connection failed"}), 500
+
     try:
-        db = get_db_connection()
-        cursor = db.cursor(dictionary=True)
-
-        print("🔵 Executing SQL query...")
-        cursor.execute(generated_sql)
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(sql)
         result = cursor.fetchall()
 
-        print(f"✅ Query executed successfully. Records found: {len(result)}")
-
-        # Mask accidental password fields
+        # Mask password fields if somehow returned
         for row in result:
             for key in row:
-                if 'password' in key.lower():
+                if "password" in key.lower():
                     row[key] = "*** MASKED ***"
 
-        cursor.close()
-        db.close()
-        print("🔴 Database connection closed.")
+        answer_text = (
+            f"Found {len(result)} record(s)." if result else "No records found."
+        )
 
         return jsonify({
-            "sql": generated_sql,
-            "count": len(result),
+            "answer": answer_text,
             "data": result
         })
 
-    except mysql.connector.Error as e:
-        print("❌ MySQL Error:", e)
-        return jsonify({"error": f"MySQL Error: {str(e)}"}), 500
+    except Error as e:
+        return jsonify({"error": f"MySQL error: {str(e)}"}), 500
 
     except Exception as e:
-        print("❌ Unexpected Error:", e)
-        return jsonify({"error": f"Unexpected Error: {str(e)}"}), 500
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()

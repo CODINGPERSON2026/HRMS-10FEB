@@ -4,12 +4,7 @@
 <style>
     /* Weight Management Page Styles - Using Theme Variables from baseView.html */
     
-    body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+   
 
     /* Decorative navbar */
     .secondary-navbar {
@@ -837,60 +832,7 @@
         margin: 0;
     }
 
-    /* Modals */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background: var(--card-background);
-        border-radius: 16px;
-        padding: 30px;
-        max-width: 600px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 10px 40px var(--shadow);
-        border: 1px solid var(--border-color);
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid var(--border-color);
-    }
-
-    .modal-header h3 {
-        color: var(--text-primary);
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .close-modal {
-        font-size: 2rem;
-        color: var(--text-secondary);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .close-modal:hover {
-        color: var(--danger-color);
-        transform: scale(1.2);
-    }
-
+    
     .form-group {
         margin-bottom: 20px;
     }
@@ -1104,8 +1046,8 @@
 <!-- Link external CSS and JS -->
 <link rel="stylesheet" href="/static/weight_ms/home.css">
 <script src="/static/Chart.umd.min.js"></script>
-<script type="module" src="/static/theme_changer.js"></script>
-<link rel="stylesheet" href="/static/fontawesome-free-7.1.0-web/css/all.min.css">
+
+
 
 <div class="weight-container" style="position: relative;">
     <!-- Fullscreen Loader -->
@@ -1122,7 +1064,7 @@
         </div>
     </div>
 
-    <!-- Dashboard Header (Theme switcher removed - now in parent template) -->
+    
     <div class="dashboard-header">
         <div class="header-controls">
             <div class="company-filter">
@@ -1145,170 +1087,7 @@
     </div>
 
     <!-- Add User Modal -->
-    <div id="add-user-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New User</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <form id="add-user-form">
-                <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required 
-                           oninput="validateAlpha(this)" maxlength="50">
-                    <span class="error-message" id="name-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="army_number">Army Number:</label>
-                    <input type="text" id="army_number" name="army_number" required 
-                           oninput="validateAlphaNumeric(this)" maxlength="20">
-                    <span class="error-message" id="army_number-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="age">Age:</label>
-                    <input type="number" id="age" name="age" required min="18" max="60"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="age-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="rank">Enter Rank:</label>
-                    <input type="text" id="rank" name="rank" 
-                           oninput="validateAlpha(this)">
-                    <span class="error-message" id="rank-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="height_cm">Height (cm):</label>
-                    <input type="number" id="height_cm" name="height_cm" required min="100" max="250"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="height_cm-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="actual_weight">Actual Weight (kg):</label>
-                    <input type="number" id="actual_weight" name="actual_weight" required min="30" max="200" step="0.1"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="actual_weight-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="company">Company:</label>
-                    <select id="company" name="company" required>
-                        <option value="">Select Company</option>
-                        <option value="1 Company">1 Company</option>
-                        <option value="2 Company">2 Company</option>
-                        <option value="3 Company">3 Company</option>
-                        <option value="HQ company">HQ company</option>
-                    </select>
-                    <span class="error-message" id="company-error"></span>
-                </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="status_type" value="safe" checked>Shape</label>
-                        <label><input type="radio" name="status_type" value="category"> Category</label>
-                    </div>
-                    <div class="sub-radio-group-left" id="category-options" style="display: none;">
-                        <label><input type="radio" name="category_type" value="permanent">Permanent</label>
-                        <label><input type="radio" name="category_type" value="temporary">Temporary</label>
-                    </div>
-                    <div class="restrictions-group" id="restrictions-group" style="display: none;">
-                        <label for="restrictions">Restrictions:</label>
-                        <textarea id="restrictions" name="restrictions" placeholder="Enter restrictions" maxlength="500"></textarea>
-                        <span class="error-message" id="restrictions-error"></span>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="closeAddUserModal()">Cancel</button>
-                    <button type="submit" class="btn-submit">Add User</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Update User Modal -->
-    <div id="update-user-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Update User</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <form id="update-user-form">
-                <div class="form-group">
-                    <label for="update-army-number">Enter Army Number:</label>
-                    <input type="text" id="update-army-number" name="update-army-number" required 
-                           oninput="validateAlphaNumeric(this)" maxlength="20">
-                    <button type="submit" class="btn-submit" style="margin-top: 10px;">Search</button>
-                </div>
-            </form>
-            <form id="edit-user-form" style="display: none;">
-                <div class="form-group">
-                    <label for="edit-name">Name:</label>
-                    <input type="text" id="edit-name" name="name" required 
-                           oninput="validateAlpha(this)" maxlength="50">
-                    <span class="error-message" id="edit-name-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-army_number">Army Number:</label>
-                    <input type="text" id="edit-army_number" name="army_number" required 
-                           oninput="validateAlphaNumeric(this)" maxlength="20" readonly>
-                    <span class="error-message" id="edit-army_number-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-age">Age:</label>
-                    <input type="number" id="edit-age" name="age" required min="18" max="60"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="edit-age-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-rank">Enter Rank:</label>
-                    <input type="text" id="edit-rank" name="rank" 
-                           oninput="validateAlpha(this)">
-                    <span class="error-message" id="edit-rank-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-height_cm">Height (cm):</label>
-                    <input type="number" id="edit-height_cm" name="height_cm" required min="100" max="250"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="edit-height_cm-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-actual_weight">Actual Weight (kg):</label>
-                    <input type="number" id="edit-actual_weight" name="actual_weight" required min="30" max="200" step="0.1"
-                           oninput="validateNumeric(this)">
-                    <span class="error-message" id="edit-actual_weight-error"></span>
-                </div>
-                <div class="form-group">
-                    <label for="edit-company">Company:</label>
-                    <select id="edit-company" name="company" required>
-                        <option value="">Select Company</option>
-                        <option value="1 Company">1 Company</option>
-                        <option value="2 Company">2 Company</option>
-                        <option value="3 Company">3 Company</option>
-                        <option value="HQ company">HQ company</option>
-                    </select>
-                    <span class="error-message" id="edit-company-error"></span>
-                </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="edit-status_type" value="safe" checked>Shape</label>
-                        <label><input type="radio" name="edit-status_type" value="category"> Category</label>
-                    </div>
-                    <div class="sub-radio-group-left" id="edit-category-options" style="display: none;">
-                        <label><input type="radio" name="edit-category_type" value="permanent">Permanent</label>
-                        <label><input type="radio" name="edit-category_type" value="temporary">Temporary</label>
-                    </div>
-                    <div class="restrictions-group" id="edit-restrictions-group" style="display: none;">
-                        <label for="edit-restrictions">Restrictions:</label>
-                        <textarea id="edit-restrictions" name="restrictions" placeholder="Enter restrictions" maxlength="500"></textarea>
-                        <span class="error-message" id="edit-restrictions-error"></span>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="button-update-cancel">Cancel</button>
-                    <button type="submit" class="btn-submit">Update User</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Success Toast -->
     <div id="success-toast" class="toast" style="display: none;">

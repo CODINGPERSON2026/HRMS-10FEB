@@ -572,7 +572,7 @@
   .theme-option {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    
     cursor: pointer;
     border: 2px solid transparent;
     transition: all 0.2s;
@@ -590,7 +590,7 @@
   }
   
   .theme-option::after {
-    content: '';
+    
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1269,7 +1269,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (settingsBtn) {
     
     settingsBtn.addEventListener('click', function(e) {
-      alert('button clicked')
+      
       e.stopPropagation();
       settingsDropdown.classList.toggle('show');
     });

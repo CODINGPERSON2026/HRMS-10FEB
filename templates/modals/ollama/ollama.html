@@ -3,224 +3,254 @@
     margin-bottom: 8px;
     padding: 8px 12px;
     border-radius: 14px;
-    max-width: 70%;
+    max-width: 75%;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
     word-wrap: break-word;
     animation: fadeIn 0.2s ease-in-out;
   }
-  
+
   .user-msg {
     background: linear-gradient(135deg, #0d6efd, #2d8cff);
     color: white;
     margin-left: auto;
     text-align: right;
   }
-  
+
   .bot-msg {
-    background: white;
+    background: #ffffff;
     border: 1px solid #e0e0e0;
     margin-right: auto;
+    color: #212529;
   }
-  
+
+  .error-msg {
+    color: #dc3545;
+  }
+
   #chatArea {
     scroll-behavior: smooth;
   }
-  
-  /* 🔥 Model Upgrade Notice */
-  .model-upgrade {
-    background: linear-gradient(135deg, #fff3cd, #ffeeba);
-    border: 1px solid #ffc107;
-    font-size: 12px;
-    color: #850404;
-  }
-  
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  </style>
-  
-  
-  <!-- AI MODAL -->
-  <div class="modal fade" id="AIMODAL" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-  
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">
-            UMS AI Assistant 
-            <span style="font-size:12px; opacity:0.8;">(Llama 1B)</span>
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+</style>
+
+
+<!-- AI MODAL -->
+<div class="modal fade" id="AIMODAL" tabindex="-1" aria-labelledby="AIModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="AIModalLabel">🤖 UMS AI Assistant</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-0">
+
+        <!-- CHAT AREA -->
+        <div id="chatArea" style="height: 400px; overflow-y: auto; padding: 15px; background: #f8f9fa;"></div>
+
+        <!-- INPUT AREA -->
+        <div id="inputArea" class="d-flex align-items-center p-2 border-top gap-2">
+          <input
+            type="text"
+            id="chatInput"
+            class="form-control"
+            placeholder="Ask anything..."
+            autocomplete="off"
+          />
+          <button id="sendBtn" class="btn btn-primary px-3" onclick="sendMessage()">Send</button>
         </div>
-  
-        <div class="modal-body p-0">
-  
-          <!-- CHAT AREA -->
-          <div id="chatArea" style="height:400px; overflow-y:auto; padding:15px; background:#f8f9fa;"></div>
-  
-          <div class="d-flex p-2 border-top">
-            <input type="text" id="chatInput" class="form-control me-2" placeholder="Ask anything..." />
-            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-          </div>
-  
-        </div>
+
       </div>
     </div>
   </div>
-  
-  
-  <script>
-  async function sendMessage() {
-  
-    const input = document.getElementById("chatInput");
-    const chatArea = document.getElementById("chatArea");
-  
-    const question = input.value.trim();
-    if (!question) return;
-  
-    // USER MESSAGE
-    const userDiv = document.createElement("div");
-    userDiv.className = "message user-msg";
-    userDiv.innerText = question;
-    chatArea.appendChild(userDiv);
-  
-    input.value = "";
-    chatArea.scrollTop = chatArea.scrollHeight;
-  
-    // LOADING MESSAGE
-    const typingDiv = document.createElement("div");
-    typingDiv.className = "message bot-msg";
-    typingDiv.innerHTML = `
-      <span class="spinner-border spinner-border-sm me-2"></span>
-      Thinking...
-    `;
-    chatArea.appendChild(typingDiv);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  
-    try {
-  
-      const response = await fetch("/bot/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: question })
-      });
-  
-      const data = await response.json();
-      chatArea.removeChild(typingDiv);
-  
-      // 🔥 MODEL NOTICE
-      const modelNotice = document.createElement("div");
-      modelNotice.className = "message bot-msg model-upgrade";
-      modelNotice.innerHTML = `
-        ⚙️ You are using lower Ollama model.<br>
-        🚀 Upgrade to work faster and smarter.(RAM minimum 16GB)
-      `;
-      chatArea.appendChild(modelNotice);
-  
-      // BOT RESPONSE CONTAINER
-      const botDiv = document.createElement("div");
-      botDiv.className = "message bot-msg";
-      chatArea.appendChild(botDiv);
-  
-      // 1️⃣ STRING RESPONSE
-      if (data.response) {
-        typeMessage(botDiv, data.response);
-      }
-  
-      // 2️⃣ TABLE RESPONSE
-      else if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-  
-        let table = "<div style='overflow-x:auto;'>";
-        table += "<table class='table table-sm table-bordered table-striped'>";
-        table += "<thead class='table-light'><tr>";
-  
-        Object.keys(data.data[0]).forEach(key => {
-          table += `<th>${key}</th>`;
-        });
-  
-        table += "</tr></thead><tbody>";
-  
-        data.data.forEach(row => {
-          table += "<tr>";
-          Object.values(row).forEach(val => {
-            table += `<td>${val ?? ""}</td>`;
-          });
-          table += "</tr>";
-        });
-  
-        table += "</tbody></table></div>";
-  
-        botDiv.innerHTML = table;
-      }
-  
-      // 3️⃣ NO RECORDS
-      else if (data.data && data.data.length === 0) {
-        typeMessage(botDiv, "No records found.");
-      }
-  
-      // 4️⃣ ERROR
-      else if (data.error) {
-        botDiv.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
-      }
-  
-      else {
-        typeMessage(botDiv, "Sorry, I couldn't understand that.");
-      }
-  
-      chatArea.scrollTop = chatArea.scrollHeight;
-  
-    } catch (error) {
-      console.error(error);
+</div>
+
+
+<script>
+(function () {
+
+  // ── State ────────────────────────────────────────────
+  let hasGreeted = false;
+  let currentAbortController = null;
+
+  // ── DOM refs ─────────────────────────────────────────
+  const chatArea  = () => document.getElementById("chatArea");
+  const chatInput = () => document.getElementById("chatInput");
+  const sendBtn   = () => document.getElementById("sendBtn");
+  const inputArea = () => document.getElementById("inputArea");
+
+  // ── Lock / Unlock input ──────────────────────────────
+  function lockInput() {
+    inputArea().style.opacity       = "0.6";
+    inputArea().style.pointerEvents = "none";
+    chatInput().disabled            = true;
+    sendBtn().disabled              = true;
+  }
+
+  function unlockInput() {
+    inputArea().style.opacity       = "1";
+    inputArea().style.pointerEvents = "auto";
+    chatInput().disabled            = false;
+    sendBtn().disabled              = false;
+    chatInput().focus();
+  }
+
+  // ── Abort in-flight request ──────────────────────────
+  function abortRequest() {
+    if (currentAbortController) {
+      currentAbortController.abort();
+      currentAbortController = null;
     }
   }
-  
-  
-  // TYPEWRITER EFFECT
-  function typeMessage(element, text, speed = 15) {
+
+  // ── Append a plain text bubble ───────────────────────
+  function appendMessage(text, cssClass) {
+    const div = document.createElement("div");
+    div.className = `message ${cssClass}`;
+    div.innerText = text;
+    chatArea().appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  // ── Append an empty bubble (for progressive fill) ───
+  function appendEmptyBubble(cssClass) {
+    const div = document.createElement("div");
+    div.className = `message ${cssClass}`;
+    chatArea().appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  // ── Typewriter effect ────────────────────────────────
+  function typeMessage(element, text, speed = 15, onDone = null) {
     let i = 0;
     element.innerHTML = "";
-    function typing() {
+    (function typing() {
       if (i < text.length) {
-        element.innerHTML += text.charAt(i);
-        i++;
+        element.innerHTML += text.charAt(i++);
         setTimeout(typing, speed);
+      } else if (onDone) {
+        onDone();
       }
-    }
-    typing();
+    })();
   }
-  
-  
-  // ENTER KEY SUPPORT
-  document.getElementById("chatInput").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
+
+  // ── Build HTML table from data array ─────────────────
+  function buildTable(dataArr) {
+    const wrapper = document.createElement("div");
+    wrapper.style.overflowX = "auto";
+    wrapper.style.marginTop = "8px";
+
+    const keys = Object.keys(dataArr[0]);
+    let html = "<table class='table table-sm table-bordered table-striped mb-0'>";
+    html += "<thead class='table-light'><tr>" + keys.map(k => `<th>${k}</th>`).join("") + "</tr></thead>";
+    html += "<tbody>";
+    dataArr.forEach(row => {
+      html += "<tr>" + keys.map(k => `<td>${row[k] ?? ""}</td>`).join("") + "</tr>";
+    });
+    html += "</tbody></table>";
+    wrapper.innerHTML = html;
+    return wrapper;
+  }
+
+  // ── Scroll chat to bottom ────────────────────────────
+  function scrollToBottom() {
+    const el = chatArea();
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // ── Send message ─────────────────────────────────────
+  window.sendMessage = async function () {
+    const input    = chatInput();
+    const question = input.value.trim();
+    if (!question) return;
+
+    // Show user bubble
+    appendMessage(question, "user-msg");
+    input.value = "";
+    lockInput();
+
+    // Thinking indicator
+    const thinkingDiv = appendEmptyBubble("bot-msg");
+    thinkingDiv.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Thinking...`;
+
+    currentAbortController = new AbortController();
+
+    try {
+      const response = await fetch("/bot/ask", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ question }),
+        signal:  currentAbortController.signal
+      });
+
+      chatArea().removeChild(thinkingDiv);
+      const data = await response.json();
+
+      const botDiv = appendEmptyBubble("bot-msg");
+
+      if (data.error) {
+        // Error response
+        botDiv.innerHTML = `<span class="error-msg">⚠️ ${data.error}</span>`;
+
+      } else if (data.answer && data.data && data.data.length > 0) {
+        // Answer + table
+        const answerP = document.createElement("p");
+        answerP.style.marginBottom = "0";
+        botDiv.appendChild(answerP);
+        typeMessage(answerP, data.answer, 15, () => {
+          botDiv.appendChild(buildTable(data.data));
+          scrollToBottom();
+        });
+
+      } else if (data.answer) {
+        // Text-only answer (greetings, simple responses)
+        typeMessage(botDiv, data.answer);
+
+      } else if (data.data && data.data.length > 0) {
+        // Table only (no answer text)
+        botDiv.appendChild(buildTable(data.data));
+
+      } else {
+        botDiv.innerText = "Sorry, I couldn't find anything for that.";
+      }
+
+      scrollToBottom();
+
+    } catch (err) {
+      if (thinkingDiv.parentNode) chatArea().removeChild(thinkingDiv);
+      const errDiv = appendEmptyBubble("bot-msg");
+      errDiv.innerHTML = err.name === "AbortError"
+        ? `<span style="color:#888;">⛔ Request cancelled.</span>`
+        : `<span class="error-msg">⚠️ Network error. Please try again.</span>`;
+      currentAbortController = null;
+    }
+
+    unlockInput();
+  };
+
+  // ── Enter key support ─────────────────────────────────
+  document.getElementById("chatInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !this.disabled) {
       e.preventDefault();
       sendMessage();
     }
   });
-  
-  
-  // AUTO GREETING ON MODAL OPEN
-  let hasGreeted = false;
-  const aiModal = document.getElementById('AIMODAL');
-  
-  aiModal.addEventListener('shown.bs.modal', function () {
-  
+
+  // ── Auto-greet on first modal open ───────────────────
+  document.getElementById("AIMODAL").addEventListener("shown.bs.modal", function () {
     if (hasGreeted) return;
-  
-    const chatArea = document.getElementById("chatArea");
-  
-    const botDiv = document.createElement("div");
-    botDiv.className = "message bot-msg";
-  
-    chatArea.appendChild(botDiv);
-  
-    typeMessage(botDiv, "👋 Welcome! I’m here to help you with UMS queries.");
-  
-    chatArea.scrollTop = chatArea.scrollHeight;
-  
     hasGreeted = true;
+    const botDiv = appendEmptyBubble("bot-msg");
+    typeMessage(botDiv, "👋 Welcome! I'm here to help you with UMS queries.");
   });
-  </script>
-  
+
+})();
+</script>

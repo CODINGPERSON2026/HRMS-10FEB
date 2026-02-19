@@ -36,7 +36,7 @@ except mysql.connector.Error as err:
 print("🔵 Loading Ollama model...")
 
 try:
-    llm = OllamaLLM(model="llama3.2:3b", temperature=0)
+    llm = OllamaLLM(model="llama3.2:3b", temperature=0,keep_alive = -1)
     print("✅ Ollama model ready.")
 except Exception as e:
     print("❌ Failed to load Ollama model:", e)

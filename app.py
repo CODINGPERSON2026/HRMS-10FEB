@@ -1,4 +1,5 @@
 from imports import *
+from waitress import serve
 
 import os
 import csv
@@ -5050,5 +5051,3 @@ def get_gallery():
         return jsonify([]), 500
 
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1',port=4000,debug=True)

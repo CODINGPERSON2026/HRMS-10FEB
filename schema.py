@@ -7,15 +7,18 @@ Contains complete structure of users and personnel tables
 # USERS TABLE SCHEMA
 # ==========================================================
 
+
 USERS_SCHEMA = """
 Table: users
 Purpose: Stores system login and profile information for HRMS users.
+
+
 
 IMPORTANT:
 This table contains:
 1. Commissioned Officers (CO, OC, 2IC, ADJUTANT)
 2. System roles (admin, clerk, NCO, JCO, CNCO etc.)
-3. Some soldiers who have login access (linked via army_number)
+3. ONLY JCO ARE LINKED TO army_number in personnel table
 
 Columns:
 - id (int, primary key, auto increment)
@@ -25,7 +28,7 @@ Columns:
 - role (varchar(50), role examples below)
 - created_at (timestamp, account creation date)
 - company (varchar(100), assigned company)
-- army_number (varchar(100), NULL for officers/admin, filled for soldiers with login)
+- army_number (varchar(100), NULL for officers/admin,in this table its only for login)
 
 ROLE VALUES MAY INCLUDE:
 Commissioned Officers:
@@ -46,13 +49,14 @@ System / Other Roles:
 # ==========================================================
 # PERSONNEL TABLE SCHEMA (ONLY SOLDIERS)
 # ==========================================================
+f'if question has (co,2ic,adjutant,JCO,S/JCO) query only {USERS_SCHEMA} '
 
 PERSONNEL_SCHEMA = """
 Table: personnel
-Purpose: Stores ONLY soldier data (JCOs, NCOs, Other Ranks).
+Purpose: Stores ONLY soldier data (Subedar,Subedar Major,Naib Subedar NCOs, Other Ranks).
 
 IMPORTANT:
-Commissioned Officers (CO, OC, 2IC, ADJUTANT) DO NOT exist in this table.
+Commissioned Officers (CO, OC, 2IC, ADJUTANT) DO NOT exist in this table .
 
 Primary Key:
 - id (int, auto increment)
@@ -121,7 +125,9 @@ DATABASE SCHEMA:
 
 1. Get all soldiers in a company:
    SELECT * FROM personnel WHERE company = 'company_name'
-
+2.WHO IS MAJ PRATEEK
+ select * from users where username = 'Maj prateek' (if not found here then search personnel table as below)
+   select name army_number `rank` from personnel where name = 'Major Prateek'
 2. Get all officers in a company:
    SELECT username, email, role, company
    FROM users
@@ -129,7 +135,7 @@ DATABASE SCHEMA:
    AND company = 'company_name'
 
 3. Get soldiers by rank:
-   SELECT * FROM personnel WHERE `rank` = 'Subedar'
+   SELECT `rank` FROM personnel 
 
 4. Get soldiers on leave:
    SELECT army_number, name, `rank`, company

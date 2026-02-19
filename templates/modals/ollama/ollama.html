@@ -1,256 +1,308 @@
+
 <style>
-  .message {
-    margin-bottom: 8px;
-    padding: 8px 12px;
-    border-radius: 14px;
-    max-width: 75%;
-    font-size: 14px;
-    line-height: 1.5;
-    word-wrap: break-word;
-    animation: fadeIn 0.2s ease-in-out;
+  :root {
+      --hc-bg: #0d0f14;
+      --hc-surface: #13161e;
+      --hc-card: #1a1e2a;
+      --hc-border: #252a38;
+      --hc-accent: #4fffb0;
+      --hc-accent2: #4f8fff;
+      --hc-text: #e2e8f0;
+      --hc-muted: #64748b;
+      --hc-user-bg: #1e2d4a;
+      --hc-bot-bg: #162a22;
   }
 
-  .user-msg {
-    background: linear-gradient(135deg, #0d6efd, #2d8cff);
-    color: white;
-    margin-left: auto;
-    text-align: right;
+  /* ── Overlay & Modal ── */
+  .hc-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      animation: fadeIn 0.3s ease forwards;
   }
 
-  .bot-msg {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    margin-right: auto;
-    color: #212529;
+  .hc-modal {
+      width: min(600px, 96vw);
+      height: min(700px, 92vh);
+      background: var(--hc-surface);
+      border: 1px solid var(--hc-border);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.65), 0 0 0 1 rgba(79,255,176,0.07);
+      overflow: hidden;
+      transform: translateY(50px) scale(0.95);
+      opacity: 0;
+      animation: hc-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 
-  .error-msg {
-    color: #dc3545;
-  }
-
-  #chatArea {
-    scroll-behavior: smooth;
+  @keyframes hc-up {
+      to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to { opacity: 1; }
   }
+
+  /* ── Header ── */
+  .hc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--hc-border);
+      background: linear-gradient(135deg, rgba(79,255,176,0.05), rgba(79,143,255,0.05));
+      flex-shrink: 0;
+  }
+  .hc-header-left { display: flex; align-items: center; gap: 12px; }
+  .hc-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4fffb0, #4f8fff);
+      display: grid; place-items: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px rgba(79,255,176,0.3);
+      flex-shrink: 0;
+  }
+  .hc-header-title { font-weight: 700; font-size: 0.98rem; color: var(--hc-text); }
+  .hc-header-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--hc-accent); display:flex; align-items:center; gap:5px; margin-top:2px; }
+  .hc-live-dot { width:6px;height:6px;border-radius:50%;background:var(--hc-accent);animation:hc-breathe 2s ease-in-out infinite; }
+  @keyframes hc-breathe { 0%,100%{opacity:1;}50%{opacity:0.3;} }
+  .hc-close { width:34px;height:34px;border-radius:9px;background:transparent;border:1px solid var(--hc-border);color:var(--hc-muted);font-size:1rem;cursor:pointer;display:grid;place-items:center;transition:all 0.15s;flex-shrink:0; }
+  .hc-close:hover { background: rgba(255,255,255,0.06); color: var(--hc-text); border-color: var(--hc-text); }
+
+  /* ── Body & Messages ── */
+  .hc-body { flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; gap:16px; scroll-behavior: smooth; }
+  .hc-body::-webkit-scrollbar { width:4px; }
+  .hc-body::-webkit-scrollbar-thumb { background: var(--hc-border); border-radius:2px; }
+  .hc-row { display:flex; gap:10px; animation: hc-msg-in 0.22s ease; }
+  @keyframes hc-msg-in { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .hc-row.hc-right { flex-direction:row-reverse; }
+  .hc-av { width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:3px; }
+  .hc-av-bot { background: linear-gradient(135deg,#4fffb0,#4f8fff); color:#0d0f14; }
+  .hc-av-user { background: var(--hc-user-bg); border:1px solid var(--hc-border); color: var(--hc-accent2); }
+  .hc-bubble { max-width:78%; padding:12px 15px; border-radius:16px; font-family:'JetBrains Mono', monospace; font-size:0.8rem; line-height:1.7; }
+  .hc-bubble-user { background: var(--hc-user-bg); border:1px solid rgba(79,143,255,0.22); border-top-right-radius:4px; color:#b8cef8; }
+  .hc-bubble-bot { background: var(--hc-bot-bg); border:1px solid rgba(79,255,176,0.16); border-top-left-radius:4px; color:var(--hc-text); }
+  .hc-bubble pre { background: rgba(0,0,0,0.3); border-radius:8px; padding:10px; margin-top:8px; overflow-x:auto; font-size:0.75rem; white-space:pre-wrap; word-break:break-word; }
+  .hc-label { font-size:0.68rem; color:var(--hc-accent); font-weight:600; letter-spacing:0.5px; margin-bottom:4px; display:block; }
+
+  /* Typing dots */
+  .hc-typing { display:flex; align-items:center; gap:5px; padding:13px 15px; background: var(--hc-bot-bg); border:1px solid rgba(79,255,176,0.16); border-radius:16px; border-top-left-radius:4px; }
+  .hc-dot { width:7px;height:7px;border-radius:50%;background:var(--hc-accent);animation:hc-bounce 1.3s ease-in-out infinite; }
+  .hc-dot:nth-child(2) { animation-delay:0.18s; }
+  .hc-dot:nth-child(3) { animation-delay:0.36s; }
+  @keyframes hc-bounce { 0%,60%,100%{transform:translateY(0);opacity:0.45;}30%{transform:translateY(-8px);opacity:1;} }
+  .hc-wait { font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--hc-muted); margin-left:4px; font-style:italic; }
+
+  /* Intro card */
+  .hc-intro { background: linear-gradient(135deg, rgba(79,255,176,0.05), rgba(79,143,255,0.05)); border:1px solid rgba(79,255,176,0.13); border-radius:14px; padding:20px; text-align:center; }
+  .hc-intro h4 { font-size:0.9rem; color:var(--hc-accent); margin-bottom:8px; }
+  .hc-intro p { font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--hc-muted); line-height:1.8; }
+
+  /* Footer */
+  .hc-footer { padding:14px 18px; border-top:1px solid var(--hc-border); display:flex; gap:10px; align-items:flex-end; flex-shrink:0; }
+  .hc-input { flex:1; background: var(--hc-card); border:1px solid var(--hc-border); border-radius:12px; color:var(--hc-text); font-family:'JetBrains Mono', monospace; font-size:0.82rem; padding:12px 15px; outline:none; resize:none; min-height:44px; max-height:120px; line-height:1.5; transition:border-color 0.2s; }
+  .hc-input::placeholder { color: var(--hc-muted); }
+  .hc-input:focus { border-color: var(--hc-accent); }
+  .hc-send { width:44px;height:44px;border-radius:12px;border:none;background:linear-gradient(135deg,#4fffb0,#4f8fff);color:#0d0f14;font-size:1rem;cursor:pointer;display:grid;place-items:center;transition:transform 0.18s, box-shadow 0.18s, opacity 0.18s;flex-shrink:0;box-shadow:0 4px 16px rgba(79,255,176,0.28); }
+  .hc-send:hover:not(:disabled) { transform:scale(1.1); box-shadow:0 6px 24px rgba(79,255,176,0.45); }
+  .hc-send:disabled { opacity:0.3; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  /* ── Trigger Button & Stars ── */
+  .hc-view-btn { display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg,#4fffb0,#4f8fff); color:#0d0f14; border:none; border-radius:29px; font-weight:500; font-size:0.8rem; cursor:pointer; letter-spacing:0.2px; box-shadow:0 6px 32px rgba(79,255,176,0.3); transition: transform 0.2s, box-shadow 0.2s; position:relative; overflow:hidden; padding:10px 20px; }
+  .hc-view-btn:hover { transform: scale(1.04); box-shadow:0 8px 40px rgba(79,255,176,0.5); }
+  .hc-view-btn .star { position:absolute; width:6px; height:6px; pointer-events:none; }
+  .hc-view-btn .star::before, .hc-view-btn .star::after { content:''; position:absolute; background:rgba(255,255,255,0.9); border-radius:1px; }
+  .hc-view-btn .star::before { width:2px;height:100%; left:50%; transform:translateX(-50%); }
+  .hc-view-btn .star::after { width:100%; height:2px; top:50%; transform:translateY(-50%); }
+  .hc-view-btn .star-1 { top:8px; left:12px; animation:twinkle 1.8s ease-in-out infinite; }
+  .hc-view-btn .star-2 { top:50%; right:14px; transform:translateY(-50%) scale(0.7); animation:twinkle2 2.2s ease-in-out infinite 0.4s; }
+  .hc-view-btn .star-3 { bottom:7px; left:38px; transform:scale(0.55); animation:twinkle3 1.6s ease-in-out infinite 0.9s; }
+  @keyframes twinkle { 0%,100%{opacity:0.2; transform:scale(0.6) rotate(0deg);} 50%{opacity:1; transform:scale(1) rotate(20deg);} }
+  @keyframes twinkle2 { 0%,100%{opacity:0.2; top:50%; right:14px; transform:translateY(-50%) scale(0.5) rotate(0deg);} 50%{opacity:1; transform:translateY(-50%) scale(0.85) rotate(15deg);} }
+  @keyframes twinkle3 { 0%,100%{opacity:0.15; transform:scale(0.45) rotate(0deg);} 50%{opacity:0.9; transform:scale(0.75) rotate(25deg);} }
 </style>
 
 
-<!-- AI MODAL -->
-<div class="modal fade" id="AIMODAL" tabindex="-1" aria-labelledby="AIModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
+  <body>
 
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="AIModalLabel">🤖 UMS AI Assistant</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body p-0">
-
-        <!-- CHAT AREA -->
-        <div id="chatArea" style="height: 400px; overflow-y: auto; padding: 15px; background: #f8f9fa;"></div>
-
-        <!-- INPUT AREA -->
-        <div id="inputArea" class="d-flex align-items-center p-2 border-top gap-2">
-          <input
-            type="text"
-            id="chatInput"
-            class="form-control"
-            placeholder="Ask anything..."
-            autocomplete="off"
-          />
-          <button id="sendBtn" class="btn btn-primary px-3" onclick="sendMessage()">Send</button>
+    <!-- ── Trigger Button ── -->
+ 
+    
+    <!-- ── Modal ── -->
+    <div class="hc-overlay" id="hcOverlay" onclick="hcOverlayClick(event)">
+      <div class="hc-modal" id="hcModal">
+    
+        <div class="hc-header">
+          <div class="hc-header-left">
+              <div class="hc-avatar">🔵</div>
+              <div>
+                  <div class="hc-header-title">HRMS SQL Assistant</div>
+                  <div class="hc-header-sub">
+                      <span class="hc-live-dot"></span> Offline · Local
+                  </div>
+              </div>
+          </div>
+          <button class="hc-close" onclick="hcClose()">✕</button>
         </div>
-
+    
+        <div class="hc-body" id="hcBody">
+          <div class="hc-intro">
+              <h4>✦ HRMS AI Assistant</h4>
+              <p>Ask me anything about your HR database.<br>I'll generate SQL and fetch real results for you.</p>
+          </div>
+        </div>
+    
+        <div class="hc-footer">
+          <textarea
+              class="hc-input"
+              id="hcInput"
+              placeholder="Ask about soldiers, leaves, coy's"
+              rows="1"
+              onkeydown="hcKeydown(event)"
+              oninput="hcResize(this)"
+          ></textarea>
+          <button class="hc-send" id="hcSendBtn" onclick="hcSend()" title="Send">➤</button>
+        </div>
+    
       </div>
     </div>
-  </div>
-</div>
-
+    </body>
 
 <script>
-(function () {
-
-  // ── State ────────────────────────────────────────────
-  let hasGreeted = false;
-  let currentAbortController = null;
-
-  // ── DOM refs ─────────────────────────────────────────
-  const chatArea  = () => document.getElementById("chatArea");
-  const chatInput = () => document.getElementById("chatInput");
-  const sendBtn   = () => document.getElementById("sendBtn");
-  const inputArea = () => document.getElementById("inputArea");
-
-  // ── Lock / Unlock input ──────────────────────────────
-  function lockInput() {
-    inputArea().style.opacity       = "0.6";
-    inputArea().style.pointerEvents = "none";
-    chatInput().disabled            = true;
-    sendBtn().disabled              = true;
+  let hcBusy = false;
+  
+  function hcOpen() {
+      const overlay = document.getElementById("hcOverlay");
+      overlay.style.display = "flex";
+      setTimeout(() => document.getElementById("hcInput").focus(), 120);
   }
-
-  function unlockInput() {
-    inputArea().style.opacity       = "1";
-    inputArea().style.pointerEvents = "auto";
-    chatInput().disabled            = false;
-    sendBtn().disabled              = false;
-    chatInput().focus();
+  
+  function hcClose() {
+      const overlay = document.getElementById("hcOverlay");
+      overlay.style.display = "none";
   }
-
-  // ── Abort in-flight request ──────────────────────────
-  function abortRequest() {
-    if (currentAbortController) {
-      currentAbortController.abort();
-      currentAbortController = null;
-    }
+  
+  function hcOverlayClick(e) {
+      if (e.target === document.getElementById("hcOverlay")) hcClose();
   }
-
-  // ── Append a plain text bubble ───────────────────────
-  function appendMessage(text, cssClass) {
-    const div = document.createElement("div");
-    div.className = `message ${cssClass}`;
-    div.innerText = text;
-    chatArea().appendChild(div);
-    scrollToBottom();
-    return div;
-  }
-
-  // ── Append an empty bubble (for progressive fill) ───
-  function appendEmptyBubble(cssClass) {
-    const div = document.createElement("div");
-    div.className = `message ${cssClass}`;
-    chatArea().appendChild(div);
-    scrollToBottom();
-    return div;
-  }
-
-  // ── Typewriter effect ────────────────────────────────
-  function typeMessage(element, text, speed = 15, onDone = null) {
-    let i = 0;
-    element.innerHTML = "";
-    (function typing() {
-      if (i < text.length) {
-        element.innerHTML += text.charAt(i++);
-        setTimeout(typing, speed);
-      } else if (onDone) {
-        onDone();
-      }
-    })();
-  }
-
-  // ── Build HTML table from data array ─────────────────
-  function buildTable(dataArr) {
-    const wrapper = document.createElement("div");
-    wrapper.style.overflowX = "auto";
-    wrapper.style.marginTop = "8px";
-
-    const keys = Object.keys(dataArr[0]);
-    let html = "<table class='table table-sm table-bordered table-striped mb-0'>";
-    html += "<thead class='table-light'><tr>" + keys.map(k => `<th>${k}</th>`).join("") + "</tr></thead>";
-    html += "<tbody>";
-    dataArr.forEach(row => {
-      html += "<tr>" + keys.map(k => `<td>${row[k] ?? ""}</td>`).join("") + "</tr>";
-    });
-    html += "</tbody></table>";
-    wrapper.innerHTML = html;
-    return wrapper;
-  }
-
-  // ── Scroll chat to bottom ────────────────────────────
-  function scrollToBottom() {
-    const el = chatArea();
-    el.scrollTop = el.scrollHeight;
-  }
-
-  // ── Send message ─────────────────────────────────────
-  window.sendMessage = async function () {
-    const input    = chatInput();
-    const question = input.value.trim();
-    if (!question) return;
-
-    // Show user bubble
-    appendMessage(question, "user-msg");
+  
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hcClose(); });
+  
+  function hcKeydown(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); hcSend(); } }
+  function hcResize(el) { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 120) + "px"; }
+  
+  async function hcSend() {
+    if (hcBusy) return;
+    const input = document.getElementById("hcInput");
+    const sendBtn = document.getElementById("hcSendBtn");
+    const msg = input.value.trim();
+    if (!msg) return;
+  
+    hcBusy = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
     input.value = "";
-    lockInput();
-
-    // Thinking indicator
-    const thinkingDiv = appendEmptyBubble("bot-msg");
-    thinkingDiv.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Thinking...`;
-
-    currentAbortController = new AbortController();
-
+    input.style.height = "auto";
+  
+    hcAddUser(msg);
+    const typingId = hcShowTyping();
+  
     try {
-      const response = await fetch("/bot/ask", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ question }),
-        signal:  currentAbortController.signal
-      });
-
-      chatArea().removeChild(thinkingDiv);
-      const data = await response.json();
-
-      const botDiv = appendEmptyBubble("bot-msg");
-
-      if (data.error) {
-        // Error response
-        botDiv.innerHTML = `<span class="error-msg">⚠️ ${data.error}</span>`;
-
-      } else if (data.answer && data.data && data.data.length > 0) {
-        // Answer + table
-        const answerP = document.createElement("p");
-        answerP.style.marginBottom = "0";
-        botDiv.appendChild(answerP);
-        typeMessage(answerP, data.answer, 15, () => {
-          botDiv.appendChild(buildTable(data.data));
-          scrollToBottom();
+        const res = await fetch("/bot/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
         });
-
-      } else if (data.answer) {
-        // Text-only answer (greetings, simple responses)
-        typeMessage(botDiv, data.answer);
-
-      } else if (data.data && data.data.length > 0) {
-        // Table only (no answer text)
-        botDiv.appendChild(buildTable(data.data));
-
-      } else {
-        botDiv.innerText = "Sorry, I couldn't find anything for that.";
-      }
-
-      scrollToBottom();
-
+        const data = await res.json();
+        hcRemoveTyping(typingId);
+  
+        if (data.error) hcAddBot({ error: data.error });
+        else hcAddBot({ sql: data.sql, result: data.result });
     } catch (err) {
-      if (thinkingDiv.parentNode) chatArea().removeChild(thinkingDiv);
-      const errDiv = appendEmptyBubble("bot-msg");
-      errDiv.innerHTML = err.name === "AbortError"
-        ? `<span style="color:#888;">⛔ Request cancelled.</span>`
-        : `<span class="error-msg">⚠️ Network error. Please try again.</span>`;
-      currentAbortController = null;
+        hcRemoveTyping(typingId);
+        hcAddBot({ error: err.message });
+    } finally {
+        hcBusy = false;
+        sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
     }
-
-    unlockInput();
-  };
-
-  // ── Enter key support ─────────────────────────────────
-  document.getElementById("chatInput").addEventListener("keydown", function (e) {
-    if (e.key === "Enter" && !this.disabled) {
-      e.preventDefault();
-      sendMessage();
+  }
+  
+  function hcAddUser(text) {
+    const body = document.getElementById("hcBody");
+    const row  = document.createElement("div");
+    row.className = "hc-row hc-right";
+    row.innerHTML = `<div class="hc-av hc-av-user">U</div><div class="hc-bubble hc-bubble-user">${esc(text)}</div>`;
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+  }
+  
+  function hcShowTyping() {
+    const body = document.getElementById("hcBody");
+    const id = "hc-t-" + Date.now();
+    const row = document.createElement("div");
+    row.className = "hc-row";
+    row.id = id;
+    row.innerHTML = `
+        <div class="hc-av hc-av-bot">✦</div>
+        <div class="hc-typing">
+            <div class="hc-dot"></div>
+            <div class="hc-dot"></div>
+            <div class="hc-dot"></div>
+            <span class="hc-wait">please wait…</span>
+        </div>
+    `;
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+    return id;
+  }
+  
+  function hcRemoveTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
+  
+  function hcAddBot({ sql, result, error }) {
+    const body = document.getElementById("hcBody");
+    const row = document.createElement("div");
+    row.className = "hc-row";
+  
+    const av = document.createElement("div");
+    av.className = "hc-av hc-av-bot";
+    av.textContent = "✦";
+  
+    const bubble = document.createElement("div");
+    bubble.className = "hc-bubble hc-bubble-bot";
+  
+    if (error) {
+        const label = document.createElement("span");
+        label.className = "hc-label"; label.textContent = "⚠ Error";
+        const typed = document.createElement("span");
+        bubble.appendChild(label); bubble.appendChild(typed);
+        row.appendChild(av); row.appendChild(bubble);
+        body.appendChild(row); body.scrollTop = body.scrollHeight;
+        hcType(typed, "Error: " + error, body);
+    } else {
+        const label1 = document.createElement("span"); label1.className="hc-label"; label1.textContent="Generated SQL";
+        const typedSql = document.createElement("span");
+        const label2 = document.createElement("span"); label2.className="hc-label"; label2.style.marginTop="10px"; label2.textContent="Result";
+        const pre = document.createElement("pre"); pre.textContent = JSON.stringify(result,null,2);
+  
+        bubble.appendChild(label1); bubble.appendChild(typedSql); bubble.appendChild(label2); bubble.appendChild(pre);
+        row.appendChild(av); row.appendChild(bubble);
+        body.appendChild(row); body.scrollTop = body.scrollHeight;
+        hcType(typedSql, sql || "", body);
     }
-  });
+  }
+  
+  function hcType(el,text,scrollTarget){let i=0;(function next(){if(i<text.length){el.textContent+=text[i++];scrollTarget.scrollTop=scrollTarget.scrollHeight;setTimeout(next,16);}})();}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  </script>
 
-  // ── Auto-greet on first modal open ───────────────────
-  document.getElementById("AIMODAL").addEventListener("shown.bs.modal", function () {
-    if (hasGreeted) return;
-    hasGreeted = true;
-    const botDiv = appendEmptyBubble("bot-msg");
-    typeMessage(botDiv, "👋 Welcome! I'm here to help you with UMS queries.");
-  });
-
-})();
-</script>
+</body>
+</html>

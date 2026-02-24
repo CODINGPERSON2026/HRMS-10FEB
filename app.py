@@ -5027,6 +5027,66 @@ def save_gallery():
     except Exception as e:
         print("❌ Gallery upload error (FULL):", repr(e))
         return jsonify(success=False, message=str(e)), 500
+    
+@app.route('/api/dashboard/birthdays', methods=['GET'])
+def get_today_birthdays():
+    """Return personnel whose birthday is today (month-day match, ignoring year)."""
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    user = require_login()
+    if not user:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
+
+    company = user['company']
+
+    try:
+        query = """
+            SELECT name, army_number, `rank`, company,
+                   home_state, home_village, home_district,
+                   CONCAT_WS(', ', NULLIF(TRIM(home_village), ''), NULLIF(TRIM(home_district), ''), NULLIF(TRIM(home_state), '')) AS address
+            FROM personnel
+            WHERE date_of_birth IS NOT NULL
+              AND MONTH(date_of_birth) = MONTH(CURDATE())
+              AND DAY(date_of_birth) = DAY(CURDATE())
+        """
+        params = []
+        if company != "Admin":
+            query += " AND company = %s"
+            params.append(company)
+
+        query += " ORDER BY name;"
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+
+        result = []
+        for r in rows:
+            addr = r.get('address') or r.get('home_state') or '—'
+            result.append({
+                "name": r.get("name") or "—",
+                "rank": r.get("rank") or "—",
+                "army_number": r.get("army_number") or "—",
+                "company": r.get("company") or "—",
+                "address": addr.strip() if addr and addr != ',' else (r.get('home_state') or '—')
+            })
+
+        return jsonify({"status": "success", "data": result}), 200
+
+    except Exception as e:
+        print("Error fetching today's birthdays:", str(e))
+        return jsonify({"status": "error", "message": "Internal Server Error"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/settings')
+def settings_page():
+    """Settings page - theme and other preferences."""
+    user = require_login()
+    if not user:
+        return redirect(url_for('admin_login'))
+    return render_template('settings/settings.html', role=user['role'])
+
 @app.route("/api/gallery", methods=["GET"])
 def get_gallery():
     try:

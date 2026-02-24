@@ -25,13 +25,8 @@
   }
 
   @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-
-    100% {
-      background-position: 200% 0;
-    }
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
   .shimmer-card {
@@ -72,17 +67,9 @@
     height: 10px;
   }
 
-  .shimmer-line.short {
-    width: 60%;
-  }
-
-  .shimmer-line.medium {
-    width: 80%;
-  }
-
-  .shimmer-line.long {
-    width: 100%;
-  }
+  .shimmer-line.short { width: 60%; }
+  .shimmer-line.medium { width: 80%; }
+  .shimmer-line.long { width: 100%; }
 
   .shimmer-title {
     height: 18px;
@@ -128,13 +115,8 @@
   }
 
   @keyframes loader-shimmer-progress {
-    0% {
-      background-position: -200% 0;
-    }
-
-    100% {
-      background-position: 200% 0;
-    }
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
   /* Main Content */
@@ -172,36 +154,212 @@
     );
   }
 
+  /* ==================== ACTION BUTTONS – REDESIGNED ==================== */
 
-
-  .action-buttons {
-    margin: 4px 10px;
+  .action-buttons-wrapper {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin: 4px 10px 16px;
+  }
+
+  .action-buttons-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
+    flex: 1;
     opacity: 0;
     transition: opacity 0.4s ease;
   }
 
-  .action-buttons.show {
+  .action-buttons-left.show {
     opacity: 1;
   }
 
-  .action-buttons .btn {
-    background: linear-gradient(
-      135deg,
-      var(--primary-color) 0%,
-      var(--secondary-color) 100%
-    );
-    color: white;
+  /* Toggle chevron button */
+  #show-btn {
     border: none;
-    transition: all 0.3s ease;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px var(--shadow);
+    background: var(--primary-color);
+    color: white;
+    flex-shrink: 0;
   }
 
-  .action-buttons .btn:hover {
+  #show-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+
+  /* Pill-style action buttons */
+  .action-buttons-left .btn {
+    position: relative;
+    background: transparent;
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .action-buttons-left .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 0;
+  }
+
+  .action-buttons-left .btn > *:not(.position-absolute) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .action-buttons-left .btn:hover::before {
+    opacity: 1;
+  }
+
+  .action-buttons-left .btn:hover {
+    color: white;
+    border-color: transparent;
     transform: translateY(-2px);
-     background-color: #084298;   /* deeper primary */
     box-shadow: 0 6px 20px var(--shadow);
+  }
+
+  /* Messenger icon button */
+  .sidebar-messenger {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #0084ff, #006aff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .sidebar-messenger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
+  }
+
+  #unreadBadge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ==================== CHAT WITH AI – FAR RIGHT ==================== */
+
+  .ai-chat-btn-wrapper {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .hc-view-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 22px;
+    background: linear-gradient(135deg, #6c47ff 0%, #a855f7 50%, #ec4899 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 18px rgba(108, 71, 255, 0.4);
+    white-space: nowrap;
+  }
+
+  .hc-view-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 60%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+    z-index: 0;
+  }
+
+  .hc-view-btn:hover::before {
+    left: 120%;
+  }
+
+  .hc-view-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(108, 71, 255, 0.55);
+  }
+
+  .hc-view-btn .ai-icon {
+    font-size: 1rem;
+    animation: pulse-icon 2s infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hc-view-btn .btn-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .hc-view-btn .star {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    animation: twinkle 2s infinite;
+    z-index: 1;
+  }
+
+  .hc-view-btn .star-1 { width: 4px; height: 4px; top: 6px; right: 14px; animation-delay: 0s; }
+  .hc-view-btn .star-2 { width: 3px; height: 3px; top: 14px; right: 8px; animation-delay: 0.6s; }
+  .hc-view-btn .star-3 { width: 3px; height: 3px; bottom: 7px; right: 18px; animation-delay: 1.2s; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.5); }
   }
 
   /* Stats Grid */
@@ -326,22 +484,6 @@
     box-shadow: 0 6px 16px var(--shadow);
   }
 
-  #show-btn {
-    border: none;
-    padding: 2px 6px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 10px var(--shadow);
-    background: var(--primary-color);
-    color: white;
-  }
-
   .stats-grid.hide {
     opacity: 0;
     transform: translateY(-10px);
@@ -390,12 +532,22 @@
       padding: 20px;
     }
 
-    .action-buttons {
-      flex-direction: column;
+    .action-buttons-wrapper {
+      flex-wrap: wrap;
     }
 
-    .action-section-title {
-      font-size: 1.2rem;
+    .action-buttons-left {
+      flex-wrap: wrap;
+    }
+
+    .ai-chat-btn-wrapper {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .hc-view-btn {
+      width: 100%;
+      justify-content: center;
     }
 
     .stats-grid {
@@ -422,46 +574,6 @@
       font-size: 1.3rem;
     }
   }
-
-  /* ==================== MAIN CONTENT MESSENGER ==================== */
-  .sidebar-messenger {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #0084ff, #006aff);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .sidebar-messenger:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
-  }
-
-  .sidebar-messenger {
-    cursor: pointer;
-  }
-
-  .sidebar-messenger {
-    position: relative;
-    cursor: pointer;
-  }
-
-  #unreadBadge {
-    font-size: 0.7rem;
-    padding: 0.25em 0.5em;
-    min-width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  
 </style>
 
 <!-- Dashboard -->
@@ -504,64 +616,69 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="action-buttons" id="actionButtonsContainer">
-      <button id="show-btn">
-        <i class="fas fa-chevron-down"></i>
-      </button>
+    <div class="action-buttons-wrapper" id="actionButtonsContainer">
 
-      <button
-        class="btn btn-primary position-relative"
-        data-bs-toggle="modal"
-        data-bs-target="#coRejectedModal"
-        id="coRejectedBtn"
-      >
-        REJECTED LEAVES
-        <span
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-          id="coRejectedCount"
+      <!-- Left side: toggle + action buttons + messenger -->
+      <div class="action-buttons-left" id="actionButtonsLeft">
+
+        <button id="show-btn">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <button
+          class="btn btn-primary position-relative"
+          data-bs-toggle="modal"
+          data-bs-target="#coRejectedModal"
+          id="coRejectedBtn"
         >
+          REJECTED LEAVES
           <span
-            class="shimmer-line"
-            style="width: 20px; height: 8px; display: inline-block"
-          ></span>
-          <span class="visually-hidden">unread messages</span>
-        </span>
-      </button>
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="coRejectedCount"
+          >
+            <span
+              class="shimmer-line"
+              style="width: 20px; height: 8px; display: inline-block"
+            ></span>
+            <span class="visually-hidden">unread messages</span>
+          </span>
+        </button>
 
-      <button
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#addEventModal"
-      >
-        ADD EVENT
-      </button>
-      <div
-        class="sidebar-messenger position-relative"
-        title="Chat with us"
-        id="chatBtn"
-      >
-        <i class="fab fa-facebook-messenger"></i>
-        <span
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-          id="unreadBadge"
-          style="display: none"
+        <button
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#addEventModal"
         >
-          0
-        </span>
+          ADD EVENT
+        </button>
+
+        <div
+          class="sidebar-messenger position-relative"
+          title="Chat with us"
+          id="chatBtn"
+        >
+          <i class="fab fa-facebook-messenger"></i>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="unreadBadge"
+            style="display: none"
+          >
+            0
+          </span>
+        </div>
+
       </div>
-      <!-- AI Assistant Button -->
-      
-        
-    
-      <button onclick="hcOpen()" class="hc-view-btn">
-        Chat with AI
-        <span class="star star-1"></span>
-        <span class="star star-2"></span>
-        <span class="star star-3"></span>
-      </button>
-        
-    
-    
+
+      <!-- Right side: AI Chat button pushed to far right -->
+      <div class="ai-chat-btn-wrapper">
+        <button onclick="hcOpen()" class="hc-view-btn">
+          <i class="fas fa-robot ai-icon"></i>
+          <span class="btn-text">Chat with AI</span>
+          <span class="star star-1"></span>
+          <span class="star star-2"></span>
+          <span class="star star-3"></span>
+        </button>
+      </div>
 
     </div>
 
@@ -718,7 +835,7 @@
         style="cursor: pointer; transition: all 0.3s ease"
         data-bs-toggle="modal"
         data-bs-target="#projDash_modal">
-      
+
         <div class="icon-circle mb-2">
           <i class="fas fa-rocket"></i>
         </div>
@@ -803,8 +920,7 @@
       </div>
     </div>
     {%include 'modals/Projects/modal.html'%}
-     {% include
-    'modals/detachmentModal/detachment.html' %} {% include
+    {% include 'modals/detachmentModal/detachment.html' %} {% include
     'modals/personnelModal/personal_modal.html' %} {% include
     'modals/personnelModal/duty_search_modal.html' %} {% include
     'modals/salesmodal/salesModal.html' %} {% include
@@ -822,9 +938,9 @@
     include 'modals/leaverequest/co-rejected-view.html' %} {% include
     'modals/alarm/agniveer_test_alarms.html' %} {% include
     'modals/agniveer/modal.html' %}
-     {% include 'modals/messenger/modal.html' %}
-        {%include 'modals/ollama/ollama.html' %}
-    
+    {% include 'modals/messenger/modal.html' %}
+    {%include 'modals/ollama/ollama.html' %}
+
     <div
       class="modal fade modal-fullscreen"
       id="paradeStateModal"
@@ -898,16 +1014,16 @@
   // ========== SHOW ACTION BUTTONS AFTER LOADING ==========
   function showActionButtons() {
     const loader = document.getElementById("actionBtnProgressLoader");
-    const buttonsContainer = document.getElementById("actionButtonsContainer");
+    const leftBtns = document.getElementById("actionButtonsLeft");
 
-    if (loader && buttonsContainer) {
+    if (loader && leftBtns) {
       setTimeout(() => {
         loader.style.opacity = "0";
         loader.style.transition = "opacity 0.3s ease";
 
         setTimeout(() => {
           loader.style.display = "none";
-          buttonsContainer.classList.add("show");
+          leftBtns.classList.add("show");
         }, 300);
       }, 500);
     }

@@ -18,13 +18,8 @@ print("🔵 Connecting to database...")
 _db_start = time.time()
 
 try:
-    db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="qaz123QAZ!@#",
-        database="hrms"
-    )
-    cursor = db.cursor(dictionary=True)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
     print(f"✅ Database connected successfully. ({time.time() - _db_start:.3f}s)")
 except mysql.connector.Error as err:
     print(f"❌ Database connection failed: {err}")

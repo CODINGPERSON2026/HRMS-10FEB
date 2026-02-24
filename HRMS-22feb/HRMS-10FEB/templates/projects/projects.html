@@ -1,0 +1,506 @@
+{% extends "baseView.html" %}
+{% block content %}
+
+<style>
+    :root {
+        --sidebar-width: 240px;
+        --border: #e2e8f0;
+        --card-gradient-start: #fdfbfb;
+        --card-gradient-end: #ebedee;
+    }
+   
+    .dashboard-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .header-bar {
+        background: #0d6efd;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px 12px 0 0;
+        margin-bottom: 0;
+    }
+    .controls-bar {
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    .project-card {
+        background: linear-gradient(145deg, var(--card-gradient-start), var(--card-gradient-end));
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        cursor: pointer;
+        transition: all 0.4s ease;
+    }
+    
+    .project-card:hover .p-3 { color: #0d6efd; }
+    .stage-text.flash {
+        animation: flashStage 0.8s ease;
+    }
+    @keyframes flashStage {
+        0% { background-color: #d1e7dd; }
+        50% { background-color: #0d6efd; color: white; }
+        100% { background-color: transparent; color: inherit; }
+    }
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        grid-column: 1 / -1;
+    }
+    .floating-add-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 1050;
+    }
+    .floating-add-btn:hover {
+        transform: scale(1.1);
+        background: #2563eb;
+    }
+
+    
+</style>
+<div class="wrapper">
+    {% set header = "Project Management" %}
+    {% set subscript = "Create tasks → View tasks → Update tasks → Assign tasks" %}
+    {% include 'navbar/navbar.html' %}
+<!-- PROJECT DASHBOARD AS FULL PAGE -->
+<div class="dashboard-container">
+    <div class="header-bar">
+        <h3 class="mb-0">Project Monitoring Dashboard</h3>
+    </div>
+
+    <div class="controls-bar d-flex align-items-end gap-3 flex-wrap">
+        <div>
+            <label class="fw-bold small text-muted">Select Head</label>
+            <select class="form-select" id="headSelect">
+                <option value="all">All Heads</option>
+            </select>
+        </div>
+        <div>
+            <label class="fw-bold small text-muted">Filter by Stage</label>
+            <select class="form-select w-auto" id="stageSelect">
+                <option value="all">All Stages</option>
+                <option value="PPP">PPP</option>
+                <option value="AON">AON</option>
+                <option value="FBU">FBU</option>
+                <option value="TOB & TEC">TOB & TEC</option>
+                <option value="B BD">B BD</option>
+                <option value="OCB RA">OCB RA</option>
+                <option value="Placement Of SO">Placement Of SO</option>
+                <option value="Store/Items Delivery">Store / Items Delivery</option>
+                <option value="ATP">ATP</option>
+                <option value="PRAC & CRAC">PRAC & CRAC</option>
+                <option value="Payment">Payment</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addHeadModal">
+            Add Head
+        </button>
+    </div>
+<!-- Loader -->
+<div id="dropdownLoader" class="text-center my-3" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="small text-muted mt-2">Loading data...</div>
+</div>
+
+    <div class="empty-state" id="emptyState"></div>
+    <div class="projects-grid" id="projectsGrid"></div>
+</div>
+</div>
+
+
+<!-- ADD PROJECT MODAL (Kept as modal) -->
+<div class="modal fade" id="addProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2"></i>Add New Project</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProjectForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Head *</label>
+                        <select class="form-select" id="addProjectHeadSelect" name="head" required>
+                            <option value="">Select Head</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Project Name *</label>
+                        <input class="form-control" name="project_name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Current Stage *</label>
+                        <select class="form-select" name="current_stage" required>
+                            <option value="">Select Stage</option>
+                            <option value="PPP">PPP</option>
+                            <option value="AON">AON</option>
+                            <option value="FBU">FBU</option>
+                            <option value="TOB & TEC">TOB & TEC</option>
+                            <option value="B BD">B BD</option>
+                            <option value="OCB RA">OCB RA</option>
+                            <option value="Placement Of SO">Placement Of SO</option>
+                            <option value="Store/Items Delivery">Store / Items Delivery</option>
+                            <option value="ATP">ATP</option>
+                            <option value="PRAC & CRAC">PRAC & CRAC</option>
+                            <option value="Payment">Payment</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Project Cost (₹) *</label>
+                        <input class="form-control" name="project_cost" type="number" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Project Items *</label>
+                        <input class="form-control" name="project_items" placeholder="e.g. Radios, Vehicles" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity *</label>
+                        <input class="form-control" name="quantity" type="number" min="1" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="project_description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="addProject()">Save Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Details Modal -->
+<div class="modal fade" id="projectDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="detailProjectName">Project Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th style="width: 25%;">Head</th><td id="detailHead"></td></tr>
+                        <tr><th>Stage</th><td id="detailStage"></td></tr>
+                        <tr><th>Cost</th><td>₹<span id="detailCost"></span></td></tr>
+                        <tr><th>Items</th><td id="detailItems"></td></tr>
+                        <tr><th>Quantity</th><td id="detailQuantity"></td></tr>
+                        <tr><th>Description</th><td id="detailDescription"></td></tr>
+                    </tbody>
+                </table>
+                <div class="mt-3">
+                    <label class="fw-bold">Update Stage:</label>
+                    <select class="form-select w-auto" id="modalStageSelect" onchange="updateStage(this.value)">
+                        <option value="PPP">PPP</option>
+                        <option value="AON">AON</option>
+                        <option value="FBU">FBU</option>
+                        <option value="TOB & TEC">TOB & TEC</option>
+                        <option value="B BD">B BD</option>
+                        <option value="OCB RA">OCB RA</option>
+                        <option value="Placement Of SO">Placement Of SO</option>
+                        <option value="Store/Items Delivery">Store / Items Delivery</option>
+                        <option value="ATP">ATP</option>
+                        <option value="PRAC & CRAC">PRAC & CRAC</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Head Modal -->
+<div class="modal fade" id="addHeadModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Add New Head</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addHeadForm">
+                    <div class="mb-3">
+                        <label class="form-label">Head Name</label>
+                        <input type="text" class="form-control" id="headNameInput" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Head</button>
+                </form>
+                <div id="headAlert" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="floating-add-btn" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+    <i class="fas fa-plus"></i>
+</button>
+
+<script>
+    let currentProjectId = null;
+    let allProjects = [];
+
+    async function loadHeads() {
+        const selects = [document.getElementById("headSelect"), document.getElementById("addProjectHeadSelect")];
+        selects.forEach(s => s.disabled = true);
+
+        try {
+            const res = await fetch('/get_project_heads');
+            const heads = await res.json();
+
+            selects.forEach(select => {
+                if (select.id === "headSelect") {
+                    select.innerHTML = '<option value="all">All Heads</option>';
+                } else {
+                    select.innerHTML = '<option value="">Select Head</option>';
+                }
+                heads.forEach(h => select.add(new Option(h.head_name, h.head_name)));
+                select.disabled = false;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function loadProjects() {
+        try {
+            const res = await fetch('/api/get_projects');
+            allProjects = await res.json();
+            renderProjects();
+        } catch (err) {
+            document.getElementById("projectsGrid").innerHTML = "<p class='text-danger text-center'>Failed to load projects.</p>";
+        }
+    }
+
+    function renderProjects() {
+        const grid = document.getElementById("projectsGrid");
+        grid.innerHTML = "";
+        allProjects.forEach(p => {
+            const card = document.createElement("div");
+            card.className = "project-card";
+            card.dataset.id = p.project_id;
+            card.dataset.head = (p.head || "Uncategorized").trim();
+            card.dataset.stage = p.current_stage;
+            card.dataset.name = p.project_name;
+            card.dataset.cost = p.project_cost;
+            card.dataset.items = p.project_items;
+            card.dataset.quantity = p.quantity;
+            card.dataset.description = p.project_description || "";
+            card.onclick = () => showProjectDetails(card);
+
+            card.innerHTML = `
+                <div class="p-3 border-bottom fw-bold">${p.project_name}</div>
+                <div class="p-3">
+                    <div><strong>Head:</strong> ${card.dataset.head}</div>
+                    <div>Stage: <span class="stage-text">${p.current_stage}</span></div>
+                    <div>Cost: ₹${p.project_cost}</div>
+                    <div>Items: ${p.project_items}</div>
+                    <div>Qty: ${p.quantity}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function applyFilters() {
+        const selectedHead = document.getElementById("headSelect").value;
+        const selectedStage = document.getElementById("stageSelect").value;
+        const cards = document.querySelectorAll(".project-card");
+        const emptyState = document.getElementById("emptyState");
+
+        if (selectedHead === "all") {
+            const headCounts = {};
+            
+            cards.forEach(card => {
+                let head = card.dataset.head || "Uncategorized";
+                
+                headCounts[head] = (headCounts[head] || 0) + 1;
+            });
+
+            emptyState.style.display = "grid";
+            emptyState.style.gridTemplateColumns = "repeat(auto-fill, minmax(180px, 1fr))";
+            emptyState.style.gap = "1rem";
+            emptyState.innerHTML = "";
+
+            if (Object.keys(headCounts).length === 0) {
+                emptyState.innerHTML = '<div class="text-center w-100"><i class="fas fa-folder-open fa-3x mb-3 text-muted"></i><h5>No projects available</h5></div>';
+            } else {
+                for (const [head, count] of Object.entries(headCounts)) {
+                    const summary = document.createElement("div");
+                    summary.className = "project-card text-center";
+                    summary.style.cursor = "default";
+                    summary.innerHTML = `<div class="p-3 fw-bold fs-5">${head}</div><div class="p-3">${count} Project${count > 1 ? "s" : ""}</div>`;
+                    emptyState.appendChild(summary);
+                }
+            }
+            cards.forEach(c => c.style.display = "none");
+        } else {
+            let visible = 0;
+            cards.forEach(card => {
+                const matchHead = card.dataset.head === selectedHead;
+                const matchStage = selectedStage === "all" || card.dataset.stage === selectedStage;
+                card.style.display = matchHead && matchStage ? "block" : "none";
+                if (matchHead && matchStage) visible++;
+            });
+
+            emptyState.style.display = visible === 0 ? "block" : "none";
+            if (visible === 0) {
+                emptyState.innerHTML = '<div class="text-center"><i class="fas fa-search fa-3x mb-3 text-muted"></i><h5>No projects found</h5></div>';
+            }
+        }
+    }
+
+    // Load data on page load
+   
+
+    document.getElementById("headSelect").addEventListener("change", applyFilters);
+    document.getElementById("stageSelect").addEventListener("change", applyFilters);
+
+    function showProjectDetails(card) {
+        if (document.getElementById("headSelect").value === "all") {
+            alert("Please select a specific Head to view project details.");
+            return;
+        }
+        currentProjectId = card.dataset.id;
+        document.getElementById("detailProjectName").textContent = card.dataset.name;
+        document.getElementById("detailHead").textContent = card.dataset.head;
+        document.getElementById("detailStage").textContent = card.dataset.stage;
+        document.getElementById("detailCost").textContent = card.dataset.cost;
+        document.getElementById("detailItems").textContent = card.dataset.items;
+        document.getElementById("detailQuantity").textContent = card.dataset.quantity;
+        document.getElementById("detailDescription").textContent = card.dataset.description || "No description";
+        document.getElementById("modalStageSelect").value = card.dataset.stage;
+
+        new bootstrap.Modal(document.getElementById("projectDetailModal")).show();
+    }
+
+    function updateStage(stage) {
+        if (!currentProjectId) return;
+
+        fetch('/update_project_stage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ project_id: currentProjectId, new_stage: stage })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById("detailStage").textContent = stage;
+                const card = document.querySelector(`.project-card[data-id="${currentProjectId}"]`);
+                if (card) {
+                    card.dataset.stage = stage;
+                    card.querySelector(".stage-text").textContent = stage;
+                    card.querySelector(".stage-text").classList.add("flash");
+                    setTimeout(() => card.querySelector(".stage-text").classList.remove("flash"), 800);
+                }
+                applyFilters();
+            }
+        });
+    }
+
+    function addProject() {
+        const form = document.getElementById("addProjectForm");
+        const formData = new FormData(form);
+
+        fetch("/add_project", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                bootstrap.Modal.getInstance(document.getElementById("addProjectModal")).hide();
+                form.reset();
+                showLoader();
+                loadProjects().then(hideLoader);
+                loadHeads();
+            } else {
+                alert("Failed: " + (data.message || "Unknown error"));
+            }
+        })
+        .catch(() => alert("Server error"));
+    }
+
+    document.getElementById("addHeadForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const headName = document.getElementById("headNameInput").value.trim();
+        if (!headName) return;
+
+        fetch('/add_head', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ head_name: headName })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById("headNameInput").value = '';
+                bootstrap.Modal.getInstance(document.getElementById("addHeadModal")).hide();
+                loadHeads();
+                showLoader();
+loadHeads().then(hideLoader);
+            }
+        });
+    });
+
+
+    function showLoader() {
+    document.getElementById("dropdownLoader").style.display = "block";
+}
+
+function hideLoader() {
+    document.getElementById("dropdownLoader").style.display = "none";
+}
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    showLoader();
+
+    Promise.all([loadHeads(), loadProjects()])
+        .then(() => {
+            document.getElementById("headSelect").value = "all";
+            applyFilters();
+        })
+        .finally(() => {
+            hideLoader();
+        });
+});
+
+</script>
+{% endblock %}
+
+
+
+
+

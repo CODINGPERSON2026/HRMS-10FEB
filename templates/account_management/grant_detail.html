@@ -9,7 +9,7 @@
       ← Back to Grants
     </a>
   </div>
-
+ {%if role != 'CO'%}
   <!-- ACTION BUTTONS -->
   <div class="mb-4">
     <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addSoModal">
@@ -23,6 +23,7 @@
     <button class="btn btn-primary" onclick="openAllocationModal()">
       + Add Additional Allocation
     </button>
+    {% endif %}
   </div>
 
   <h4 class="mb-4">

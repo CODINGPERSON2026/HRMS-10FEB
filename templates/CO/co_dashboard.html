@@ -1,5 +1,4 @@
-{% extends "baseView.html" %}
-{% block content %}
+{% extends "baseView.html" %} {% block content %}
 
 <style>
   /* Dashboard-specific styles (theme variables inherited from baseView.html) */
@@ -26,8 +25,13 @@
   }
 
   @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
   }
 
   .shimmer-card {
@@ -58,13 +62,38 @@
     border-radius: 5px;
   }
 
-  .shimmer-circle { width: 40px; height: 40px; border-radius: 50%; }
-  .shimmer-line { height: 10px; }
-  .shimmer-line.short { width: 60%; }
-  .shimmer-line.medium { width: 80%; }
-  .shimmer-line.long { width: 100%; }
-  .shimmer-title { height: 18px; width: 90px; }
-  .shimmer-number { height: 30px; width: 70px; border-radius: 6px; }
+  .shimmer-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .shimmer-line {
+    height: 10px;
+  }
+
+  .shimmer-line.short {
+    width: 60%;
+  }
+
+  .shimmer-line.medium {
+    width: 80%;
+  }
+
+  .shimmer-line.long {
+    width: 100%;
+  }
+
+  .shimmer-title {
+    height: 18px;
+    width: 90px;
+  }
+
+  .shimmer-number {
+    height: 30px;
+    width: 70px;
+    border-radius: 6px;
+  }
 
   /* Action Buttons Progress Loader */
   .action-btn-progress-loader {
@@ -79,7 +108,9 @@
     transition: opacity 0.3s ease;
   }
 
-  .action-btn-progress-loader.loader-active { opacity: 1; }
+  .action-btn-progress-loader.loader-active {
+    opacity: 1;
+  }
 
   .action-btn-progress-loader .loader-progress-bar {
     height: 100%;
@@ -97,12 +128,20 @@
   }
 
   @keyframes loader-shimmer-progress {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
   }
 
   /* Main Content */
-  .main-content { padding: 1px; min-height: 100vh; }
+  .main-content {
+    padding: 1px;
+    min-height: 100vh;
+  }
 
   /* Action Section */
   .action-section {
@@ -119,12 +158,21 @@
   .action-section::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 5px;
-    background: linear-gradient(90deg, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #138808 66%);
+    background: linear-gradient(
+      90deg,
+      #ff9933 0%,
+      #ff9933 33%,
+      #ffffff 33%,
+      #ffffff 66%,
+      #138808 66%
+    );
   }
 
-  /* ══ REDESIGNED ACTION BUTTONS ══ */
+  /* ── REDESIGNED ACTION BUTTONS ── */
   .action-buttons {
     margin: 4px 10px;
     display: flex;
@@ -135,90 +183,93 @@
     transition: opacity 0.4s ease;
   }
 
-  .action-buttons.show { opacity: 1; }
+  .action-buttons.show {
+    opacity: 1;
+  }
 
-  /* Collapse toggle */
+  /* collapse toggle — unchanged look */
   #show-btn {
     border: none;
-    padding: 7px 10px;
-    font-size: 13px;
+    padding: 2px 6px;
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px var(--shadow);
+    box-shadow: 0 4px 10px var(--shadow);
     background: var(--primary-color);
     color: white;
     flex-shrink: 0;
   }
 
-  /* Base command button */
+  /* Base style for all new action buttons */
   .cmd-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 15px;
-    border-radius: 6px;
+    padding: 7px 14px;
+    border-radius: 7px;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
     border: 1.5px solid transparent;
     background: transparent;
-    text-decoration: none;
-    position: relative;
     font-family: inherit;
+    position: relative;
   }
-  .cmd-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .cmd-btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
 
   /* Rejected Leaves — red */
   .cmd-btn--danger {
     background: rgba(220, 53, 69, 0.08);
-    border-color: rgba(220, 53, 69, 0.45);
+    border-color: rgba(220, 53, 69, 0.4);
     color: #dc3545;
   }
   .cmd-btn--danger:hover {
-    background: rgba(220, 53, 69, 0.18);
+    background: rgba(220, 53, 69, 0.16);
     border-color: #dc3545;
-    box-shadow: 0 4px 14px rgba(220,53,69,0.2);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
     transform: translateY(-1px);
-    color: #b02a37;
   }
 
   /* Add Event — primary */
-  .cmd-btn--accent {
+  .cmd-btn--primary {
     background: rgba(13, 110, 253, 0.08);
-    border-color: rgba(13, 110, 253, 0.4);
+    border-color: rgba(13, 110, 253, 0.38);
     color: var(--primary-color, #0d6efd);
   }
-  .cmd-btn--accent:hover {
-    background: rgba(13, 110, 253, 0.16);
+  .cmd-btn--primary:hover {
+    background: rgba(13, 110, 253, 0.15);
     border-color: var(--primary-color, #0d6efd);
-    box-shadow: 0 4px 14px rgba(13,110,253,0.2);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.18);
     transform: translateY(-1px);
   }
 
   /* Messenger — blue */
   .cmd-btn--messenger {
     background: rgba(0, 132, 255, 0.08);
-    border-color: rgba(0, 132, 255, 0.4);
+    border-color: rgba(0, 132, 255, 0.38);
     color: #0084ff;
   }
   .cmd-btn--messenger:hover {
-    background: rgba(0, 132, 255, 0.18);
+    background: rgba(0, 132, 255, 0.16);
     border-color: #0084ff;
-    box-shadow: 0 4px 14px rgba(0,132,255,0.2);
+    box-shadow: 0 4px 12px rgba(0, 132, 255, 0.2);
     transform: translateY(-1px);
-    color: #0066cc;
   }
 
-  /* Badge on buttons */
+  /* Badge inside buttons */
   .cmd-badge {
     display: inline-flex;
     align-items: center;
@@ -230,34 +281,39 @@
     font-size: 10px;
     font-weight: 700;
     line-height: 1;
-    margin-left: 2px;
     background: #dc3545;
     color: #fff;
+    margin-left: 2px;
   }
 
-  /* Spacer — pushes Chat AI to far right */
-  .btn-spacer { flex: 1; min-width: 10px; }
+  /* Flex spacer — pushes Chat AI to far right */
+  .btn-spacer {
+    flex: 1;
+    min-width: 8px;
+  }
 
-  /* Chat with AI — pill, far right */
+  /* Chat with AI — pill, always far right */
   .cmd-btn--ai {
-    padding: 8px 20px;
-    border-radius: 30px;
+    padding: 8px 18px;
+    border-radius: 50px;
     border-width: 2px;
     border-color: #0084ff;
     background: rgba(0, 132, 255, 0.08);
     color: #0084ff;
     font-weight: 700;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
+    margin-left: auto;
   }
   .cmd-btn--ai:hover {
-    background: rgba(0, 132, 255, 0.18);
+    background: rgba(0, 132, 255, 0.16);
     border-color: #006aff;
     color: #006aff;
-    box-shadow: 0 0 16px rgba(0,132,255,0.25);
+    box-shadow: 0 0 16px rgba(0, 132, 255, 0.22);
     transform: translateY(-1px);
   }
-  .cmd-btn--ai .ai-dot {
-    width: 7px; height: 7px;
+  .ai-dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: #0084ff;
     box-shadow: 0 0 5px #0084ff;
@@ -265,8 +321,8 @@
     flex-shrink: 0;
   }
   @keyframes ai-pulse {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%      { opacity:0.35; transform:scale(1.6); }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.3; transform: scale(1.6); }
   }
 
   /* Stats Grid */
@@ -275,7 +331,8 @@
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
     margin-bottom: 10px;
-    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease, padding 0.3s ease, margin 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease,
+      padding 0.3s ease, margin 0.3s ease;
     overflow: hidden;
   }
 
@@ -300,59 +357,220 @@
   .card::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
-  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--shadow); }
-  .card:hover::before { opacity: 1; }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px var(--shadow);
+  }
 
-  .card h3 { font-size: 1.8rem; margin: 10px 0 5px 0; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
-  .card .text-muted { color: var(--text-secondary) !important; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-  .card .text-success { color: var(--success-color) !important; font-weight: 600; font-size: 0.85rem; }
-  .card .text-danger { color: var(--danger-color) !important; font-weight: 600; font-size: 0.85rem; }
-  .card .icon-circle, .card .mb-2, .card .loan-icon { margin-bottom: 8px; }
-  .card .icon-circle i, .card .mb-2 i, .card .loan-icon i { font-size: 1.5rem; color: var(--icon-color); }
-  .card .fa-2x { font-size: 1.5rem !important; color: var(--icon-color); }
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .card h3 {
+    font-size: 1.8rem;
+    margin: 10px 0 5px 0;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .card .text-muted {
+    color: var(--text-secondary) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .card .text-success {
+    color: var(--success-color) !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .card .text-danger {
+    color: var(--danger-color) !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .card .icon-circle,
+  .card .mb-2,
+  .card .loan-icon {
+    margin-bottom: 8px;
+  }
+
+  .card .icon-circle i,
+  .card .mb-2 i,
+  .card .loan-icon i {
+    font-size: 1.5rem;
+    color: var(--icon-color);
+  }
+
+  .card .fa-2x {
+    font-size: 1.5rem !important;
+    color: var(--icon-color);
+  }
 
   .view-details {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white; border: none; padding: 8px 16px; border-radius: 8px;
-    font-weight: 600; font-size: 0.85rem; margin-top: 8px; transition: all 0.3s ease;
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--secondary-color) 100%
+    );
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    transition: all 0.3s ease;
   }
-  .view-details:hover { transform: translateY(-2px); box-shadow: 0 6px 16px var(--shadow); }
 
-  .stats-grid.hide { opacity: 0; transform: translateY(-10px); max-height: 0; padding-top: 0 !important; padding-bottom: 0 !important; margin-top: 0 !important; }
-  .stats-grid.show { opacity: 1; transform: translateY(0); max-height: 2000px; }
+  .view-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+
+  .stats-grid.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .stats-grid.show {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 2000px;
+  }
 
   /* Modal Styles */
-  .modal-fullscreen .modal-dialog { margin: 10px; max-width: calc(100vw - 20px); max-height: calc(100vh - 20px); }
-  .modal-fullscreen .modal-content { height: 100%; }
-  .modal-backdrop { --bs-backdrop-opacity: 0.12; }
-
-  .hide { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; }
-  .show { max-height: 1000px; opacity: 1; transition: max-height 0.4s ease, opacity 0.3s ease; }
-
-  @media (max-width: 768px) {
-    .main-content { padding: 20px; }
-    .action-buttons { flex-direction: column; align-items: flex-start; }
-    .btn-spacer { display: none; }
-    .cmd-btn--ai { margin-left: 0; }
-    .action-section-title { font-size: 1.2rem; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-    .card { padding: 14px; min-height: 120px; }
-    .card h3 { font-size: 1.5rem; }
-    .card .text-muted { font-size: 0.7rem; }
-    .card .icon-circle i, .card .mb-2 i, .card .loan-icon i { font-size: 1.3rem; }
+  .modal-fullscreen .modal-dialog {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
   }
 
-  /* Unread badge sizing (kept for JS compatibility) */
-  #unreadBadge { font-size: 0.7rem; padding: 0.25em 0.5em; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+  .modal-fullscreen .modal-content {
+    height: 100%;
+  }
 
-  /* Birthday modal */
+  .modal-backdrop {
+    --bs-backdrop-opacity: 0.12;
+  }
+
+  .hide {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+  }
+
+  .show {
+    max-height: 1000px;
+    opacity: 1;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 20px;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-spacer { display: none; }
+    .cmd-btn--ai { margin-left: 0; }
+
+    .action-section-title {
+      font-size: 1.2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      padding: 14px;
+      min-height: 120px;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+    }
+
+    .card .text-muted {
+      font-size: 0.7rem;
+    }
+
+    .card .icon-circle i,
+    .card .mb-2 i,
+    .card .loan-icon i {
+      font-size: 1.3rem;
+    }
+  }
+
+  /* ==================== MAIN CONTENT MESSENGER ==================== */
+  .sidebar-messenger {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #0084ff, #006aff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .sidebar-messenger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(0, 132, 255, 0.45);
+  }
+
+  .sidebar-messenger {
+    cursor: pointer;
+  }
+
+  .sidebar-messenger {
+    position: relative;
+    cursor: pointer;
+  }
+
+  #unreadBadge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Birthday modal - gift box + flowers */
   .birthday-modal-body { position: relative; min-height: 320px; display: flex; flex-direction: column; align-items: center; padding: 20px; }
   .birthday-gift-wrapper { position: relative; width: 140px; height: 100px; margin-bottom: 20px; }
   .birthday-box { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 70px; background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%); border-radius: 4px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
@@ -373,6 +591,8 @@
   .birthday-person-card .bday-label { font-weight: 600; color: var(--text-secondary); min-width: 110px; display: inline-block; }
   .birthday-person-card .bday-value { color: var(--text-primary); }
   .birthday-person-card .bday-name { font-size: 1.3rem; font-weight: 700; color: var(--primary-color); margin-bottom: 12px; }
+  
+  
 </style>
 
 <!-- Dashboard -->
@@ -382,7 +602,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">📅 Today's Events</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
         <div class="modal-body">
           <ul id="eventList" class="list-group"></ul>
@@ -420,18 +644,18 @@
     </div>
   </div>
 
-  {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %}
-  {% set subscript = 'Welcome ' ~ role ~ ' ' ~ current_user_name %}
-  {% include 'navbar/navbar.html' %}
+  {% set header = "15 CORPS ENGINEERING SIGNAL REGIMENT" %} {% set subscript =
+  'Welcome ' ~ role ~ ' ' ~ current_user_name %} {% include 'navbar/navbar.html'
+  %}
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
     <div style="margin-bottom: 10px">
-      {% include 'modals/alarm/alarm.html' %}
-      {% include 'modals/alarm/attachment_alarm.html' %}
-      {% include 'modals/alarm/leave_alarm.html' %}
-      {% include 'modals/alarm/agniveer_test_alarms.html' %}
-      {% include 'modals/alarm/event_alarm.html' %}
+      {% include 'modals/alarm/alarm.html' %} {% include
+      'modals/alarm/attachment_alarm.html' %} {% include
+      'modals/alarm/leave_alarm.html' %} {% include
+      'modals/alarm/agniveer_test_alarms.html' %} {% include
+      'modals/alarm/event_alarm.html' %}
     </div>
 
     <!-- Action Buttons Loader -->
@@ -439,10 +663,9 @@
       <div class="loader-progress-bar"></div>
     </div>
 
-    <!-- ══ ACTION BUTTONS ══ -->
+    <!-- Action Buttons -->
     <div class="action-buttons" id="actionButtonsContainer">
 
-      <!-- Collapse toggle -->
       <button id="show-btn">
         <i class="fas fa-chevron-down"></i>
       </button>
@@ -460,16 +683,16 @@
           <line x1="9" y1="14" x2="15" y2="14"/>
           <line x1="9" y1="17" x2="12" y2="17"/>
         </svg>
-        Rejected Leaves
+        REJECTED LEAVES
         <span class="cmd-badge" id="coRejectedCount" style="display:none">
-          <span class="shimmer-line" style="width:14px;height:8px;display:inline-block"></span>
+          <span class="shimmer-line" style="width: 20px; height: 8px; display: inline-block"></span>
           <span class="visually-hidden">unread messages</span>
         </span>
       </button>
 
       <!-- Add Event -->
       <button
-        class="cmd-btn cmd-btn--accent"
+        class="cmd-btn cmd-btn--primary"
         data-bs-toggle="modal"
         data-bs-target="#addEventModal"
       >
@@ -481,18 +704,22 @@
           <line x1="12" y1="14" x2="12" y2="18"/>
           <line x1="10" y1="16" x2="14" y2="16"/>
         </svg>
-        Add Event
+        ADD EVENT
       </button>
 
       <!-- Messenger -->
       <button
         class="cmd-btn cmd-btn--messenger"
-        id="chatBtn"
         title="Chat with us"
+        id="chatBtn"
       >
         <i class="fab fa-facebook-messenger"></i>
-        Messages
-        <span class="cmd-badge" id="unreadBadge" style="display:none">0</span>
+        MESSAGES
+        <span
+          class="cmd-badge"
+          id="unreadBadge"
+          style="display: none"
+        >0</span>
       </button>
 
       <!-- Spacer pushes AI to far right -->
@@ -507,11 +734,10 @@
           <line x1="15" y1="9" x2="15.01" y2="9"/>
           <path d="M9 13s1 2 3 2 3-2 3-2"/>
         </svg>
-        Chat with AI
+        CHAT WITH AI
       </button>
 
     </div>
-    <!-- ══ END ACTION BUTTONS ══ -->
 
     <div id="stats-card-grid" class="stats-grid show">
       <div class="card p-3 text-center" id="birthdayCard" style="cursor:pointer;display:none" data-bs-toggle="modal" data-bs-target="#birthdayModal">
@@ -519,81 +745,200 @@
         <small class="text-muted">TODAY'S BIRTHDAYS</small>
         <h3 id="birthday-count">0</h3>
       </div>
-
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-target="#paradeStateModal" data-bs-toggle="modal" id="card-parade">
-        <div class="icon-circle"><i class="fas fa-book-open"></i></div>
+      <!-- Dashboard Cards -->
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-target="#paradeStateModal"
+        data-bs-toggle="modal"
+        id="card-parade"
+      >
+        <div class="icon-circle">
+          <i class="fas fa-book-open"></i>
+        </div>
         <small class="text-muted">PARADE STATE</small>
-        <h3 id="mainPower"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="mainPower">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#attachmentModal" id="card-attachment">
-        <div class="icon-circle mb-2"><i class="fas fa-cloud-upload-alt"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#attachmentModal"
+        id="card-attachment"
+      >
+        <div class="icon-circle mb-2">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
         <small class="text-muted">TD/ATTACHMENT</small>
-        <h3 id="attachment-count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="attachment-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#dutySearchModal" id="card-duty-search">
-        <div class="icon-circle mb-2"><i class="fas fa-user-tag"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#dutySearchModal"
+        id="card-duty-search"
+      >
+        <div class="icon-circle mb-2">
+          <i class="fas fa-user-tag"></i>
+        </div>
         <small class="text-muted">DOMAIN SPECIALIZATION</small>
-        <h3 id="duty-search-count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="duty-search-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" id="openCourses">
-        <div class="icon-circle mb-2"><i class="fas fa-graduation-cap"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="openCourses"
+      >
+        <div class="icon-circle mb-2">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
         <small class="text-muted">COURSE</small>
-        <h3 id="totalCoursesDone"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="totalCoursesDone">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" id="interview-card">
-        <div class="icon-circle mb-2"><i class="fa fa-male" aria-hidden="true"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="interview-card"
+      >
+        <div class="icon-circle mb-2">
+          <i class="fa fa-male" aria-hidden="true"></i>
+        </div>
         <small class="text-muted">KUNBA INTERVIEW</small>
         <h3>
-          <span id="interview-Count"><div class="shimmer-line" style="width:30px;height:24px;display:inline-block"></div></span>
-          /<span id="total-count"><div class="shimmer-line" style="width:30px;height:24px;display:inline-block"></div></span>
+          <span id="interview-Count">
+            <div
+              class="shimmer-line"
+              style="width: 30px; height: 24px; display: inline-block"
+            ></div> </span
+          >/<span id="total-count">
+            <div
+              class="shimmer-line"
+              style="width: 30px; height: 24px; display: inline-block"
+            ></div>
+          </span>
         </h3>
-        <span id="interview%" class="text-danger"><div class="shimmer-line" style="width:50px;height:14px;display:inline-block"></div></span>
+        <span id="interview%" class="text-danger">
+          <div
+            class="shimmer-line"
+            style="width: 50px; height: 14px; display: inline-block"
+          ></div>
+        </span>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" id="viewDetailsBtn">
-        <div class="mb-2"><i class="fas fa-user-plus fa-2x text-primary"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="viewDetailsBtn"
+      >
+        <div class="mb-2">
+          <i class="fas fa-user-plus fa-2x text-primary"></i>
+        </div>
         <small class="text-muted">DETACHMENT</small>
-        <h3 id="locationCount"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="locationCount">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" id="openSensitive">
-        <div class="icon-circle mb-2"><i class="fas fa-exclamation-circle"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="openSensitive"
+      >
+        <div class="icon-circle mb-2">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
         <small class="text-muted">SENSITIVE INDL</small>
-        <h3 id="sensitive-count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="sensitive-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
       <div class="card p-3 text-center" id="openBoardDetails">
-        <div class="icon-circle mb-2"><i class="fas fa-user-tie me-1"></i></div>
+        <div class="icon-circle mb-2">
+          <i class="fas fa-user-tie me-1"></i>
+        </div>
         <small class="text-muted">BOO's</small>
-        <h3 id="board-count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="board-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" id="loanDetailGraph" data-bs-toggle="modal" data-bs-target="#loanModal">
-        <div class="loan-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        id="loanDetailGraph"
+        data-bs-toggle="modal"
+        data-bs-target="#loanModal"
+      >
+        <div class="loan-icon">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+        </div>
         <small class="text-muted">LOAN</small>
-        <h3 id="active-loan-count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="active-loan-count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer;transition:all 0.3s ease" data-bs-toggle="modal" data-bs-target="#projDash_modal">
-        <div class="icon-circle mb-2"><i class="fas fa-rocket"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer; transition: all 0.3s ease"
+        data-bs-toggle="modal"
+        data-bs-target="#projDash_modal">
+      
+        <div class="icon-circle mb-2">
+          <i class="fas fa-rocket"></i>
+        </div>
+
         <small class="text-muted">TOTAL PROJECTS</small>
-        <h3 class="mb-0" id="get_projects_count"><div class="shimmer-number mx-auto"></div></h3>
+
+        <h3 class="mb-0" id="get_projects_count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#centerRollCallModal" id="card-rollcall">
-        <div class="mb-2"><i class="fas fa-clipboard-list fa-2x text-primary"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#centerRollCallModal"
+        id="card-rollcall"
+      >
+        <div class="mb-2">
+          <i class="fas fa-clipboard-list fa-2x text-primary"></i>
+        </div>
         <small class="text-muted">CENTRAL ROLL CALL</small>
-        <h3 id="center-roll-points"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="center-roll-points">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
 
-      <div class="card p-3 text-center" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#agniveersModal" id="card-agniveer">
-        <div class="icon-circle"><i class="fas fa-user-shield"></i></div>
+      <div
+        class="card p-3 text-center"
+        style="cursor: pointer"
+        data-bs-toggle="modal"
+        data-bs-target="#agniveersModal"
+        id="card-agniveer"
+      >
+        <div class="icon-circle">
+          <i class="fas fa-user-shield"></i>
+        </div>
         <small class="text-muted">AGNIVEER</small>
-        <h3 id="agniveer_count"><div class="shimmer-number mx-auto"></div></h3>
+        <h3 id="agniveer_count">
+          <div class="shimmer-number mx-auto"></div>
+        </h3>
       </div>
     </div>
 
@@ -603,14 +948,29 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Add Today's Event</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             <form id="eventForm">
               <label>Event Date:</label>
-              <input type="date" class="form-control" name="event_date" value="{{ today }}" required />
+              <input
+                type="date"
+                class="form-control"
+                name="event_date"
+                value="{{ today }}"
+                required
+              />
               <label class="mt-2">Event Name:</label>
-              <input type="text" class="form-control" name="event_name" required />
+              <input
+                type="text"
+                class="form-control"
+                name="event_name"
+                required
+              />
               <label class="mt-2">Venue:</label>
               <input type="text" class="form-control" name="venue" required />
             </form>
@@ -621,37 +981,43 @@
         </div>
       </div>
     </div>
-
     {%include 'modals/Projects/modal.html'%}
-    {% include 'modals/detachmentModal/detachment.html' %}
-    {% include 'modals/personnelModal/personal_modal.html' %}
-    {% include 'modals/personnelModal/duty_search_modal.html' %}
-    {% include 'modals/salesmodal/salesModal.html' %}
-    {% include 'modals/leaverequest/leave_request.html' %}
-    {% include 'modals/interview_pending/modal.html' %}
-    {% include 'modals/count_parade/modal.html' %}
-    {% include 'modals/attachment-modal/modal.html' %}
-    {% include 'modals/loan/loans.html' %}
-    {% include 'modals/roll_call/modal.html' %}
-    {% include 'modals/roll_call/view_roll_call.html' %}
-    {% include 'modals/course/courses.html' %}
-    {% include 'modals/interview_pending/jco-update-modal.html' %}
-    {% include 'modals/success-modal/modal.html' %}
-    {% include 'task_manager/update_task_by_jco.html' %}
-    {% include 'modals/adduser/user.html' %}
-    {% include 'modals/oncourses/modal.html' %}
-    {% include 'modals/leaverequest/co-rejected-view.html' %}
-    {% include 'modals/alarm/agniveer_test_alarms.html' %}
-    {% include 'modals/agniveer/modal.html' %}
-    {% include 'modals/messenger/modal.html' %}
-    {%include 'modals/ollama/ollama.html' %}
-
-    <div class="modal fade modal-fullscreen" id="paradeStateModal" tabindex="-1">
+     {% include
+    'modals/detachmentModal/detachment.html' %} {% include
+    'modals/personnelModal/personal_modal.html' %} {% include
+    'modals/personnelModal/duty_search_modal.html' %} {% include
+    'modals/salesmodal/salesModal.html' %} {% include
+    'modals/leaverequest/leave_request.html' %} {% include
+    'modals/interview_pending/modal.html' %} {% include
+    'modals/count_parade/modal.html' %} {% include
+    'modals/attachment-modal/modal.html' %} {% include 'modals/loan/loans.html'
+    %} {% include 'modals/roll_call/modal.html' %} {% include
+    'modals/roll_call/view_roll_call.html' %} {% include
+    'modals/course/courses.html' %} {% include
+    'modals/interview_pending/jco-update-modal.html' %} {% include
+    'modals/success-modal/modal.html' %} {% include
+    'task_manager/update_task_by_jco.html' %} {% include
+    'modals/adduser/user.html' %} {% include 'modals/oncourses/modal.html' %} {%
+    include 'modals/leaverequest/co-rejected-view.html' %} {% include
+    'modals/alarm/agniveer_test_alarms.html' %} {% include
+    'modals/agniveer/modal.html' %}
+     {% include 'modals/messenger/modal.html' %}
+        {%include 'modals/ollama/ollama.html' %}
+    
+    <div
+      class="modal fade modal-fullscreen"
+      id="paradeStateModal"
+      tabindex="-1"
+    >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Parade State</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             {% include 'modals/parade_state/index.html' %}
@@ -659,10 +1025,10 @@
         </div>
       </div>
     </div>
-
     {% include 'images_section/section.html' %}
   </div>
 </div>
+
 
 <script>
   document.addEventListener("hidden.bs.modal", function (e) {
@@ -810,7 +1176,8 @@
             initFillUpTestForm();
           })
           .catch(() => {
-            modalBody.innerHTML = "<p class='text-danger'>Failed to load form</p>";
+            modalBody.innerHTML =
+              "<p class='text-danger'>Failed to load form</p>";
           });
       });
 
@@ -830,10 +1197,26 @@
           const payload = {
             army_number: form.army_number.value,
             tests: [
-              { test: "1st", status: form.test1.value, date: form.test1_date.value },
-              { test: "2nd", status: form.test2.value, date: form.test2_date.value },
-              { test: "3rd", status: form.test3.value, date: form.test3_date.value },
-              { test: "4th", status: form.test4.value, date: form.test4_date.value },
+              {
+                test: "1st",
+                status: form.test1.value,
+                date: form.test1_date.value,
+              },
+              {
+                test: "2nd",
+                status: form.test2.value,
+                date: form.test2_date.value,
+              },
+              {
+                test: "3rd",
+                status: form.test3.value,
+                date: form.test3_date.value,
+              },
+              {
+                test: "4th",
+                status: form.test4.value,
+                date: form.test4_date.value,
+              },
             ],
           };
 
@@ -867,7 +1250,10 @@
       list.innerHTML = "";
 
       if (!data.rows || data.rows.length === 0) {
-        list.innerHTML = `<li class="list-group-item text-muted text-center">No events for today</li>`;
+        list.innerHTML = `
+          <li class="list-group-item text-muted text-center">
+            No events for today
+          </li>`;
         return;
       }
 
@@ -908,7 +1294,9 @@
       if (countEl) countEl.textContent = list.length;
       if (birthdayCard) birthdayCard.style.display = "flex";
 
-      const cardsHtml = list.map((p) => `
+      const cardsHtml = list
+        .map(
+          (p) => `
         <div class="birthday-person-card">
           <div class="bday-name">🎂 ${escapeHtml(p.name)}</div>
           <div class="bday-row"><span class="bday-label">Rank:</span><span class="bday-value">${escapeHtml(p.rank)}</span></div>
@@ -916,7 +1304,9 @@
           <div class="bday-row"><span class="bday-label">Company:</span><span class="bday-value">${escapeHtml(p.company)}</span></div>
           <div class="bday-row"><span class="bday-label">Address:</span><span class="bday-value">${escapeHtml(p.address)}</span></div>
         </div>
-      `).join("");
+      `
+        )
+        .join("");
       if (cardsContainer) cardsContainer.innerHTML = cardsHtml;
     } catch (err) {
       console.error("Error loading birthdays:", err);
@@ -960,11 +1350,14 @@
 
       const pendingTasks = tasks.pending ?? 0;
       const totalTasks = tasks.total ?? 0;
-      const taskPercentage = totalTasks > 0 ? ((pendingTasks / totalTasks) * 100).toFixed(1) : "0";
+      const taskPercentage =
+        totalTasks > 0 ? ((pendingTasks / totalTasks) * 100).toFixed(1) : "0";
 
       const dashboardMap = {
         locationCount: detachments,
-        mainPower: `${manpower.officerCount ?? 0} - ${manpower.jcoCount ?? 0} - ${manpower.orCount ?? 0}`,
+        mainPower: `${manpower.officerCount ?? 0} - ${
+          manpower.jcoCount ?? 0
+        } - ${manpower.orCount ?? 0}`,
         "interview-Count": interview.pending_count ?? 0,
         "total-count": interview.total_count ?? 0,
         "interview%": `Pending ${interview.percentage ?? 0}%`,
@@ -979,7 +1372,9 @@
         "duty-search-count": duty_count ?? 0,
       };
 
-      Object.entries(dashboardMap).forEach(([id, value]) => updateIfExists(id, value));
+      Object.entries(dashboardMap).forEach(([id, value]) =>
+        updateIfExists(id, value)
+      );
 
       updateLoaderProgress(70);
       await updateRejectedLeaveCount();
@@ -1005,7 +1400,7 @@
 
       const badge = document.getElementById("coRejectedCount");
       badge.innerText = count;
-      badge.style.display = count > 0 ? "inline-flex" : "none";
+      badge.style.display = count > 0 ? "inline-block" : "none";
     } catch (err) {
       console.error("Error fetching rejected leaves count:", err);
     }
@@ -1024,6 +1419,5 @@
     initializeDashboard();
   });
 </script>
-
 <script src="static/js/chat.js"></script>
 {% endblock %}

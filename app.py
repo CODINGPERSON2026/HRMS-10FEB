@@ -5110,4 +5110,5 @@ def get_gallery():
         print("❌ Gallery fetch error:", e)
         return jsonify([]), 500
 
-
+if __name__ == '__main__':
+    app.run(port=5000,debug=True)

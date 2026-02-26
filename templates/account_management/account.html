@@ -2,433 +2,327 @@
 {% block content %}
 
 <style>
- 
-
-  .statement-card {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    max-height: 500px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #6b7280;
-    font-size: 1.1rem;
-    font-weight: 200;
+  .page-title {
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
 
-  .statement-header {
-    font-weight: 600;
-    color: #000102;
+  .card-shadow {
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   }
 
   .table thead {
-    background: #1f2937;
-    color: #ffffff;
+    background-color: #1f2937;
+    color: #fff;
   }
 
-  .credit {
-    color: #16a34a;
+  .amount {
     font-weight: 600;
   }
 
-  .debit {
-    color: #dc2626;
-    font-weight: 600;
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
   }
 
-  #debit-percentage {
-    color: #dc2626;
-    font-weight: 600;
-  }
-
-  /* Current Balance Display */
-  #currentBalanceDisplay {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #350cee;
-    text-align: right;
-    margin-left: auto;
-  }
-
-  #currentBalanceDisplay.credit {
-    color: #16a34a;
-  }
-
-  #currentBalanceDisplay.debit {
-    color: #dc2626;
-  }
-
-  /* Warning message below amount input */
-  #debitWarning {
-    color: #dc2626;
-    font-weight: 600;
-    margin-top: 4px;
-    display: none;
-  }
-
-  /* Placeholder for no grant selected */
-  .no-grant-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 20px;
-    color: #6b7280;
-    font-size: 1.2rem;
-    font-weight: 500;
-  }
-
-  .no-grant-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    color: #2563eb;
+  .view-btn.active {
+    background-color: #0d6efd;
+    color: white;
   }
 </style>
 
-<div class="wrapper">
-  {% set header = "Grant Management" %}
-  {% set subscript = "Create Grants → View Grant → View Grant Balance" %}
-  {% include 'navbar/navbar.html' %}
+<div class="container-fluid mt-4">
 
-  <div class="container-fluid mt-4">
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="page-title">DETAILS OF GRANTS – FY 2025-26</h4>
+      <small class="text-muted">Admin Financial Control Panel</small>
+    </div>
+  </div>
 
-    <div class="row mb-4 align-items-end">
+  <!-- ================= SUMMARY CARDS ================= -->
+  <div class="row mb-4">
 
-      <!-- Grant Dropdown -->
-      <div class="col-md-4">
-        <label class="form-label fw-semibold">Select Grant</label>
-        <select class="form-select" id="departmentSelect">
-          <option selected disabled>-- Select Grant --</option>
-        </select>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6>Total Grants</h6>
+          <h4 id="totalGrants">0</h4>
+        </div>
       </div>
-
-      <!-- Add Grant Button -->
-      <div class="col-md-2">
-        <label class="form-label invisible">Add</label>
-        <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
-          Add Grant
-        </button>
-      </div>
-
-      <!-- Update Balance Button + Current Balance -->
-      <div class="col-md-5 d-flex align-items-center">
-        <button class="btn btn-primary me-3" style="flex: 0 0 auto;" data-bs-toggle="modal" data-bs-target="#updateBalanceModal">
-          Update Balance
-        </button>
-        <div id="currentBalanceDisplay"></div>
-      </div>
-
     </div>
 
-    <!-- GRANT STATEMENT -->
-    <div class="statement-card p-4" id="statementCard">
-      <h5 class="statement-header mb-3">Grant Statement</h5>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6>Total Allotment (₹)</h6>
+          <h4 id="totalAllotment">0</h4>
+        </div>
+      </div>
+    </div>
 
-      <!-- Table container -->
-      <div class="table-responsive" id="statementTableContainer" style="width:100%; display:none;">
-        <table class="table table-bordered table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Initial Balance (₹)</th>
-              <th>Additional Amount (₹)</th>
-              <th>Expense (₹)</th>
-              <th>% (₹)</th>
-              <th>New Balance (₹)</th>
-            </tr>
-          </thead>
-          <tbody id="statementTableBody"></tbody>
-        </table>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6>Total Expenditure (₹)</h6>
+          <h4 id="totalExpenditure">0</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6>Overall Utilization</h6>
+          <h4 id="overallUtil">0%</h4>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADD GRANT BUTTON -->
+  <div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <button class="btn btn-outline-primary view-btn active" id="analyticBtn">📊 Statistical View</button>
+      <button class="btn btn-outline-secondary view-btn" id="tableBtn">📋 Tabular View</button>
+    </div>
+    <a href="/account/grants/add" class="btn btn-success">
+      + Add Grant
+    </a>
+  </div>
+
+  <!-- ================= ANALYTICAL VIEW ================= -->
+  <div id="analyticView">
+
+    <div class="row g-4 mb-5">
+
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <h6 class="mb-0 fw-semibold">Allotment vs Expenditure</h6>
+          </div>
+          <div class="card-body">
+            <canvas id="barChart" height="120"></canvas>
+          </div>
+        </div>
       </div>
 
-      <!-- Placeholder when no grant selected -->
-      <div class="no-grant-placeholder" id="noGrantPlaceholder">
-        <i class="bi bi-folder2-open"></i>
-        Please select a grant to view the statement
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <h6 class="mb-0 fw-semibold">Expenditure Distribution</h6>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart" height="120"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <h6 class="mb-0 fw-semibold">Utilization Trend (%)</h6>
+          </div>
+          <div class="card-body">
+            <canvas id="lineChart" height="120"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">
+            <h6 class="mb-0 fw-semibold">Overall Utilization</h6>
+          </div>
+          <div class="card-body">
+            <canvas id="doughnutChart" height="120"></canvas>
+          </div>
+        </div>
       </div>
 
     </div>
 
   </div>
-</div>
 
-<!-- ADD GRANT MODAL -->
-<div class="modal fade" id="addDepartmentModal" tabindex="-1">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content">
+  <!-- ================= TABULAR VIEW ================= -->
+  <div id="tableView" style="display:none;">
 
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title">Add Grant</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="card card-shadow">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover mb-0 align-middle text-center">
+            <thead>
+              <tr>
+                <th>Ser No</th>
+                <th>Grant Head</th>
+                <th>Code Head</th>
+                <th>Allotment (₹)</th>
+                <th>No of SOs</th>
+                <th>Total Expdr (₹)</th>
+                <th>Balance (₹)</th>
+                <th>Expdr %</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="grantTableBody"></tbody>
+          </table>
+        </div>
       </div>
-
-      <div class="modal-body">
-        <form id="addDepartmentForm">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Grant Name</label>
-            <input type="text" class="form-control" placeholder="Enter grant name" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Initial Balance (₹)</label>
-            <input type="number" class="form-control" placeholder="Enter initial balance" required>
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" form="addDepartmentForm" class="btn btn-success">Add Grant</button>
-      </div>
-
     </div>
+
   </div>
+
 </div>
 
-<!-- UPDATE BALANCE MODAL -->
-<div class="modal fade" id="updateBalanceModal" tabindex="-1">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title">Update Grant Balance</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        <form id="updateBalanceForm">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Select Grant</label>
-            <select class="form-select" id="updateDepartmentSelect" required>
-              <option selected disabled>-- Select Grant --</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Transaction Type</label>
-            <select class="form-select" required>
-              <option value="credit">Allotment</option>
-              <option value="debit">Expenditure</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Amount (₹)</label>
-            <input type="number" class="form-control" placeholder="Enter amount" required id="transactionAmount">
-            <div id="debitWarning">Expense cannot exceed current balance!</div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Remarks</label>
-            <textarea class="form-control" rows="2" placeholder="Optional remarks"></textarea>
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" form="updateBalanceForm" class="btn btn-success" id="updateBalanceSubmit">Submit</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-{% include 'modals/success-modal/modal.html'%}
+<script src="/static/Chart.umd.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const departmentSelect = document.getElementById('departmentSelect');
-  const updateDepartmentSelect = document.getElementById('updateDepartmentSelect');
-  const statementTableBody = document.getElementById('statementTableBody');
-  const statementTableContainer = document.getElementById('statementTableContainer');
-  const noGrantPlaceholder = document.getElementById('noGrantPlaceholder');
-  const statementCard = document.getElementById('statementCard');
-  const currentBalanceDisplay = document.getElementById('currentBalanceDisplay');
-  const transactionAmountInput = document.getElementById('transactionAmount');
-  const debitWarning = document.getElementById('debitWarning');
-  const updateSubmitBtn = document.getElementById('updateBalanceSubmit');
+document.addEventListener("DOMContentLoaded", function(){
 
-  let currentPage = 1;
-  let selectedDep = null;
-  let loading = false;
-  let hasMore = true;
+  const tableBody = document.getElementById("grantTableBody");
+  const analyticView = document.getElementById("analyticView");
+  const tableView = document.getElementById("tableView");
+  const analyticBtn = document.getElementById("analyticBtn");
+  const tableBtn = document.getElementById("tableBtn");
 
-  // Load Departments
-  function loadDepartments() {
-    fetch('/account/departments')
-      .then(res => res.json())
-      .then(data => {
-        departmentSelect.innerHTML = '<option selected disabled>-- Select Grant --</option>';
-        
-        // Add "All Grants" option
-        const allOption = document.createElement('option');
-        allOption.value = 'all';
-        allOption.textContent = 'All Grants (Last 10 Transactions)';
-        departmentSelect.appendChild(allOption);
+  let barChart, pieChart, lineChart, doughnutChart;
 
-        updateDepartmentSelect.innerHTML = '<option selected disabled>-- Select Grant --</option>';
-        data.forEach(dep => {
-          const option1 = document.createElement('option');
-          option1.value = dep.id;
-          option1.textContent = `${dep.account_holder} (₹${Number(dep.current_balance).toLocaleString()})`;
-          option1.dataset.balance = dep.current_balance || 0;
-          departmentSelect.appendChild(option1);
+  function formatCurrency(value){
+    return Number(value || 0).toLocaleString("en-IN");
+  }
 
-          const option2 = document.createElement('option');
-          option2.value = dep.id;
-          option2.textContent = dep.account_holder;
-          updateDepartmentSelect.appendChild(option2);
-        });
+  analyticBtn.onclick = function(){
+    analyticView.style.display = "block";
+    tableView.style.display = "none";
+    analyticBtn.classList.add("active");
+    tableBtn.classList.remove("active");
+  };
+
+  tableBtn.onclick = function(){
+    analyticView.style.display = "none";
+    tableView.style.display = "block";
+    tableBtn.classList.add("active");
+    analyticBtn.classList.remove("active");
+  };
+
+  function loadGrants(){
+
+    fetch("/account/grants/summary")
+    .then(res => res.json())
+    .then(data => {
+
+      tableBody.innerHTML = "";
+
+      let totalAllotment = 0;
+      let totalExpenditure = 0;
+
+      let grantNames = [];
+      let allotments = [];
+      let expenditures = [];
+      let percentages = [];
+
+      data.forEach((grant, index) => {
+
+        const allotment = parseFloat(grant.total_allotment) || 0;
+        const exp = parseFloat(grant.total_expenditure) || 0;
+        const percent = parseFloat(grant.exp_percent) || 0;
+
+        totalAllotment += allotment;
+        totalExpenditure += exp;
+
+        grantNames.push(grant.name);
+        allotments.push(allotment);
+        expenditures.push(exp);
+        percentages.push(percent);
+
+        let badgeClass = "bg-success";
+        if (percent >= 80 && percent <= 100) badgeClass = "bg-warning text-dark";
+        if (percent > 100) badgeClass = "bg-danger";
+
+        const row = `
+          <tr>
+            <td>${index + 1}</td>
+            <td class="fw-semibold">${grant.name}</td>
+            <td>${grant.code_head}</td>
+            <td>${formatCurrency(allotment)}</td>
+            <td>${grant.no_of_sos}</td>
+            <td class="text-danger">${formatCurrency(exp)}</td>
+            <td>${formatCurrency(grant.balance)}</td>
+            <td><span class="badge ${badgeClass}">${percent.toFixed(2)}%</span></td>
+            <td><a href="/account/grants/${grant.id}" class="btn btn-sm btn-outline-primary">View</a></td>
+          </tr>
+        `;
+
+        tableBody.innerHTML += row;
       });
-  }
-  loadDepartments();
 
-  function showPlaceholder(show) {
-    statementTableContainer.style.display = show ? 'none' : 'block';
-    noGrantPlaceholder.style.display = show ? 'flex' : 'none';
-  }
+      const overallPercent = totalAllotment > 0
+        ? (totalExpenditure / totalAllotment) * 100
+        : 0;
 
-  showPlaceholder(true);
+      document.getElementById("totalGrants").innerText = data.length;
+      document.getElementById("totalAllotment").innerText = formatCurrency(totalAllotment);
+      document.getElementById("totalExpenditure").innerText = formatCurrency(totalExpenditure);
+      document.getElementById("overallUtil").innerText = overallPercent.toFixed(2) + "%";
 
-  // Load Grant Statement / All Grants
-  function loadDepartmentStatement(depId, page=1) {
-    if(!depId || loading) return;
-    loading = true;
+      createCharts(grantNames, allotments, expenditures, percentages, overallPercent);
 
-    let url = '';
-    if(depId === 'all') {
-      url = `/account/departments/all_transactions?limit=10`;
-      currentPage = 1;
-    } else {
-      url = `/account/departments/${depId}/statement?page=${page}`;
-    }
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        statementTableBody.innerHTML = '';
-        showPlaceholder(false);
-
-        if(depId !== 'all' && data.current_balance !== undefined){
-          currentBalanceDisplay.textContent = `₹${Number(data.current_balance).toLocaleString()}`;
-        } else {
-          currentBalanceDisplay.textContent = ''; // hide balance for All Grants
-        }
-
-        data.transactions.forEach(tx => {
-          const percentage = tx.old_balance > 0 ? ((tx.debit_amount / tx.old_balance) * 100).toFixed(2) : 0;
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${tx.date}</td>
-            <td>${tx.old_balance.toLocaleString()}</td>
-            <td class="credit">${tx.credit_amount > 0 ? '+' + tx.credit_amount.toLocaleString() : '—'}</td>
-            <td class="debit">${tx.debit_amount > 0 ? '-' + tx.debit_amount.toLocaleString() : '—'}</td>
-            <td id="debit-percentage">${tx.debit_amount > 0 ? percentage + '%' : '—'}</td>
-            <td>${tx.new_balance.toLocaleString()}</td>
-          `;
-          statementTableBody.appendChild(row);
-        });
-
-        hasMore = data.has_more !== undefined ? data.has_more : false;
-        loading = false;
-      })
-      .catch(err => { console.error(err); loading = false; });
-  }
-
-  // Grant change
-  departmentSelect.addEventListener('change', e => {
-    selectedDep = e.target.value;
-    currentPage = 1;
-    hasMore = true;
-    loadDepartmentStatement(selectedDep, currentPage);
-  });
-
-  // Infinite scroll
-  statementCard.addEventListener('scroll', () => {
-    if(statementCard.scrollTop + statementCard.clientHeight >= statementCard.scrollHeight - 10 && !loading && hasMore && selectedDep !== 'all') {
-      currentPage++;
-      loadDepartmentStatement(selectedDep, currentPage);
-    }
-  });
-
-  // Add Grant
-  document.getElementById('addDepartmentForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = e.target.querySelector('input[type="text"]').value;
-    const balance = e.target.querySelector('input[type="number"]').value;
-
-    fetch('/account/departments/add', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({account_holder: name, initial_balance: balance})
-    })
-    .then(res => res.json())
-    .then(data => {
-      showStatusModal("Grant Added", "Green", 2500);
-      setTimeout(()=> location.reload(), 2500);
-      bootstrap.Modal.getInstance(document.getElementById('addDepartmentModal')).hide();
     });
-  });
+  }
 
-  // Validate debit input
-  transactionAmountInput.addEventListener('input', () => {
-    const type = document.querySelector('#updateBalanceForm select:nth-child(2)').value;
-    const amount = Number(transactionAmountInput.value);
-    const currentBalance = Number(currentBalanceDisplay.textContent.replace(/[^0-9.-]+/g,""));
+  function createCharts(names, allotments, expenditures, percentages, overallPercent){
 
-    if(type === 'debit' && amount > currentBalance){
-      debitWarning.style.display = 'block';
-      updateSubmitBtn.disabled = true;
-    } else {
-      debitWarning.style.display = 'none';
-      updateSubmitBtn.disabled = false;
-    }
-  });
+    if(barChart) barChart.destroy();
+    if(pieChart) pieChart.destroy();
+    if(lineChart) lineChart.destroy();
+    if(doughnutChart) doughnutChart.destroy();
 
-  // Update Grant Balance
-  document.getElementById('updateBalanceForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const depId = updateDepartmentSelect.value;
-    const type = e.target.querySelectorAll('select')[1].value;
-    const amount = Number(transactionAmountInput.value);
-    const remarks = e.target.querySelector('textarea').value;
-    const currentBalance = Number(currentBalanceDisplay.textContent.replace(/[^0-9.-]+/g,""));
-
-    if(type === 'debit' && amount > currentBalance){
-      alert(`Expense cannot exceed current balance of ₹${currentBalance.toLocaleString()}`);
-      return;
-    }
-
-    fetch('/account/departments/update_balance', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        department_id: depId,
-        transaction_type: type,
-        amount: amount,
-        remarks: remarks
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      showStatusModal("Balance Updated", "Green", 2500);
-      
-      setTimeout(() => {
-        bootstrap.Modal.getInstance(document.getElementById('updateBalanceModal')).hide();
-
-        departmentSelect.value = depId;
-        selectedDep = depId;
-        currentPage = 1;
-        hasMore = true;
-        loadDepartmentStatement(depId, currentPage);
-        location.reload()
-      }, 500);
+    barChart = new Chart(document.getElementById("barChart"), {
+      type: "bar",
+      data: {
+        labels: names,
+        datasets: [
+          { label: "Allotment", data: allotments },
+          { label: "Expenditure", data: expenditures }
+        ]
+      }
     });
-  });
+
+    pieChart = new Chart(document.getElementById("pieChart"), {
+      type: "pie",
+      data: {
+        labels: names,
+        datasets: [{ data: expenditures }]
+      }
+    });
+
+    lineChart = new Chart(document.getElementById("lineChart"), {
+      type: "line",
+      data: {
+        labels: names,
+        datasets: [{
+          label: "Utilization %",
+          data: percentages,
+          tension: 0.3
+        }]
+      }
+    });
+
+    doughnutChart = new Chart(document.getElementById("doughnutChart"), {
+      type: "doughnut",
+      data: {
+        labels: ["Used", "Remaining"],
+        datasets: [{
+          data: [overallPercent, 100 - overallPercent]
+        }]
+      }
+    });
+  }
+
+  loadGrants();
 
 });
 </script>

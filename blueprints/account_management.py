@@ -1,174 +1,315 @@
 from imports import *
 
-accounts_bp = Blueprint('account',__name__,url_prefix='/account')
+accounts_bp = Blueprint('account', __name__, url_prefix='/account')
 
+
+# ==========================================
+# DASHBOARD PAGE
+# ==========================================
 @accounts_bp.route('/')
 def accounts():
-    return render_template('account_management/account.html')
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    query = """
+        SELECT 
+            g.id,
+            g.name,
+            g.code_head,
+            IFNULL(a.total_allotment, 0) AS total_allotment,
+            IFNULL(s.no_of_sos, 0) AS no_of_sos,
+            IFNULL(e.total_expenditure, 0) AS total_expenditure
+        FROM grants g
+        LEFT JOIN (
+            SELECT grant_id, SUM(amount) AS total_allotment
+            FROM grant_allocations
+            GROUP BY grant_id
+        ) a ON g.id = a.grant_id
+        LEFT JOIN (
+            SELECT grant_id, COUNT(*) AS no_of_sos
+            FROM sanction_orders
+            GROUP BY grant_id
+        ) s ON g.id = s.grant_id
+        LEFT JOIN (
+            SELECT grant_id, SUM(amount) AS total_expenditure
+            FROM expenditures
+            GROUP BY grant_id
+        ) e ON g.id = e.grant_id
+    """
+
+    cursor.execute(query)
+    grants = cursor.fetchall()
+
+    for row in grants:
+
+        total_allotment = float(row['total_allotment'] or 0)
+        total_expenditure = float(row['total_expenditure'] or 0)
+
+        row['balance'] = total_allotment - total_expenditure
+        row['exp_percent'] = (
+            round((total_expenditure / total_allotment) * 100, 2)
+            if total_allotment > 0 else 0
+        )
+
+        print("DASHBOARD DEBUG:", row['name'], total_allotment)
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "account_management/account.html",
+        grants=grants
+    )
 
 
+# ==========================================
+# SUMMARY API
+# ==========================================
+@accounts_bp.route('/grants/summary')
+def grant_summary():
 
-
-
-
-# -----------------------------
-# Fetch Departments
-# -----------------------------
-@accounts_bp.route('/departments', methods=['GET'])
-def get_departments():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, account_holder, current_balance FROM department_accounts ORDER BY account_holder")
-    departments = cursor.fetchall()
+
+    query = """
+        SELECT 
+            g.id,
+            g.name,
+            g.code_head,
+            IFNULL(a.total_allotment, 0) AS total_allotment,
+            IFNULL(s.no_of_sos, 0) AS no_of_sos,
+            IFNULL(e.total_expenditure, 0) AS total_expenditure
+        FROM grants g
+        LEFT JOIN (
+            SELECT grant_id, SUM(amount) AS total_allotment
+            FROM grant_allocations
+            GROUP BY grant_id
+        ) a ON g.id = a.grant_id
+        LEFT JOIN (
+            SELECT grant_id, COUNT(*) AS no_of_sos
+            FROM sanction_orders
+            GROUP BY grant_id
+        ) s ON g.id = s.grant_id
+        LEFT JOIN (
+            SELECT grant_id, SUM(amount) AS total_expenditure
+            FROM expenditures
+            GROUP BY grant_id
+        ) e ON g.id = e.grant_id
+    """
+
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    for row in results:
+
+        total_allotment = float(row['total_allotment'] or 0)
+        total_expenditure = float(row['total_expenditure'] or 0)
+
+        row['balance'] = total_allotment - total_expenditure
+        row['exp_percent'] = (
+            round((total_expenditure / total_allotment) * 100, 2)
+            if total_allotment > 0 else 0
+        )
+
+        print("SUMMARY DEBUG:", row['name'], total_allotment)
+
     cursor.close()
     conn.close()
-    return jsonify(departments)
+
+    return jsonify(results)
 
 
-# -----------------------------
-# Add Department
-# -----------------------------
-@accounts_bp.route('/departments/add', methods=['POST'])
-def add_department():
-    data = request.json
-    name = data.get('account_holder')
-    initial_balance = float(data.get('initial_balance', 0))
+# ==========================================
+# CREATE GRANT + ORIGINAL ALLOCATION
+# ==========================================
+@accounts_bp.route('/grants/add', methods=['POST'])
+def add_grant():
+
+    data = request.get_json()
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO department_accounts (account_holder, current_balance) VALUES (%s, %s)",
-        (name, initial_balance)
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'status': 'success', 'message': 'Department added successfully'})
 
-
-# -----------------------------
-# Update Balance
-# -----------------------------
-@accounts_bp.route('/departments/update_balance', methods=['POST'])
-def update_balance():
-    data = request.json
-    dep_id = data.get('department_id')
-    transaction_type = data.get('transaction_type')
-    amount = Decimal(str(data.get('amount')))  # convert float/string to Decimal
-    remarks = data.get('remarks', '')
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    # Fetch current balance
-    cursor.execute("SELECT current_balance FROM department_accounts WHERE id = %s", (dep_id,))
-    row = cursor.fetchone()
-    if not row:
-        return jsonify({'success': False, 'message': 'Department not found'}), 404
-
-    old_balance = row['current_balance']  # decimal.Decimal
-
-    # Calculate new balance
-    if transaction_type == 'credit':
-        new_balance = old_balance + amount
-        credit_amount = amount
-        debit_amount = Decimal('0')
-    else:
-        new_balance = old_balance - amount
-        credit_amount = Decimal('0')
-        debit_amount = amount
-
-    # Update current_balance in department_accounts
-    cursor.execute(
-        "UPDATE department_accounts SET current_balance = %s, updated_at = NOW() WHERE id = %s",
-        (new_balance, dep_id)
-    )
-
-    # Insert transaction into department_transactions
     cursor.execute("""
-        INSERT INTO department_transactions
-        (department_account_id, transaction_date, old_balance, credit_amount, debit_amount, new_balance, remarks)
-        VALUES (%s, NOW(), %s, %s, %s, %s, %s)
-    """, (dep_id, old_balance, credit_amount, debit_amount, new_balance, remarks))
+        INSERT INTO grants (name, code_head, created_at)
+        VALUES (%s, %s, NOW())
+    """, (data['name'], data['code_head']))
+
+    grant_id = cursor.lastrowid
+
+    original_amount = float(data['allotment'] or 0)
+
+    print("Creating Grant:", data['name'])
+    print("Original Allotment:", original_amount)
+
+    cursor.execute("""
+        INSERT INTO grant_allocations
+        (grant_id, amount, allocation_type, remarks)
+        VALUES (%s, %s, 'Original', 'Initial Allotment')
+    """, (grant_id, original_amount))
 
     conn.commit()
     cursor.close()
     conn.close()
 
-    return jsonify({'success': True, 'message': 'Balance updated successfully'})
+    return jsonify({"success": True})
 
 
-
-# -----------------------------
-# Fetch Department Statement
-# -----------------------------
-
-
-@accounts_bp.route('/departments/<int:department_id>/statement', methods=['GET'])
-def get_statement(department_id):
-    page = int(request.args.get('page', 1))  # current page, default 1
-    per_page = 20  # number of transactions per page
-    offset = (page - 1) * per_page
+# ==========================================
+# GRANT DETAIL PAGE
+# ==========================================
+@accounts_bp.route('/grants/<int:grant_id>')
+def grant_detail(grant_id):
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Fetch paginated transactions
-    cursor.execute(
-        """SELECT DATE_FORMAT(transaction_date, '%d %b %Y') AS date,
-                  old_balance, credit_amount, debit_amount, new_balance, remarks
-           FROM department_transactions
-           WHERE department_account_id=%s
-           ORDER BY transaction_date DESC
-           LIMIT %s OFFSET %s""",
-        (department_id, per_page, offset)
-    )
-    transactions = cursor.fetchall()
+    cursor.execute("""
+        SELECT id, name, code_head
+        FROM grants
+        WHERE id = %s
+    """, (grant_id,))
+    grant = cursor.fetchone()
 
-    # Fetch current balance to show in dropdown
-    cursor.execute(
-        "SELECT current_balance FROM department_accounts WHERE id=%s",
-        (department_id,)
+    if not grant:
+        return "Grant not found", 404
+
+    # ✅ TOTAL ALLOTMENT
+    cursor.execute("""
+        SELECT IFNULL(SUM(amount),0) AS total_allotment
+        FROM grant_allocations
+        WHERE grant_id = %s
+    """, (grant_id,))
+    total_allotment = float(cursor.fetchone()['total_allotment'] or 0)
+
+    # attach to grant object for template
+    grant["allotment"] = total_allotment
+
+    # ✅ TOTAL EXPENDITURE
+    cursor.execute("""
+        SELECT IFNULL(SUM(amount),0) AS total_exp
+        FROM expenditures
+        WHERE grant_id = %s
+    """, (grant_id,))
+    total_exp = float(cursor.fetchone()['total_exp'] or 0)
+
+    # lists
+    cursor.execute("""
+        SELECT id, so_number, so_amount, created_at
+        FROM sanction_orders
+        WHERE grant_id = %s
+        ORDER BY created_at DESC
+    """, (grant_id,))
+    sos = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT id, amount, remarks, created_at
+        FROM expenditures
+        WHERE grant_id = %s
+        ORDER BY created_at DESC
+    """, (grant_id,))
+    expenditures = cursor.fetchall()
+
+    balance = total_allotment - total_exp
+    exp_percent = (
+        round((total_exp / total_allotment) * 100, 2)
+        if total_allotment > 0 else 0
     )
-    account = cursor.fetchone()
-    current_balance = float(account['current_balance']) if account else 0
+
+    print("DETAIL DEBUG:", grant["name"], total_allotment)
 
     cursor.close()
     conn.close()
 
-    return jsonify({
-        'transactions': transactions,
-        'current_balance': current_balance,
-        'page': page,
-        'per_page': per_page,
-        'has_more': len(transactions) == per_page  # flag to check if more pages exist
-    })
-# -----------------------------
-# Fetch Last 10 Transactions for All Grants
-# -----------------------------
-@accounts_bp.route('/departments/all_transactions', methods=['GET'])
-def get_all_transactions():
-    limit = int(request.args.get('limit', 10))  # default 10
+    return render_template(
+        "account_management/grant_detail.html",
+        grant=grant,
+        total_exp=total_exp,
+        sos=sos,
+        expenditures=expenditures,
+        balance=balance,
+        exp_percent=exp_percent
+    )
+
+
+# ==========================================
+# ADD ADDITIONAL ALLOCATION
+# ==========================================
+@accounts_bp.route('/grants/<int:grant_id>/add-allocation', methods=['POST'])
+def add_allocation(grant_id):
+
+    data = request.get_json()
+    amount = float(data.get("amount") or 0)
+
+    if amount <= 0:
+        return jsonify({"success": False, "message": "Invalid amount"})
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO grant_allocations
+        (grant_id, amount, allocation_type, remarks)
+        VALUES (%s, %s, 'Additional', %s)
+    """, (grant_id, amount, data.get("remarks", "")))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    print("Added Additional Allocation:", amount)
+
+    return jsonify({"success": True})
+
+
+# ==========================================
+# ADD EXPENDITURE (FIXED QUERY)
+# ==========================================
+@accounts_bp.route("/grants/<int:grant_id>/add-exp", methods=["POST"])
+def add_expenditure(grant_id):
+
+    data = request.get_json()
+    amount = float(data.get("amount") or 0)
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(
-        """SELECT t.id, t.department_account_id, d.account_holder,
-                  DATE_FORMAT(t.transaction_date, '%d %b %Y') AS date,
-                  t.old_balance, t.credit_amount, t.debit_amount, t.new_balance, t.remarks
-           FROM department_transactions t
-           JOIN department_accounts d ON t.department_account_id = d.id
-           ORDER BY t.transaction_date DESC
-           LIMIT %s""",
-        (limit,)
-    )
-    transactions = cursor.fetchall()
+    # ✅ FIXED: Separate queries to avoid SUM multiplication bug
 
+    cursor.execute("""
+        SELECT IFNULL(SUM(amount),0) AS total_allotment
+        FROM grant_allocations
+        WHERE grant_id = %s
+    """, (grant_id,))
+    total_allotment = float(cursor.fetchone()["total_allotment"] or 0)
+
+    cursor.execute("""
+        SELECT IFNULL(SUM(amount),0) AS total_exp
+        FROM expenditures
+        WHERE grant_id = %s
+    """, (grant_id,))
+    total_exp = float(cursor.fetchone()["total_exp"] or 0)
+
+    current_balance = total_allotment - total_exp
+
+    print("EXP DEBUG - Balance:", current_balance)
+
+    if amount > current_balance:
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "Expenditure exceeds available balance"
+        })
+
+    cursor.execute("""
+        INSERT INTO expenditures (grant_id, amount)
+        VALUES (%s, %s)
+    """, (grant_id, amount))
+
+    conn.commit()
     cursor.close()
     conn.close()
 
-    return jsonify({
-        'transactions': transactions,
-        'has_more': False  # no infinite scroll for all grants
-    })
+    return jsonify({"success": True})
